@@ -4,19 +4,17 @@
     angular.module('MDC');
 
     angular.module('MDC')
-        .service('dashboardService', ['$q', DashboardService]);
+        .service('dashboardService', ['$http', DashboardService]);
 
     /**
      * Dashboard Data Service
      *
      * @returns {{loadStatistics: Function}}
      */
-    function DashboardService($q) {
+    function DashboardService($http) {
         return {
             loadStatistics : function() {
-                var statistics = { "name": "data" };
-                //var statistics = $http.get('/classifications');
-                return $q.when(statistics);
+                return $http.get('/classifications');
             }
         };
     }

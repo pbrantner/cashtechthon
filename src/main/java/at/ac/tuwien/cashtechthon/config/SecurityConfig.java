@@ -17,12 +17,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/resources/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
-                .formLogin()
+                .formLogin().defaultSuccessUrl("/app/index.html", true)
                 //.loginPage("/login")
                 .permitAll()
                 .and()
                 .logout()
-                .permitAll();
+                .permitAll()
+                .and().csrf().disable();;
     }
 
     @Autowired
@@ -30,5 +31,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         auth.inMemoryAuthentication().withUser("thomas").password("test").roles("ADMIN");
         auth.inMemoryAuthentication().withUser("michael").password("test").roles("ADMIN");
         auth.inMemoryAuthentication().withUser("patrick").password("test").roles("USER");
+        auth.inMemoryAuthentication().withUser("johannes").password("test").roles("ADMIN");
+        auth.inMemoryAuthentication().withUser("bernd").password("test").roles("ADMIN");
+        auth.inMemoryAuthentication().withUser("chris").password("test").roles("ADMIN");
     }
 }

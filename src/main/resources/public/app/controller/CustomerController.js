@@ -21,10 +21,26 @@
             .get(self.customerId)
             .then( function( customer ) {
                 $log.debug("customer " + self.customerId + "'s details loaded");
-                self.customer    = customer;
+                self.customer    = customer.data;
             });
 
         self.tags = ['Amazon', 'PayPal', '...'];
+
+        self.companies = [{
+           name: "Amazon",
+           icon: "./assets/amazon.png"
+        },{
+            name: "PayPal",
+            icon: "./assets/svg/paypal.svg"
+        }];
+
+        self.connections = [{
+
+        }];
+
+        self.planned = [{
+
+        }];
     }
 
 })();

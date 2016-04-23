@@ -79,7 +79,6 @@ public class CSVTransactionImporter implements ITransactionImporter {
 					transaction.setDescription(description);
 					transaction.setAmount(amount);
 					transaction.setCurrency(currency);
-					transaction.setCustomer(customer);
 					transactionDao.save(transaction);
 				} catch(DateTimeParseException | IllegalArgumentException e) {
 					throw new CSVTransactionImporterException("An error occurred while parsing csv data", e);

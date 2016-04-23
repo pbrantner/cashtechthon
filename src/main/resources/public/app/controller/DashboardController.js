@@ -18,12 +18,16 @@
         dashboardService
             .loadStatistics()
             .then( function( statistics ) {
-                self.statistics    = statistics;
+                self.statistics    = statistics.data;
                 addHistogram();
             });
 
         function addHistogram() {
             var div = document.getElementById("histogram");
+            if(!google.visualization){
+                console.error("google.visualization undefined");
+                return;
+            }
             var data = google.visualization.arrayToDataTable([
                 ['Dinosaur', 'Length'],
                 ['Acrocanthosaurus (top-spined lizard)', 12.2],
@@ -60,7 +64,7 @@
                 legend: { position: 'none' },
             };
 
-            var chart = new google.visualization.Histogram(div);
+            var chart = new google.visualization.ColumnChart(div);
             chart.draw(data, options);
         }
 
@@ -70,6 +74,56 @@
 
         self.selectUser = function(){
             $state.go('user');
+        };
+
+        self.showUpload = function(){
+            console.log("test");
+
+            var form = document.getElementById('file-form');
+            var fileSelect = document.getElementById('file-select');
+            var uploadButton = document.getElementById('upload-button');
+
+            document.querySelector('#file-select').click();
+            document.querySelector('#file-select').onchange = function(evt){
+
+                var input = fileSelect;
+
+                var data = new FormData()
+                data.append('file', input.files[0])
+                data.append('user', 'hubot')
+
+                fetch('/files', {
+                    method: 'POST',
+                    credentials: 'include',
+                    body: data
+                }).then(function(data){
+                    console.log(data);
+                });
+
+                /*
+
+                // The rest of the code will go here...
+                var file = fileSelect.files[0];
+                var formData = new FormData();
+                formData.append("file",file);
+                var xhr = new XMLHttpRequest();
+                xhr.open('POST', '/files', true);
+                //xhr.setRequestHeader("Content-Type","multipart/form-data; boundary=---------------------------314911788813839");
+                xhr.setRequestHeader("Content-Type","multipart/form-data; boundary=---------------------------129291770317552");
+                //xhr.setRequestHeader("Accept","application/json");
+                //xhr.withCredentials = true;
+                xhr.onload = function () {
+                    if (xhr.status === 200) {
+                        // File(s) uploaded.
+                        uploadButton.innerHTML = 'Upload';
+                    } else {
+                        alert(xhr.responseText);
+                        //alert('An error occurred!');
+                    }
+                };
+                xhr.send(formData);
+                */
+            };
         };
     }
 
