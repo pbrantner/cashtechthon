@@ -1,7 +1,7 @@
 (function(){
     'use strict';
 
-    angular.module('MDC',[]);
+    angular.module('MDC');
 
     angular.module('MDC')
         .service('dashboardService', ['$q', DashboardService]);

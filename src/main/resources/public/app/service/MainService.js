@@ -1,8 +1,6 @@
 (function(){
     'use strict';
 
-    angular.module('MDC',[]);
-
     angular.module('MDC')
         .service('mainService', ['$q', MainService]);
 
