@@ -1,4 +1,4 @@
-package at.ac.tuwien;
+package at.ac.tuwien.cashtechthon;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
