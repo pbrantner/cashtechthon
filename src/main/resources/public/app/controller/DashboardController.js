@@ -87,23 +87,22 @@
             document.querySelector('#file-select').onchange = function(evt){
 
                 // The rest of the code will go here...
-                var files = fileSelect.files;
+                var file = fileSelect.files[0];
                 var formData = new FormData();
-                for (var i = 0; i < files.length; i++) {
-                    var file = files[i];
-
-                    // Add the file to the request.
-                    formData.append('files[]', file, file.name);
-                }
+                formData.append("file",file);
                 var xhr = new XMLHttpRequest();
-                xhr.open('POST', '/api/upload', true);
-                xhr.withCredentials = true;
+                xhr.open('POST', '/files', true);
+                //xhr.setRequestHeader("Content-Type","multipart/form-data; boundary=---------------------------314911788813839");
+                xhr.setRequestHeader("Content-Type","multipart/form-data; boundary=---------------------------129291770317552");
+                //xhr.setRequestHeader("Accept","application/json");
+                //xhr.withCredentials = true;
                 xhr.onload = function () {
                     if (xhr.status === 200) {
                         // File(s) uploaded.
                         uploadButton.innerHTML = 'Upload';
                     } else {
-                        alert('An error occurred!');
+                        alert(xhr.responseText);
+                        //alert('An error occurred!');
                     }
                 };
                 xhr.send(formData);
