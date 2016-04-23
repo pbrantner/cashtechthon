@@ -13,8 +13,7 @@
         return {
             get : function(customerId) {
                 var data = {"name": "User1", "userId": customerId, "key2":"value2", "key3":"value3","key4":"..."};
-                //var users = $http.get('/someUrl/' + customerId);
-
+                //var data = $http.get('/classifications/' + customerId);
                 return $q.when(data);
             }
         };

@@ -15,8 +15,7 @@
         return {
             loadStatistics : function() {
                 var statistics = { "name": "data" };
-                //var users = $http.get('/someUrl');
-
+                //var statistics = $http.get('/classifications');
                 return $q.when(statistics);
             }
         };

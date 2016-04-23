@@ -13,14 +13,14 @@
     function MainController(mainService, $log, $state ) {
         var self = this;
 
-        self.users        = [ ];
+        self.customers        = [ ];
 
         // Load all registered users
 
         mainService
-            .loadAllUsers()
-            .then( function( users ) {
-                self.users    = [].concat(users);
+            .loadAllCustomers()
+            .then( function( customers ) {
+                self.customers    = [].concat(customers);
             });
 
         self.showDashboard = function(){

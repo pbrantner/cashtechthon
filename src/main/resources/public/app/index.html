@@ -55,7 +55,7 @@
                       <input ng-model="ul.searchText">
                   </md-input-container>
               </md-list-item>
-            <md-list-item ng-repeat="it in ul.users">
+            <md-list-item ng-repeat="it in ul.customers">
                 <md-button ng-click="ul.selectUser(it)" ng-class="{'selected' : it === ul.selected }">
                   <md-icon md-svg-icon="{{it.avatar}}" class="avatar"></md-icon>
                   {{it.name}}
@@ -127,7 +127,7 @@
                           .state('user', {
                               url: "/user",
                               templateUrl: "partials/user.html",
-                              controller: "UserController"
+                              controller: "CustomerController"
                           })
                           .state('state2.list', {
                               url: "/list",
