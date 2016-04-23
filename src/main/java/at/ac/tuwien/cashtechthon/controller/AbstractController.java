@@ -1,7 +1,7 @@
 package at.ac.tuwien.cashtechthon.controller;
 
 /**
- * Abstract base class for all controllers
+ * Abstract base class for all MVC controllers
  */
 public abstract class AbstractController {
 
