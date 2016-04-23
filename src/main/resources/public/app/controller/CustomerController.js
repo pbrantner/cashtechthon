@@ -3,7 +3,7 @@
     angular
         .module('MDC')
         .controller('CustomerController', [
-            'customerService', '$routeParams', '$log',
+            'customerService', '$stateParams', '$log',
             CustomerController
         ]);
 
@@ -11,11 +11,11 @@
     /**
      * Manages details for a specific customer
      */
-    function CustomerController(customerService, $routeParams, $log ) {
+    function CustomerController(customerService, $stateParams, $log ) {
         var self = this;
 
         self.customer        = { };
-        self.customerId = $routeParams.customerId;
+        self.customerId = $stateParams.customerId;
 
         customerService
             .get(self.customerId)
