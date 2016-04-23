@@ -2,16 +2,17 @@
     'use strict';
 
     angular.module('MDC')
-        .service('mainService', ['$q', MainService]);
+        .service('mainService', ['$q', '$http', MainService]);
 
     /**
      * Main Data Service
      *
      * @returns {{loadAll: Function}}
      */
-    function MainService($q) {
+    function MainService($q, $http) {
         return {
             loadAllCustomers : function() {
+                /*
                 var customers = [{
                     "name": "User1",
                     customerId: 1,
@@ -27,6 +28,8 @@
 
 
                 return $q.when(customers);
+                */
+                return $http.get('/customers');
             }
         };
     }

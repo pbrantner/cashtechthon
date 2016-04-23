@@ -18,7 +18,7 @@
         dashboardService
             .loadStatistics()
             .then( function( statistics ) {
-                self.statistics    = statistics;
+                self.statistics    = statistics.data;
                 addHistogram();
             });
 
@@ -64,7 +64,7 @@
                 legend: { position: 'none' },
             };
 
-            var chart = new google.visualization.Histogram(div);
+            var chart = new google.visualization.ColumnChart(div);
             chart.draw(data, options);
         }
 

@@ -21,7 +21,7 @@
             .get(self.customerId)
             .then( function( customer ) {
                 $log.debug("customer " + self.customerId + "'s details loaded");
-                self.customer    = customer;
+                self.customer    = customer.data;
             });
 
         self.tags = ['Amazon', 'PayPal', '...'];
