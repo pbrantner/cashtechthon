@@ -55,7 +55,7 @@
               </md-list-item>
             <md-list-item ng-repeat="it in ul.customers | filter:ul.searchText">
                 <md-button ng-click="ul.selectUser(it)" ng-class="{'selected' : it === ul.selected }">
-                  <md-icon md-svg-icon="{{it.avatar}}" class="avatar"></md-icon>
+                  <img src="{{it.avatar}}" class="avatar" />
                   {{it.firstName}}
                   {{it.lastName}}
                   {{it.accountNumber}}
@@ -71,6 +71,7 @@
     </div>
 
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script src="../lib/md5.js"></script>
     <script src="../lib/angular/angular.js"></script>
     <script src="../lib/angular-animate/angular-animate.js"></script>
     <script src="../lib/angular-aria/angular-aria.js"></script>
