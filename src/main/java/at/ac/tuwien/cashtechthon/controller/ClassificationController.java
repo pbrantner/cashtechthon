@@ -4,6 +4,9 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import at.ac.tuwien.cashtechthon.service.IMLService;
+import at.ac.tuwien.cashtechthon.util.Constants;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +22,11 @@ import at.ac.tuwien.cashtechthon.dtos.ClassificationSummary;
 @RequestMapping("/classifications")
 public class ClassificationController extends AbstractController {
 
+
+
+	@Autowired
+	IMLService imlService;
+
 	@Override
 	protected String getViewDir() {
 		return "classifications";
@@ -32,6 +40,13 @@ public class ClassificationController extends AbstractController {
 			@RequestParam("from") LocalDateTime from,
 			@RequestParam("till") LocalDateTime till,
 			@RequestParam("format") String format) {
+
+
+		imlService.setAPIKey(Constants.API_KEY);
+		//imlService.setDataSet();
+
+
+
 		return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
 	}
 	
