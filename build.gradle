@@ -10,6 +10,10 @@ buildscript {
 	}
 }
 
+plugins {
+	id "com.moowork.node" version "0.12"
+}
+
 apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'spring-boot' 
@@ -49,6 +53,11 @@ task wrapper(type: Wrapper) {
 	gradleVersion = '2.12'
 }
 
+node {
+	workDir = file("${project.buildDir}/resources/public")
+}
+
 task stage {
+	dependsOn npmInstall
 	dependsOn build
 }

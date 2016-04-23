@@ -5,6 +5,7 @@ import static org.junit.Assert.assertNotNull;
 
 import java.util.List;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,7 @@ public class CSVTransactionImporterTest {
 	private ICustomerDao customerDao;
 	
 	@Test
+    @Ignore
 	public void testTransactionImportShouldImportOneTransaction() throws TransactionImporterException {
 		CSVTransactionImporter transactionImporter = new CSVTransactionImporter(transactionDao);
 		Customer customer = new Customer();
