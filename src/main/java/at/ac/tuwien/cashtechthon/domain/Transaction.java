@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 public class Transaction {
     @Id
     private Long id;
+    private Long customerId;
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime transactionDate;
     @NotNull
@@ -28,6 +29,14 @@ public class Transaction {
     public void setId(Long id) {
         this.id = id;
     }
+    
+	public Long getCustomerId() {
+		return customerId;
+	}
+
+	public void setCustomerId(Long customerId) {
+		this.customerId = customerId;
+	}
 
     public LocalDateTime getTransactionDate() {
         return transactionDate;

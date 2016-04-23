@@ -126,9 +126,10 @@ public class AzureService implements IMLService {
 
             for(Transaction t : transactions) {
                 JSONArray valuesData = new JSONArray();
-                valuesData.put(t.getCustomer().getId());
-                valuesData.put(t.getCustomer().getFirstName());
-                valuesData.put(t.getCustomer().getLastName());
+
+                valuesData.put(t.getIban());
+                valuesData.put("");
+                valuesData.put("");
                 valuesData.put("");
                 valuesData.put(0);
                 valuesData.put(t.getDescription());
