@@ -44,6 +44,7 @@ public class ClassificationController extends AbstractController {
 
 		imlService.setAPIKey(Constants.API_KEY);
 		//imlService.setDataSet();
+		imlService.getResult();
 
 
 

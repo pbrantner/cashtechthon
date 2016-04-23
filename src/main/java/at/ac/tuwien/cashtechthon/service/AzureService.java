@@ -6,7 +6,6 @@ import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.stereotype.Service;
-import sun.plugin.javascript.JSObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -48,7 +47,7 @@ public class AzureService implements IMLService {
 
 
     @Override
-    public JSObject getResult() {
+    public JSONObject getResult() {
 
         HttpPost post;
         HttpClient client;
@@ -150,19 +149,24 @@ public class AzureService implements IMLService {
         return null;
     }
 
-    private JSObject parseResponse(HttpEntity response) {
+    private JSONObject parseResponse(HttpEntity response) {
 
 
         String retSrc = null;
         try {
 
+            //JSONArray =
             retSrc = EntityUtils.toString(response);
             // parsing JSON
             JSONObject result = new JSONObject(retSrc);
 
             JSONArray values = result.getJSONArray("Values");
-            JSONArray val = values.getJSONArray(0);
-            String token = val.get(val.length() - 1).toString();
+            for(int i = 0; i < values.length(); i++) {
+                JSONArray val = values.getJSONArray(i);
+
+                String labels = val.get(val.length() - 1).toString();
+
+            }
 
 
         } catch (IOException e) {
