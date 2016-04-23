@@ -53,10 +53,11 @@
                       <input ng-model="ul.searchText">
                   </md-input-container>
               </md-list-item>
-            <md-list-item ng-repeat="it in ul.customers">
+            <md-list-item ng-repeat="it in ul.customers | filter:ul.searchText">
                 <md-button ng-click="ul.selectUser(it)" ng-class="{'selected' : it === ul.selected }">
                   <md-icon md-svg-icon="{{it.avatar}}" class="avatar"></md-icon>
                   {{it.name}}
+                  {{it.accountNumber}}
                 </md-button>
             </md-list-item>
           </md-list>
