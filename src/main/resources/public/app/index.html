@@ -22,7 +22,7 @@
     </style>
   </head>
 
-  <body ng-app="starterApp" layout="column" ng-controller="UserController as ul" ng-cloak>
+  <body ng-app="starterApp" layout="column" ng-controller="MainController as ul" ng-cloak>
 
     <md-toolbar layout="row">
       <md-button class="menu" hide-gt-sm ng-click="ul.toggleList()" aria-label="Show User List">
@@ -35,6 +35,12 @@
 
         <md-sidenav ng-click="ul.toggleList()" md-is-locked-open="$mdMedia('gt-sm')" md-component-id="left" class="md-whiteframe-z2" >
           <md-list>
+            <md-list-item>
+              <md-button ng-click="ul.showDashboard()">
+                  <md-icon md-svg-icon="./assets/svg/menu.svg" class="avatar"></md-icon>
+                  Dashboard
+              </md-button>
+            </md-list-item>
             <md-list-item ng-repeat="it in ul.users">
                 <md-button ng-click="ul.selectUser(it)" ng-class="{'selected' : it === ul.selected }">
                   <md-icon md-svg-icon="{{it.avatar}}" class="avatar"></md-icon>
@@ -46,8 +52,6 @@
 
         <md-content flex id="content">
             <div ui-view></div>
-            <a ui-sref="dashboard">State 1</a>
-            <a ui-sref="user">State 2</a>
         </md-content>
 
     </div>
@@ -60,6 +64,9 @@
     <script type="text/javascript" src="../node_modules/angular-material/angular-material.js"></script>
 
 
+    <script src="./service/MainService.js"></script>
+    <script src="./controller/MainController.js"></script>
+
     <script src="./src/users/Users.js"></script>
     <script src="./src/users/UserController.js"></script>
     <script src="./src/users/UserService.js"></script>
@@ -67,7 +74,7 @@
     <script type="text/javascript">
 
           angular
-              .module('starterApp', ['ui.router','ngMaterial', 'users'])
+              .module('starterApp', ['ui.router','ngMaterial', 'users','MDC'])
               .config(function($mdThemingProvider, $mdIconProvider, $stateProvider, $urlRouterProvider){
 
                   $mdIconProvider
