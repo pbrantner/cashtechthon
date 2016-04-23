@@ -28,7 +28,13 @@
       <md-button class="menu" hide-gt-sm ng-click="ul.toggleList()" aria-label="Show User List">
         <md-icon md-svg-icon="menu" ></md-icon>
       </md-button>
-      <h1>Angular Material - Starter App</h1>
+      <h1>MDC</h1>
+      <md-datepicker ng-model="ul.fromDate" md-placeholder="From Date"></md-datepicker>
+      <md-datepicker ng-model="ul.toDate" md-placeholder="To Date"></md-datepicker>
+        <span flex></span>
+        <md-button>
+            <md-icon md-svg-icon="./assets/svg/avatar-1.svg" style="height:64px; width: 64px" class="avatar"></md-icon>
+        </md-button>
     </md-toolbar>
 
     <div flex layout="row">
@@ -37,11 +43,17 @@
           <md-list>
             <md-list-item>
               <md-button ng-click="ul.showDashboard()">
-                  <md-icon md-svg-icon="./assets/svg/menu.svg" class="avatar"></md-icon>
+                  <md-icon md-svg-icon="./assets/svg/dashboard.svg" class="avatar"></md-icon>
                   Dashboard
               </md-button>
             </md-list-item>
-            <md-list-item ng-repeat="it in ul.users">
+              <md-list-item>
+                  <md-input-container flex>
+                      <label>Search</label>
+                      <input ng-model="ul.searchText">
+                  </md-input-container>
+              </md-list-item>
+            <md-list-item ng-repeat="it in ul.customers">
                 <md-button ng-click="ul.selectUser(it)" ng-class="{'selected' : it === ul.selected }">
                   <md-icon md-svg-icon="{{it.avatar}}" class="avatar"></md-icon>
                   {{it.name}}
@@ -56,6 +68,7 @@
 
     </div>
 
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script src="../node_modules/angular/angular.js"></script>
     <script src="../node_modules/angular-animate/angular-animate.js"></script>
     <script src="../node_modules/angular-aria/angular-aria.js"></script>
@@ -64,17 +77,20 @@
     <script type="text/javascript" src="../node_modules/angular-material/angular-material.js"></script>
 
 
+    <script src="./module/mdc.js"></script>
+
     <script src="./service/MainService.js"></script>
     <script src="./controller/MainController.js"></script>
-
-    <script src="./src/users/Users.js"></script>
-    <script src="./src/users/UserController.js"></script>
-    <script src="./src/users/UserService.js"></script>
+    <script src="./service/DashboardService.js"></script>
+    <script src="./controller/DashboardController.js"></script>
+    <script src="./service/CustomerService.js"></script>
+    <script src="./controller/CustomerController.js"></script>
 
     <script type="text/javascript">
+        google.charts.load("current", {packages:["corechart"]});
 
           angular
-              .module('starterApp', ['ui.router','ngMaterial', 'users','MDC'])
+              .module('starterApp', ['ui.router','ngMaterial','MDC'])
               .config(function($mdThemingProvider, $mdIconProvider, $stateProvider, $urlRouterProvider){
 
                   $mdIconProvider
@@ -98,7 +114,8 @@
                   $stateProvider
                           .state('dashboard', {
                               url: "/dashboard",
-                              templateUrl: "partials/dashboard.html"
+                              templateUrl: "partials/dashboard.html",
+                              controller: "DashboardController"
                           })
                           .state('state1.list', {
                               url: "/list",
@@ -109,7 +126,9 @@
                           })
                           .state('user', {
                               url: "/user",
-                              templateUrl: "partials/user.html"
+                              templateUrl: "partials/user.html",
+                              controllerAs: 'ctrl',
+                              controller: "CustomerController"
                           })
                           .state('state2.list', {
                               url: "/list",
