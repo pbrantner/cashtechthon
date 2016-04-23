@@ -56,9 +56,10 @@ task wrapper(type: Wrapper) {
 	gradleVersion = '2.12'
 }
 
-task stage {
+task stage(dependsOn: ['npmInstall', 'build'])
+/*task stage {
 	dependsOn npmInstall
 	dependsOn build
-}
+}*/
 
 clean.delete << file('node_modules')
