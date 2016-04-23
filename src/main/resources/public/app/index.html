@@ -29,10 +29,8 @@
         <md-icon md-svg-icon="menu" ></md-icon>
       </md-button>
       <h1>MDC</h1>
-      <!--
       <md-datepicker ng-model="ul.fromDate" md-placeholder="From Date"></md-datepicker>
       <md-datepicker ng-model="ul.toDate" md-placeholder="To Date"></md-datepicker>
-      -->
         <span flex></span>
         <md-button>
             <md-icon md-svg-icon="./assets/svg/avatar-1.svg" style="height:64px; width: 64px" class="avatar"></md-icon>
@@ -87,14 +85,16 @@
     <script src="./service/UserService.js"></script>
     <script src="./controller/UserController.js"></script>
 
+    <!--
     <script src="./src/users/Users.js"></script>
     <script src="./src/users/UserController.js"></script>
     <script src="./src/users/UserService.js"></script>
+    -->
 
     <script type="text/javascript">
 
           angular
-              .module('starterApp', ['ui.router','ngMaterial', 'users','MDC'])
+              .module('starterApp', ['ui.router','ngMaterial','MDC'])
               .config(function($mdThemingProvider, $mdIconProvider, $stateProvider, $urlRouterProvider){
 
                   $mdIconProvider
@@ -131,7 +131,8 @@
                           .state('user', {
                               url: "/user",
                               templateUrl: "partials/user.html",
-                              controller: "UserController"
+                              controller: "UserController",
+                              controllerAs: 'ctrl'
                           })
                           .state('state2.list', {
                               url: "/list",

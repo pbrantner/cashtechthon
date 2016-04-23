@@ -3,7 +3,7 @@
     angular
         .module('MDC')
         .controller('UserController', [
-            'userService', '$routeParams', '$log',
+            'userService', '$stateParams', '$log',
             UserController
         ]);
 
@@ -11,11 +11,11 @@
     /**
      * Manages details for a specific user
      */
-    function UserController(userService, $routeParams, $log ) {
+    function UserController(userService, $stateParams, $log ) {
         var self = this;
 
         self.user        = { };
-        self.userId = $routeParams.userId;
+        self.userId = $stateParams.userId;
 
         userService
             .get(self.userId)
@@ -23,6 +23,8 @@
                 $log.debug("User " + self.userId + "'s details loaded");
                 self.user    = user;
             });
+
+        self.tags = ['Amazon', 'PayPal', '...'];
     }
 
 })();
