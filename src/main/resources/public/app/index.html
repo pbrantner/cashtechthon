@@ -22,7 +22,7 @@
     </style>
   </head>
 
-  <body ng-app="starterApp" layout="column" ng-controller="MainController as ul" ng-cloak>
+  <body layout="column" ng-controller="MainController as ul" ng-cloak>
 
     <md-toolbar layout="row">
       <md-button class="menu" hide-gt-sm ng-click="ul.toggleList()" aria-label="Show User List">
@@ -93,16 +93,15 @@
 
     <script type="text/javascript">
 
+        google.charts.load("current", {packages:["corechart"]});
+        google.charts.setOnLoadCallback(function() {
+            angular.bootstrap(document.body, ['starterApp']);
+        });
+
 
           angular
               .module('starterApp', ['ui.router','ngMaterial','MDC'])
-              .config(function($mdThemingProvider, $mdIconProvider, $stateProvider, $urlRouterProvider, $q){
-                  google.charts.load("current", {packages:["corechart"]});
-                  window.myDeferred = $q.defer();
-                  google.charts.setOnLoadCallback(function(){
-                      window.myDeferred.resolve("google charts loaded");
-                  });
-
+              .config(function($mdThemingProvider, $mdIconProvider, $stateProvider, $urlRouterProvider){
 
                   $mdIconProvider
                       .defaultIconSet("./assets/svg/avatars.svg", 128)
@@ -127,19 +126,13 @@
                               url: "/dashboard",
                               templateUrl: "partials/dashboard.html",
                               controllerAs: 'ctrl',
-                              controller: "DashboardController",
-                              resolve: {
-                                  gchart: window.myDeferred.promise()
-                              }
+                              controller: "DashboardController"
                           })
                           .state('user', {
                               url: "/user/:customerId",
                               templateUrl: "partials/user.html",
                               controllerAs: 'ctrl',
-                              controller: "CustomerController",
-                              resolve: {
-                                  gchart: window.myDeferred.promise()
-                              }
+                              controller: "CustomerController"
                           })
                           .state('state2.list', {
                               url: "/list",
