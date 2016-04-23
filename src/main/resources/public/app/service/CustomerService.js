@@ -18,7 +18,8 @@
                 //var data = $http.get('/classifications/' + customerId);
                 return $q.when(data);
                 */
-                return $http.get('/classifications/' + customerId);
+                //return $http.get('/classifications?...');
+                return $http.get('/customers/' + customerId);
             }
         };
     }
