@@ -3,27 +3,25 @@
     angular
         .module('MDC')
         .controller('UserController', [
-            'userService', '$log',
+            'userService', '$routeParams', '$log',
             UserController
         ]);
 
+
     /**
-     * Main Controller for the Angular Material Starter App
-     * @param $scope
-     * @param $mdSidenav
-     * @param avatarsService
-     * @constructor
+     * Manages details for a specific user
      */
-    function UserController(userService, $log ) {
+    function UserController(userService, $routeParams, $log ) {
         var self = this;
 
-        self.users        = [ ];
+        self.user        = { };
+        self.userId = $routeParams.userId;
 
         userService
-            .loadAllUsers()
-            .then( function( users ) {
-                $log.debug(users.size() + " users loaded");
-                self.users    = [].concat(users);
+            .get(self.userId)
+            .then( function( user ) {
+                $log.debug("User " + self.userId + "'s details loaded");
+                self.user    = user;
             });
     }
 

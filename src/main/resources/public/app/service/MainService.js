@@ -7,12 +7,9 @@
         .service('mainService', ['$q', MainService]);
 
     /**
-     * Users DataService
-     * Uses embedded, hard-coded data model; acts asynchronously to simulate
-     * remote data service call(s).
+     * Main Data Service
      *
      * @returns {{loadAll: Function}}
-     * @constructor
      */
     function MainService($q) {
         return {
