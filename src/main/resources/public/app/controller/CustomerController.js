@@ -25,6 +25,22 @@
             });
 
         self.tags = ['Amazon', 'PayPal', '...'];
+
+        self.companies = [{
+           name: "Amazon",
+           icon: "./assets/amazon.png"
+        },{
+            name: "PayPal",
+            icon: "./assets/svg/paypal.svg"
+        }];
+
+        self.connections = [{
+
+        }];
+
+        self.planned = [{
+
+        }];
     }
 
 })();

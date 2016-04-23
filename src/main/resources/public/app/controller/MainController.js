@@ -27,8 +27,8 @@
             $state.go('dashboard');
         };
 
-        self.selectUser = function(){
-            $state.go('user');
+        self.selectUser = function(cust){
+            $state.go('user',{customerId : cust.customerId});
         };
     }
 

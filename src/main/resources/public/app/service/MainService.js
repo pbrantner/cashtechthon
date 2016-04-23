@@ -12,7 +12,7 @@
     function MainService($q) {
         return {
             loadAllCustomers : function() {
-                var customers = [{"name": "User1"}, {"name":"User2"}];
+                var customers = [{"name": "User1", customerId: 1, avatar: "svg-1"}, {"name":"User2", customerId: 2, avatar: "svg-2"}];
                 //var customers = $http.get('/customers');
 
 

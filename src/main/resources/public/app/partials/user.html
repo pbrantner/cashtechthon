@@ -8,9 +8,19 @@
     <md-icon md-svg-icon="share"></md-icon>
 </md-button>
 -->
+<style>
+    .md-button.logo {
+        height: 7rem;
+        width: 7rem;
+    }
+    .logo-image {
+        height: 100%;
+        width: 100%;
+    }
+</style>
 
 <div>
-<md-icon md-svg-icon="./assets/svg/avatar-1.svg" class="avatar"></md-icon>
+<md-icon md-svg-icon="{{ctrl.customer.avatar}}" class="avatar"></md-icon>
     <span>
         <md-chips ng-model="ctrl.tags" name="tags" readonly="true">
           <md-chip-template>
@@ -22,6 +32,11 @@
 </div>
 <h3 class="md-headline">Companies</h3>
 <div class="Companies">
+    <md-button ng-repeat="itm in ctrl.companies">
+        <md-button class="md-icon-button logo">
+            <img class="logo-image" src="{{itm.icon}}" title="{{itm.name}}">
+        </md-button>
+    </md-button>
 
 </div>
 <h3 class="md-headline">Connections</h3>
