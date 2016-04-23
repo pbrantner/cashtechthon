@@ -10,11 +10,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @SpringBootApplication
 public class PLAYfulSavingApiApplication {
 
+	/*
 	@RequestMapping("/")
 	String home() {
-		return "index";
+		return "/app/index";
 	}
-
+*/
 	public static void main(String[] args) {
 		SpringApplication.run(PLAYfulSavingApiApplication.class, args);
 	}
