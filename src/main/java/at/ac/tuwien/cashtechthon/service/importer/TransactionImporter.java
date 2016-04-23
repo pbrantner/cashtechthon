@@ -19,6 +19,7 @@ public class TransactionImporter implements ITransactionImporter {
 	public TransactionImporter(ITransactionDao transactionDao) {
 		this.transactionDao = transactionDao;
 	}
+	
 	@Transactional(rollbackOn = Exception.class)
 	@Override
 	public void importTransactions(Iterator<Transaction> transactions) {

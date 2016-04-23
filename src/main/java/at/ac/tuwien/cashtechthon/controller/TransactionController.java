@@ -31,15 +31,11 @@ public class TransactionController extends AbstractController {
 	
 	@RequestMapping(method=RequestMethod.POST, consumes=MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> importTransactions(@RequestBody FileId fileId) {
-		
 		try {
 			transactionService.importTransactions(fileId.getFileId());
+			return new ResponseEntity<>(HttpStatus.CREATED);
 		} catch (TransactionServiceException e) {
-			e.printStackTrace();
+			return new ResponseEntity<>(HttpStatus.CONFLICT);
 		}
-		// return status codes:
-		// 200 if import was successful
-		// 409 if file with fileId cannot be found
-		return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
 	}
 }
