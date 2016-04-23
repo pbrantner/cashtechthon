@@ -20,7 +20,7 @@
         mainService
             .loadAllCustomers()
             .then( function( customers ) {
-                self.customers    = [].concat(customers.data);
+                self.customers    = [].concat(customers.data.content);
             });
 
         self.showDashboard = function(){

@@ -56,7 +56,8 @@
             <md-list-item ng-repeat="it in ul.customers | filter:ul.searchText">
                 <md-button ng-click="ul.selectUser(it)" ng-class="{'selected' : it === ul.selected }">
                   <md-icon md-svg-icon="{{it.avatar}}" class="avatar"></md-icon>
-                  {{it.name}}
+                  {{it.firstName}}
+                  {{it.lastName}}
                   {{it.accountNumber}}
                 </md-button>
             </md-list-item>
