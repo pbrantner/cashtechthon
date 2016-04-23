@@ -13,7 +13,7 @@ Uploads a file as ```multipart/form-data```
 {"fileid":14}
 ```
 
-### ```POST /transactions?file=:fileid```
+### ```POST /transactions```
 
 Imports transactions into the database from a file.
 
@@ -69,7 +69,7 @@ Returns customer with :customerid
 #### GET Parameters
 
 + include[] (optional)
-	- **Values**: *bauen, mode*
+	- **Values**: *bauen, mode, sparen*
 	- **Description**: Only classifications in :include[] will be returned
 + exclude[] (optional)
 	- **Values**: *bauen, mode*
@@ -97,7 +97,7 @@ Returns customer with :customerid
 [{"customerid":13
  ,"firstname":"John"
  ,"lastname":"Doe"
- ,"classifications":{"bauen,sparen"}
+ ,"classifications":["bauen","sparen"]
  }
 ]
 ```
