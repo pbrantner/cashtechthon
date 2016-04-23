@@ -35,7 +35,7 @@ public class TransactionController extends AbstractController {
 			transactionService.importTransactions(fileId.getFileId());
 			return new ResponseEntity<>(HttpStatus.CREATED);
 		} catch (TransactionServiceException e) {
-			return new ResponseEntity<>(HttpStatus.CONFLICT);
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
 		}
 	}
 }
