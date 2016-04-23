@@ -89,11 +89,17 @@
     <script src="./controller/CustomerController.js"></script>
 
     <script type="text/javascript">
-        google.charts.load("current", {packages:["corechart"]});
+
 
           angular
               .module('starterApp', ['ui.router','ngMaterial','MDC'])
-              .config(function($mdThemingProvider, $mdIconProvider, $stateProvider, $urlRouterProvider){
+              .config(function($mdThemingProvider, $mdIconProvider, $stateProvider, $urlRouterProvider, $q){
+                  google.charts.load("current", {packages:["corechart"]});
+                  window.myDeferred = $q.defer();
+                  google.charts.setOnLoadCallback(function(){
+                      window.myDeferred.resolve("google charts loaded");
+                  });
+
 
                   $mdIconProvider
                       .defaultIconSet("./assets/svg/avatars.svg", 128)
@@ -118,13 +124,19 @@
                               url: "/dashboard",
                               templateUrl: "partials/dashboard.html",
                               controllerAs: 'ctrl',
-                              controller: "DashboardController"
+                              controller: "DashboardController",
+                              resolve: {
+                                  gchart: window.myDeferred.promise()
+                              }
                           })
                           .state('user', {
                               url: "/user/:customerId",
                               templateUrl: "partials/user.html",
                               controllerAs: 'ctrl',
-                              controller: "CustomerController"
+                              controller: "CustomerController",
+                              resolve: {
+                                  gchart: window.myDeferred.promise()
+                              }
                           })
                           .state('state2.list', {
                               url: "/list",
