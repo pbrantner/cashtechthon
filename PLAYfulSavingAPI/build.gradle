@@ -47,3 +47,7 @@ eclipse {
 task wrapper(type: Wrapper) {
 	gradleVersion = '2.12'
 }
+
+task stage {
+	dependsOn build
+}
