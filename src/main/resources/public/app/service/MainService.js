@@ -11,11 +11,12 @@
      */
     function MainService($q) {
         return {
-            loadAllUsers : function() {
-                var users = [{"name": "User1"}, {"name":"User2"}];
-                //var users = $http.get('/someUrl');
+            loadAllCustomers : function() {
+                var customers = [{"name": "User1"}, {"name":"User2"}];
+                //var customers = $http.get('/customers');
 
-                return $q.when(users);
+
+                return $q.when(customers);
             }
         };
     }
