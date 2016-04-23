@@ -29,10 +29,8 @@
         <md-icon md-svg-icon="menu" ></md-icon>
       </md-button>
       <h1>MDC</h1>
-      <!--
       <md-datepicker ng-model="ul.fromDate" md-placeholder="From Date"></md-datepicker>
       <md-datepicker ng-model="ul.toDate" md-placeholder="To Date"></md-datepicker>
-      -->
         <span flex></span>
         <md-button>
             <md-icon md-svg-icon="./assets/svg/avatar-1.svg" style="height:64px; width: 64px" class="avatar"></md-icon>
@@ -70,6 +68,7 @@
 
     </div>
 
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script src="../node_modules/angular/angular.js"></script>
     <script src="../node_modules/angular-animate/angular-animate.js"></script>
     <script src="../node_modules/angular-aria/angular-aria.js"></script>
@@ -88,6 +87,7 @@
     <script src="./controller/CustomerController.js"></script>
 
     <script type="text/javascript">
+        google.charts.load("current", {packages:["corechart"]});
 
           angular
               .module('starterApp', ['ui.router','ngMaterial','MDC'])
@@ -127,6 +127,7 @@
                           .state('user', {
                               url: "/user",
                               templateUrl: "partials/user.html",
+                              controllerAs: 'ctrl',
                               controller: "CustomerController"
                           })
                           .state('state2.list', {

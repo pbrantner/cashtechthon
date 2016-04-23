@@ -10,6 +10,10 @@ buildscript {
 	}
 }
 
+plugins {
+	id "com.moowork.node" version "0.12"
+}
+
 apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'spring-boot' 
@@ -32,7 +36,8 @@ dependencies {
 	compile('org.springframework.boot:spring-boot-starter-thymeleaf')
 	compile('org.springframework.boot:spring-boot-starter-web')
 	//runtime('org.postgresql:postgresql')
-	compile("com.h2database:h2")
+	compile('com.h2database:h2')
+	compile('org.apache.commons:commons-csv:1.1')
 	testCompile('org.springframework.boot:spring-boot-starter-test') 
 }
 
@@ -48,6 +53,11 @@ task wrapper(type: Wrapper) {
 	gradleVersion = '2.12'
 }
 
+node {
+	workDir = file("${project.buildDir}/resources/public")
+}
+
 task stage {
+	dependsOn npmInstall
 	dependsOn build
 }

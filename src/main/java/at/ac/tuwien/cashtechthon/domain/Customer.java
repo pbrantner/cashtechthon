@@ -1,9 +1,7 @@
 package at.ac.tuwien.cashtechthon.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Index;
+import javax.persistence.*;
+import java.util.List;
 
 @Entity
 public class Customer {
@@ -13,6 +11,8 @@ public class Customer {
     private Long accountNr;
     private String firstName;
     private String lastName;
+    @OneToMany(cascade=CascadeType.ALL, mappedBy="customer")
+    private List<Transaction> transactions;
 
     public Long getId() {
         return id;
