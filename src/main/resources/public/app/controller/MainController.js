@@ -20,6 +20,10 @@
         mainService
             .loadAllCustomers()
             .then( function( customers ) {
+                customers.data.content.forEach(function(c) {
+                    c.avatar = "http://www.gravatar.com/avatar/" + CryptoJS.MD5(c.firstName + " " + c.lastName)
+                        + "?s=120&d=identicon";
+                });
                 self.customers    = [].concat(customers.data.content);
             });
 
@@ -28,7 +32,7 @@
         };
 
         self.selectUser = function(cust){
-            $state.go('user',{customerId : cust.customerId});
+            $state.go('user',{customerId : cust.id});
         };
     }
 
