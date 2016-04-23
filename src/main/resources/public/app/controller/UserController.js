@@ -14,7 +14,7 @@
     function UserController(userService, $routeParams, $log ) {
         var self = this;
 
-        self.user        = [ ];
+        self.user        = { };
         self.userId = $routeParams.userId;
 
         userService
