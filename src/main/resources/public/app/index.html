@@ -22,7 +22,7 @@
     </style>
   </head>
 
-  <body ng-app="starterApp" layout="column" ng-controller="UserController as ul" ng-cloak>
+  <body ng-app="starterApp" layout="column" ng-controller="MainController as ul" ng-cloak>
 
     <md-toolbar layout="row">
       <md-button class="menu" hide-gt-sm ng-click="ul.toggleList()" aria-label="Show User List">
@@ -33,8 +33,14 @@
 
     <div flex layout="row">
 
-        <md-sidenav  ng-click="ul.toggleList()" md-is-locked-open="$mdMedia('gt-sm')" md-component-id="left" class="md-whiteframe-z2" >
+        <md-sidenav ng-click="ul.toggleList()" md-is-locked-open="$mdMedia('gt-sm')" md-component-id="left" class="md-whiteframe-z2" >
           <md-list>
+            <md-list-item>
+              <md-button ng-click="ul.showDashboard()">
+                  <md-icon md-svg-icon="./assets/svg/menu.svg" class="avatar"></md-icon>
+                  Dashboard
+              </md-button>
+            </md-list-item>
             <md-list-item ng-repeat="it in ul.users">
                 <md-button ng-click="ul.selectUser(it)" ng-class="{'selected' : it === ul.selected }">
                   <md-icon md-svg-icon="{{it.avatar}}" class="avatar"></md-icon>
@@ -45,13 +51,7 @@
         </md-sidenav>
 
         <md-content flex id="content">
-          <md-icon md-svg-icon="{{ul.selected.avatar}}" class="avatar"></md-icon>
-          <h2>{{ul.selected.name}}</h2>
-          <p>{{ul.selected.content}}</p>
-
-          <md-button class="share" md-no-ink ng-click="ul.makeContact(ul.selected)" aria-label="Share with {{ ul.selected.name }}">
-            <md-icon md-svg-icon="share"></md-icon>
-          </md-button>
+            <div ui-view></div>
         </md-content>
 
     </div>
@@ -59,7 +59,13 @@
     <script src="../node_modules/angular/angular.js"></script>
     <script src="../node_modules/angular-animate/angular-animate.js"></script>
     <script src="../node_modules/angular-aria/angular-aria.js"></script>
+    <script src="../node_modules/angular-ui-router/release/angular-ui-router.js"></script>
+
     <script type="text/javascript" src="../node_modules/angular-material/angular-material.js"></script>
+
+
+    <script src="./service/MainService.js"></script>
+    <script src="./controller/MainController.js"></script>
 
     <script src="./src/users/Users.js"></script>
     <script src="./src/users/UserController.js"></script>
@@ -68,8 +74,8 @@
     <script type="text/javascript">
 
           angular
-              .module('starterApp', ['ngMaterial', 'users'])
-              .config(function($mdThemingProvider, $mdIconProvider){
+              .module('starterApp', ['ui.router','ngMaterial', 'users','MDC'])
+              .config(function($mdThemingProvider, $mdIconProvider, $stateProvider, $urlRouterProvider){
 
                   $mdIconProvider
                       .defaultIconSet("./assets/svg/avatars.svg", 128)
@@ -81,11 +87,40 @@
                       .icon("phone"      , "./assets/svg/phone.svg"       , 512);
 
                       $mdThemingProvider.theme('default')
-                          .primaryPalette('brown')
+                          .primaryPalette('blue')
                           .accentPalette('red');
 
-              });
+                  //
+                  // For any unmatched url, redirect to /state1
+                  $urlRouterProvider.otherwise("/dashboard");
+                  //
+                  // Now set up the states
+                  $stateProvider
+                          .state('dashboard', {
+                              url: "/dashboard",
+                              templateUrl: "partials/dashboard.html"
+                          })
+                          .state('state1.list', {
+                              url: "/list",
+                              templateUrl: "partials/state1.list.html",
+                              controller: function($scope) {
+                                  $scope.items = ["A", "List", "Of", "Items"];
+                              }
+                          })
+                          .state('user', {
+                              url: "/user",
+                              templateUrl: "partials/user.html"
+                          })
+                          .state('state2.list', {
+                              url: "/list",
+                              templateUrl: "partials/state2.list.html",
+                              controller: function($scope) {
+                                  $scope.things = ["A", "Set", "Of", "Things"];
+                              }
+                          });
 
+
+              });
     </script>
 
   </body>
