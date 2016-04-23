@@ -30,7 +30,7 @@ repositories {
 
 
 node {
-	workDir = file("${project.buildDir}/resources/public")
+	workDir = file("${project.buildDir}/resources/main/public")
 }
 
 dependencies {
