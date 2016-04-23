@@ -4,18 +4,15 @@ buildscript {
 	}
 	repositories {
 		mavenCentral()
-		jcenter()
 	}
 	dependencies {
 		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
-		classpath('com.moowork.gradle:gradle-node-plugin:0.12')
 	}
 }
 
 apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'spring-boot'
-apply plugin: "com.moowork.node"
 
 jar {
 	baseName = 'playfulsavingapi'
@@ -26,11 +23,6 @@ targetCompatibility = 1.8
 
 repositories {
 	mavenCentral()
-}
-
-
-node {
-	workDir = file("${project.buildDir}/resources/main/public")
 }
 
 dependencies {
@@ -56,10 +48,6 @@ task wrapper(type: Wrapper) {
 	gradleVersion = '2.12'
 }
 
-task stage(dependsOn: ['npmInstall', 'build'])
-/*task stage {
-	dependsOn npmInstall
+task stage {
 	dependsOn build
-}*/
-
-clean.delete << file('node_modules')
+}
