@@ -24,6 +24,10 @@
 
         function addHistogram() {
             var div = document.getElementById("histogram");
+            if(!google.visualization){
+                console.error("google.visualization undefined");
+                return;
+            }
             var data = google.visualization.arrayToDataTable([
                 ['Dinosaur', 'Length'],
                 ['Acrocanthosaurus (top-spined lizard)', 12.2],
@@ -70,6 +74,40 @@
 
         self.selectUser = function(){
             $state.go('user');
+        };
+
+        self.showUpload = function(){
+            console.log("test");
+
+            var form = document.getElementById('file-form');
+            var fileSelect = document.getElementById('file-select');
+            var uploadButton = document.getElementById('upload-button');
+
+            document.querySelector('#file-select').click();
+            document.querySelector('#file-select').onchange = function(evt){
+
+                // The rest of the code will go here...
+                var files = fileSelect.files;
+                var formData = new FormData();
+                for (var i = 0; i < files.length; i++) {
+                    var file = files[i];
+
+                    // Add the file to the request.
+                    formData.append('files[]', file, file.name);
+                }
+                var xhr = new XMLHttpRequest();
+                xhr.open('POST', '/api/upload', true);
+                xhr.withCredentials = true;
+                xhr.onload = function () {
+                    if (xhr.status === 200) {
+                        // File(s) uploaded.
+                        uploadButton.innerHTML = 'Upload';
+                    } else {
+                        alert('An error occurred!');
+                    }
+                };
+                xhr.send(formData);
+            };
         };
     }
 
