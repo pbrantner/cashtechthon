@@ -1,8 +1,8 @@
 package at.ac.tuwien.cashtechthon.service;
 
 import at.ac.tuwien.cashtechthon.domain.Transaction;
+import org.json.JSONObject;
 import org.springframework.stereotype.Service;
-import sun.plugin.javascript.JSObject;
 
 import java.util.List;
 
@@ -15,5 +15,5 @@ public interface IMLService {
     public void setAPIKey(String key);
     public void setData(Transaction transaction);
     public void setDataSet(List<Transaction> transactions);
-    public JSObject getResult();
+    public JSONObject getResult();
 }
