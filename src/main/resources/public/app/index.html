@@ -19,6 +19,9 @@
         [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
           display: none !important;
         }
+        .app-name{
+            padding-left: 10px;
+        }
     </style>
   </head>
 
@@ -28,7 +31,7 @@
       <md-button class="menu" hide-gt-sm ng-click="ul.toggleList()" aria-label="Show User List">
         <md-icon md-svg-icon="menu" ></md-icon>
       </md-button>
-      <h1>Simple Profiles</h1>
+      <h1 class="app-name">Simple Profiles</h1>
         <span flex></span>
         <md-button>
             <md-icon md-svg-icon="./assets/svg/avatar-1.svg" style="height:64px; width: 64px" class="avatar"></md-icon>
