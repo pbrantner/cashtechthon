@@ -3,6 +3,7 @@ package at.ac.tuwien.cashtechthon.domain;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.validation.constraints.NotNull;
 
 @Entity
 public class User {
@@ -11,6 +12,8 @@ public class User {
     private Long id;
     private String firstName;
     private String lastName;
+    @NotNull
+    private String mail;
 
     public Long getId() {
         return id;
