@@ -31,7 +31,10 @@ public class FileController extends AbstractController {
 	}
 
 	@RequestMapping(method=RequestMethod.POST, consumes=MediaType.MULTIPART_FORM_DATA_VALUE, produces=MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile file) {	
+	public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile file) {
+		System.out.println(file.getName());
+		System.out.println(file.getOriginalFilename());
+
 		try {
 			return new ResponseEntity<>(fileService.storeFile(file.getBytes()), HttpStatus.CREATED);
 		} catch (IOException e) {
