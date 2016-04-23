@@ -86,6 +86,22 @@
             document.querySelector('#file-select').click();
             document.querySelector('#file-select').onchange = function(evt){
 
+                var input = fileSelect;
+
+                var data = new FormData()
+                data.append('file', input.files[0])
+                data.append('user', 'hubot')
+
+                fetch('/files', {
+                    method: 'POST',
+                    credentials: 'include',
+                    body: data
+                }).then(function(data){
+                    console.log(data);
+                });
+
+                /*
+
                 // The rest of the code will go here...
                 var file = fileSelect.files[0];
                 var formData = new FormData();
@@ -106,6 +122,7 @@
                     }
                 };
                 xhr.send(formData);
+                */
             };
         };
     }

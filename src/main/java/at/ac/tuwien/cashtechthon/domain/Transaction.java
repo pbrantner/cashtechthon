@@ -4,8 +4,6 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -22,10 +20,6 @@ public class Transaction {
     private Direction direction;
     private Currency currency;
     private BigDecimal amount;
-
-    @ManyToOne(optional = false)
-    @JoinColumn(name="CUST_ID", nullable=false, updatable=false)
-    private Customer customer;
 
     public Long getId() {
         return id;
@@ -81,13 +75,5 @@ public class Transaction {
 
     public void setAmount(BigDecimal amount) {
         this.amount = amount;
-    }
-
-    public Customer getCustomer() {
-        return customer;
-    }
-
-    public void setCustomer(Customer customer) {
-        this.customer = customer;
     }
 }
