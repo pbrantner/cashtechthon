@@ -65,7 +65,6 @@ public class SampleDataSeeder implements ApplicationListener<ContextRefreshedEve
         transactionOne.setDirection(Direction.OUTGOING);
         transactionOne.setIban("AT2342243424");
         transactionOne.setTransactionDate(LocalDateTime.parse("2016-04-23T16:31:31", DateTimeFormatter.ISO_DATE_TIME));
-        transactionOne.setCustomer(customerOne);
         transactionOne = transactionDao.save(transactionOne);
         transactions.add(transactionOne);
 
@@ -77,7 +76,6 @@ public class SampleDataSeeder implements ApplicationListener<ContextRefreshedEve
         transactionTwo.setDirection(Direction.OUTGOING);
         transactionTwo.setIban("AT23334222");
         transactionTwo.setTransactionDate(LocalDateTime.parse("2016-04-23T12:31:31", DateTimeFormatter.ISO_DATE_TIME));
-        transactionTwo.setCustomer(customerOne);
         transactionTwo = transactionDao.save(transactionTwo);
         transactions.add(transactionTwo);
 

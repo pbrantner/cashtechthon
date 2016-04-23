@@ -2,14 +2,14 @@
     'use strict';
 
     angular.module('MDC')
-        .service('customerService', ['$q', '$http', CustomerService]);
+        .service('customerService', ['$http', CustomerService]);
 
     /**
      * customer-Details Data Service
      *
      * @returns {{get: Function}}
      */
-    function CustomerService($q, $http) {
+    function CustomerService($http) {
         return {
             get : function(customerId) {
                 /*

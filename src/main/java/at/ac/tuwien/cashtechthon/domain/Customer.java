@@ -11,7 +11,8 @@ public class Customer {
     private Long accountNr;
     private String firstName;
     private String lastName;
-    @OneToMany(cascade=CascadeType.ALL, mappedBy="customer")
+    @OneToMany
+    @JoinColumn(name="CUST_ID")
     private List<Transaction> transactions;
 
     public Long getId() {
@@ -36,5 +37,21 @@ public class Customer {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public Long getAccountNr() {
+        return accountNr;
+    }
+
+    public void setAccountNr(Long accountNr) {
+        this.accountNr = accountNr;
+    }
+
+    public List<Transaction> getTransactions() {
+        return transactions;
+    }
+
+    public void setTransactions(List<Transaction> transactions) {
+        this.transactions = transactions;
     }
 }
