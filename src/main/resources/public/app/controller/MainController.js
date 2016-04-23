@@ -32,7 +32,7 @@
         };
 
         self.selectUser = function(cust){
-            $state.go('user',{customerId : cust.customerId});
+            $state.go('user',{customerId : cust.id});
         };
     }
 
