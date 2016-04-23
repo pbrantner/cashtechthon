@@ -68,6 +68,7 @@
 
     </div>
 
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script src="../node_modules/angular/angular.js"></script>
     <script src="../node_modules/angular-animate/angular-animate.js"></script>
     <script src="../node_modules/angular-aria/angular-aria.js"></script>
@@ -86,6 +87,7 @@
     <script src="./controller/CustomerController.js"></script>
 
     <script type="text/javascript">
+        google.charts.load("current", {packages:["corechart"]});
 
           angular
               .module('starterApp', ['ui.router','ngMaterial','MDC'])
