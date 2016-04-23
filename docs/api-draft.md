@@ -97,7 +97,7 @@ Returns customer with :customerid
 [{"customerid":13
  ,"firstname":"John"
  ,"lastname":"Doe"
- ,"classifications":{"bauen,sparen"}
+ ,"classifications":["bauen","sparen"]
  }
 ]
 ```
