@@ -1,6 +1,8 @@
 package at.ac.tuwien.cashtechthon.service;
 
 import at.ac.tuwien.cashtechthon.domain.Transaction;
+import at.ac.tuwien.cashtechthon.dtos.Classification;
+import at.ac.tuwien.cashtechthon.dtos.ClassificationSummary;
 import org.json.JSONObject;
 import org.springframework.stereotype.Service;
 
@@ -13,7 +15,9 @@ import java.util.List;
 public interface IMLService {
 
     public void setAPIKey(String key);
+    public void setAPIURL(String key);
     public void setData(Transaction transaction);
     public void setDataSet(List<Transaction> transactions);
-    public JSONObject getResult();
+    public List<ClassificationSummary> getResult();
+    public List<Classification> getResultWithCustomers();
 }

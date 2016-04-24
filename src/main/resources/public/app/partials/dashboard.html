@@ -1,7 +1,7 @@
 <div>
     <div>
-        <md-datepicker ng-model="ctrl.common.from" md-placeholder="From Date"></md-datepicker>
-        <md-datepicker ng-model="ctrl.common.till" md-placeholder="To Date"></md-datepicker>
+        <md-datepicker ng-model="ctrl.common.from" ng-change="ctrl.changeDate()" md-placeholder="From Date"></md-datepicker>
+        <md-datepicker ng-model="ctrl.common.till" ng-change="ctrl.changeDate()" md-placeholder="To Date"></md-datepicker>
         <form id="file-form" action="/files" method="POST" style="display:inline;">
             <input type="file" id="file-select" name="file" multiple class="ng-hide"/>
             <!--<button type="submit" id="upload-button">Upload</button>-->
@@ -9,6 +9,7 @@
         </form>
     </div>
     <div id="histogram"></div>
+    <div id="columnchart"></div>
     <div flex>
 
 
