@@ -45,16 +45,15 @@ public class ClassificationService implements IClassificationService {
 	}
 	
 	private List<Classification> getClassifications(List<Transaction> transactions) {
-		//TODO call mlService with transactions
-		return null;
+		return mlService.getResultWithCustomers(transactions);
+
 	}
 
 	@Override
 	public ClassificationSummary getClassificationSummary(LocalDate from, LocalDate till) {
 		LocalDateTime fromTime = LocalDateTime.of(from, LocalTime.MIN);
 		LocalDateTime tillTime = LocalDateTime.of(till, LocalTime.MAX);
-		List<Classification> classifications = getClassifications(transactionDao.findByTransactionDateBetween(fromTime, tillTime));
-		// TODO calculate summary
-		return null;
+
+		return mlService.getResult(transactionDao.findByTransactionDateBetween(fromTime, tillTime));
 	}
 }

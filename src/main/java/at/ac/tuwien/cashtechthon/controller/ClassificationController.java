@@ -83,8 +83,8 @@ public class ClassificationController extends AbstractController {
 		mockClassification.setLastName("Mustermann");
 		mockClassification.setClassifications(new ArrayList<String>(){{add("bauen"); add("mode");add("sparen");}});
 		// TODO remove later on
-		classifications = new ArrayList<>();
-		classifications.add(mockClassification);
+//		classifications = new ArrayList<>();
+//		classifications.add(mockClassification);
 		response = new ResponseEntity<>(classifications, HttpStatus.OK); 
 		return response;
 	}
@@ -126,7 +126,9 @@ public class ClassificationController extends AbstractController {
 		cse3.setCustomers(67);
 		cse3.setCustomersPercentage(0.45);
 		cs.getClassifications().add(cse3);
-
-		return cs;
+		
+//		return cs;
+		
+		return classificationService.getClassificationSummary(from, till);
 	}
 }
