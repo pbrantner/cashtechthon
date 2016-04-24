@@ -9,6 +9,7 @@ import java.util.Optional;
 import at.ac.tuwien.cashtechthon.dao.ICustomerDao;
 import at.ac.tuwien.cashtechthon.dao.ITransactionDao;
 import at.ac.tuwien.cashtechthon.domain.Transaction;
+import at.ac.tuwien.cashtechthon.dtos.ClassificationSummaryEntry;
 import at.ac.tuwien.cashtechthon.service.IMLService;
 import at.ac.tuwien.cashtechthon.util.Constants;
 import org.json.JSONObject;
@@ -70,13 +71,43 @@ public class ClassificationController extends AbstractController {
 	}
 
 	@RequestMapping(path="/summary",method=RequestMethod.GET, produces=MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody List<ClassificationSummary> getClassifiactionSummary(
+	public @ResponseBody ClassificationSummary getClassifiactionSummary(
 			@RequestParam("include") Optional<String[]> include,
 			@RequestParam("exclude") Optional<String[]> exclude,
 			@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
 			@RequestParam("from") LocalDate from,
 			@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
 			@RequestParam("till") LocalDate till) {
-		return new ArrayList<>();
+
+		ClassificationSummary cs = new ClassificationSummary();
+		cs.setTransactionsTotal(1000);
+		cs.setClassificationsTotal(18200);
+		cs.setCustomersTotal(150);
+
+		ClassificationSummaryEntry cse1 = new ClassificationSummaryEntry();
+		cse1.setName("bauen");
+		cse1.setTransactions(3200);
+		cse1.setTransactionsPercentage(0.32);
+		cse1.setCustomers(54);
+		cse1.setCustomersPercentage(0.36);
+		cs.getClassifications().add(cse1);
+
+		ClassificationSummaryEntry cse2 = new ClassificationSummaryEntry();
+		cse2.setName("mode");
+		cse2.setTransactions(5000);
+		cse2.setTransactionsPercentage(0.5);
+		cse2.setCustomers(109);
+		cse2.setCustomersPercentage(0.73);
+		cs.getClassifications().add(cse2);
+
+		ClassificationSummaryEntry cse3 = new ClassificationSummaryEntry();
+		cse3.setName("sparen");
+		cse3.setTransactions(10000);
+		cse3.setTransactionsPercentage(1);
+		cse3.setCustomers(67);
+		cse3.setCustomersPercentage(0.45);
+		cs.getClassifications().add(cse3);
+
+		return cs;
 	}
 }
