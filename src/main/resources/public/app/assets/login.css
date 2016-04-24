@@ -234,3 +234,9 @@ footer img {
 footer img:hover { opacity: .83; }
 
 footer img:focus , footer a:focus { outline: none; }
+
+.alert-msg {
+	padding: 1em;
+	background-color: rgb(198, 40, 40);
+	color: rgba(255, 255, 255, 0.870588);
+}
