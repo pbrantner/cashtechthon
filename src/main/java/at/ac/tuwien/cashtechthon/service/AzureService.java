@@ -1,6 +1,7 @@
 package at.ac.tuwien.cashtechthon.service;
 
 import at.ac.tuwien.cashtechthon.dao.ICustomerDao;
+import at.ac.tuwien.cashtechthon.domain.Customer;
 import at.ac.tuwien.cashtechthon.domain.Transaction;
 import at.ac.tuwien.cashtechthon.dtos.Classification;
 import at.ac.tuwien.cashtechthon.dtos.ClassificationSummary;
@@ -37,8 +38,13 @@ public class AzureService implements IMLService {
     private String apiurl;
     private String jsonBody;
 
-    @Autowired
+
     ICustomerDao customerDao;
+
+    @Autowired
+    public AzureService(ICustomerDao customerDao) {
+        this.customerDao = customerDao;
+    }
 
     @Override
     public void setAPIKey(String key) {
@@ -84,40 +90,31 @@ public class AzureService implements IMLService {
 
             String kdNr = values.getJSONArray(0).get(0).toString();
 
-            HashMap<String, Integer> catCounter = new HashMap<>();
+
+            ArrayList<Classification> classifications = new ArrayList<>();
+
             for(int i = 0; i < values.length(); i++) {
 
+                Classification classy = new Classification();
 
                 JSONArray val = values.getJSONArray(i);
                 Long customerId = (Long)values.getJSONArray(0).get(0);
                 String label = val.get(val.length() - 1).toString();
 
+                classy.setCustomerId(customerId);
 
-                if(customers.containsKey(customerId)) {
+                Customer customer = customerDao.findById(customerId);
+                classy.setFirstName(customer.getFirstName());
+                classy.setLastName(customer.getLastName());
 
-
-                    HashMap<String, Integer> catVals = customers.get(customerId);
-
-                    if(catVals.containsKey(label)) {
-                        catVals.put(label,catVals.get(label) + 1);
-                    }
-                    else {
-                        catVals.put(label,1);
-                    }
-
+                if(!classy.getClassifications().contains(label)) {
+                    classy.getClassifications().add(label);
                 }
-                else {
-                    HashMap<String, Integer> categories = new HashMap<>();
-                    categories.put(label,1);
-                }
-
+                classifications.add(classy);
 
             }
 
-
-
-
-             return null;
+             return classifications;
 
 
         } catch (IOException e) {
@@ -174,7 +171,7 @@ public class AzureService implements IMLService {
                 ClassificationSummaryEntry summaryEntry = new ClassificationSummaryEntry();
                 summaryEntry.setName(entry.getKey());
                 summaryEntry.setTransactions(entry.getValue());
-                summaryEntry.setTransactionsPercentage(entries.size()/transactionsSum);
+                summaryEntry.setTransactionsPercentage(entries.size()/(double)transactionsSum);
                 entries.add(summaryEntry);
             }
 
@@ -287,17 +284,13 @@ public class AzureService implements IMLService {
         return null;
     }
 
+    /*
     private JSONObject parseResponse(HttpEntity response) {
 
 
         String retSrc = null;
         try {
 
-            /*
-            -Kdnr
-                - Kategories
-                    - cat : count
-             */
             JSONObject output = new JSONObject();
 
             retSrc = EntityUtils.toString(response);
@@ -344,5 +337,6 @@ public class AzureService implements IMLService {
 
         return null;
     }
+        */
 
 }
