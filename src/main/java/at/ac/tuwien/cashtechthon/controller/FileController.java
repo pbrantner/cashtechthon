@@ -12,17 +12,22 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import at.ac.tuwien.cashtechthon.dtos.FileId;
 import at.ac.tuwien.cashtechthon.service.IFileService;
+import at.ac.tuwien.cashtechthon.service.ITransactionService;
+import at.ac.tuwien.cashtechthon.service.exception.TransactionServiceException;
 
 @Controller
 @RequestMapping("/files")
 public class FileController extends AbstractController {
 
 	private IFileService fileService;
+	private ITransactionService transactionService;
 	
 	@Autowired
-	public FileController(IFileService fileService) {
+	public FileController(IFileService fileService, ITransactionService transactionService) {
 		this.fileService = fileService;
+		this.transactionService = transactionService;
 	}
 	
 	@Override
@@ -34,11 +39,15 @@ public class FileController extends AbstractController {
 	public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile file) {
 		System.out.println(file.getName());
 		System.out.println(file.getOriginalFilename());
-
+		
 		try {
-			return new ResponseEntity<>(fileService.storeFile(file.getBytes()), HttpStatus.CREATED);
+			FileId fileId = fileService.storeFile(file.getBytes());
+			transactionService.importTransactions(fileId.getFileId());
+			return new ResponseEntity<>(fileId, HttpStatus.CREATED);
 		} catch (IOException e) {
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+		} catch (TransactionServiceException e) {
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
 		}
 	}
 }
