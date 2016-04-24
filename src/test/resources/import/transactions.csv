@@ -1,2 +1,2 @@
-TransactionId,CustomerId,FirstName,LastName,Timestamp,Direction,IBAN,Description,Amount,Currency
-1,1,Foo,Bar,2016-04-23T16:31:31,OUTGOING,AT1232142421514,"Example description",24.9,EUR
+TransactionId,CustomerId,FirstName,LastName,Timestamp,Company,Direction,IBAN,Description,Amount,Currency
+100,1,Foo,Bar,2016-04-23T16:31:31,Obi,OUTGOING,AT1232142421514,Obi,24.9,EUR
