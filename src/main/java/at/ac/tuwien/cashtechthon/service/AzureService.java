@@ -98,7 +98,7 @@ public class AzureService implements IMLService {
                 classy.setFirstName(customer.getFirstName());
                 classy.setLastName(customer.getLastName());
                 classy.setClassifications(iter.getValue());
-
+                classifications.add(classy);
             }
 
 
