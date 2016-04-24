@@ -41,7 +41,7 @@
                 customer.avatar = "http://www.gravatar.com/avatar/" + CryptoJS.MD5(customer.firstName + " "
                         + customer.lastName) + "?s=120&d=identicon";
                 self.tags = customer.classifications || self.tags;
-                self.customer    = customer.data;
+                self.customer    = customer;
             });
 
         customerService
