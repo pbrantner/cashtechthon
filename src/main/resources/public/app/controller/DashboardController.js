@@ -3,20 +3,23 @@
     angular
         .module('MDC')
         .controller('DashboardController', [
-            'dashboardService', '$log', '$state',
+            'dashboardService', 'commonService', '$log', '$state',
             DashboardController
         ]);
 
     /**
      * Manages basic information, e.g. the existing users
      */
-    function DashboardController(dashboardService, $log, $state ) {
+    function DashboardController(dashboardService, commonService, $log, $state ) {
         var self = this;
 
         self.statistics        = { };
+        self.common = commonService;
 
+        var f = commonService.from.toISOString().slice(0,10);
+        var t = commonService.till.toISOString().slice(0,10);
         dashboardService
-            .loadStatistics()
+            .loadStatistics(f, t)
             .then( function( statistics ) {
                 self.statistics    = statistics.data;
                 addHistogram();
@@ -88,9 +91,9 @@
 
                 var input = fileSelect;
 
-                var data = new FormData()
-                data.append('file', input.files[0])
-                data.append('user', 'hubot')
+                var data = new FormData();
+                data.append('file', input.files[0]);
+                data.append('user', 'hubot');
 
                 fetch('/files', {
                     method: 'POST',
@@ -99,30 +102,6 @@
                 }).then(function(data){
                     console.log(data);
                 });
-
-                /*
-
-                // The rest of the code will go here...
-                var file = fileSelect.files[0];
-                var formData = new FormData();
-                formData.append("file",file);
-                var xhr = new XMLHttpRequest();
-                xhr.open('POST', '/files', true);
-                //xhr.setRequestHeader("Content-Type","multipart/form-data; boundary=---------------------------314911788813839");
-                xhr.setRequestHeader("Content-Type","multipart/form-data; boundary=---------------------------129291770317552");
-                //xhr.setRequestHeader("Accept","application/json");
-                //xhr.withCredentials = true;
-                xhr.onload = function () {
-                    if (xhr.status === 200) {
-                        // File(s) uploaded.
-                        uploadButton.innerHTML = 'Upload';
-                    } else {
-                        alert(xhr.responseText);
-                        //alert('An error occurred!');
-                    }
-                };
-                xhr.send(formData);
-                */
             };
         };
     }

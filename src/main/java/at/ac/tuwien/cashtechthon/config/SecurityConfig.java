@@ -13,17 +13,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests()
-                .antMatchers("/resources/**").permitAll()
-                .anyRequest().authenticated()
-                .and()
-                .formLogin().defaultSuccessUrl("/app/index.html", true)
-                //.loginPage("/login")
-                .permitAll()
-                .and()
-                .logout()
-                .permitAll()
-                .and().csrf().disable();;
+        http
+                .authorizeRequests()
+                    .antMatchers("/resources/**").permitAll()
+                    .antMatchers("/lib/**").permitAll()
+                    .antMatchers("/app/assets/**").permitAll()
+                    .anyRequest().authenticated()
+                    .and()
+                .formLogin()
+                    .loginPage("/login").permitAll()
+                    .defaultSuccessUrl("/app/index.html", true)
+                    .failureUrl("/login/error")
+                    .and()
+                .logout().permitAll()
+                .and().csrf().disable();
     }
 
     @Autowired

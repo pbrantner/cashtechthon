@@ -19,21 +19,25 @@
         [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
           display: none !important;
         }
+        .app-name{
+            padding-left: 10px;
+        }
     </style>
   </head>
 
-  <body ng-app="starterApp" layout="column" ng-controller="MainController as ul" ng-cloak>
+  <body layout="column" ng-controller="MainController as ul" ng-cloak>
 
     <md-toolbar layout="row">
       <md-button class="menu" hide-gt-sm ng-click="ul.toggleList()" aria-label="Show User List">
         <md-icon md-svg-icon="menu" ></md-icon>
       </md-button>
-      <h1>MDC</h1>
-      <md-datepicker ng-model="ul.fromDate" md-placeholder="From Date"></md-datepicker>
-      <md-datepicker ng-model="ul.toDate" md-placeholder="To Date"></md-datepicker>
+      <h1 class="app-name">Simple Profiles</h1>
         <span flex></span>
         <md-button>
             <md-icon md-svg-icon="./assets/svg/avatar-1.svg" style="height:64px; width: 64px" class="avatar"></md-icon>
+        </md-button>
+        <md-button onclick="location.href='/logout'">
+            Logout
         </md-button>
     </md-toolbar>
 
@@ -83,6 +87,7 @@
 
     <script src="./module/mdc.js"></script>
 
+    <script src="./service/CommonService.js"></script>
     <script src="./service/MainService.js"></script>
     <script src="./controller/MainController.js"></script>
     <script src="./service/DashboardService.js"></script>
@@ -91,7 +96,12 @@
     <script src="./controller/CustomerController.js"></script>
 
     <script type="text/javascript">
+
         google.charts.load("current", {packages:["corechart"]});
+        google.charts.setOnLoadCallback(function() {
+            angular.bootstrap(document.body, ['starterApp']);
+        });
+
 
           angular
               .module('starterApp', ['ui.router','ngMaterial','MDC'])

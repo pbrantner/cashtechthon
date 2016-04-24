@@ -133,8 +133,13 @@ Returns customer with :customerid
 #### Response
 
 ```javascript
-[{"name":"bauen","percentage":0.32,"total":3200}
-,{"name":"mode","percentage":0.5,"total":5000}
-,{"name":"sparen","percentage":1,"total":10000}
+{"transactionsTotal":10000
+,"classificationsTotal":18200
+,"customersTotal":150
+,"classifications":
+ [{"name":"bauen","transactions":3200,"transactionsPercentage":0.32,"customers":54,"customersPercentage":0.36}
+ ,{"name":"mode","transactions":5000,"transactionsPercentage":0.5,"customers":109,"customersPercentage":0.73}
+ ,{"name":"sparen","transactions":10000,"transactionsPercentage":1,"customers":67,"customersPercentage":0.45}
+ ]
 ]
 ```
