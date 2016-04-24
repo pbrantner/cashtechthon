@@ -3,20 +3,23 @@
     angular
         .module('MDC')
         .controller('DashboardController', [
-            'dashboardService', '$log', '$state',
+            'dashboardService', 'commonService', '$log', '$state',
             DashboardController
         ]);
 
     /**
      * Manages basic information, e.g. the existing users
      */
-    function DashboardController(dashboardService, $log, $state ) {
+    function DashboardController(dashboardService, commonService, $log, $state ) {
         var self = this;
 
         self.statistics        = { };
+        self.common = commonService;
 
+        var f = commonService.from.toISOString().slice(0,10);
+        var t = commonService.till.toISOString().slice(0,10);
         dashboardService
-            .loadStatistics()
+            .loadStatistics(f, t)
             .then( function( statistics ) {
                 self.statistics    = statistics.data;
                 addHistogram();
@@ -88,9 +91,9 @@
 
                 var input = fileSelect;
 
-                var data = new FormData()
-                data.append('file', input.files[0])
-                data.append('user', 'hubot')
+                var data = new FormData();
+                data.append('file', input.files[0]);
+                data.append('user', 'hubot');
 
                 fetch('/files', {
                     method: 'POST',

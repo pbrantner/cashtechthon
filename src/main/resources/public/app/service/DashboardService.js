@@ -13,8 +13,8 @@
      */
     function DashboardService($http) {
         return {
-            loadStatistics : function() {
-                return $http.get('/classifications');
+            loadStatistics : function(from, till) {
+                return $http.get('/classifications?from=' + from + '&till=' + till);
             }
         };
     }
