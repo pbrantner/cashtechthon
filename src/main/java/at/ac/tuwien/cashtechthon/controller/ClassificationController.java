@@ -85,7 +85,7 @@ public class ClassificationController extends AbstractController {
 		// TODO remove later on
 //		classifications = new ArrayList<>();
 //		classifications.add(mockClassification);
-		response = new ResponseEntity<>(classifications, HttpStatus.OK); 
+//		response = new ResponseEntity<>(classifications, HttpStatus.OK); 
 		return response;
 	}
 
