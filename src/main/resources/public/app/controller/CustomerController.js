@@ -35,7 +35,8 @@
 
         customerService
             .get(self.customerId, f, t)
-            .then( function( customer ) {
+            .then( function( customers ) {
+                var customer = customers.length > 0 ? customers[0] : {};
                 $log.debug("customer " + self.customerId + "'s details loaded");
                 customer.data.avatar = "http://www.gravatar.com/avatar/" + CryptoJS.MD5(customer.data.firstName + " "
                         + customer.data.lastName) + "?s=120&d=identicon";
@@ -44,6 +45,11 @@
                 self.customer    = customer.data;
             });
 
+        customerService
+            .getCompanies(self.customerId)
+            .then(function(comps){
+                self.companies = comps || self.companies;
+            });
 
     }
 
