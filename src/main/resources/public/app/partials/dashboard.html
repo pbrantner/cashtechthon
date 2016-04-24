@@ -1,20 +1,32 @@
 <div>
     <div>
-        <md-datepicker ng-model="ctrl.common.from" md-placeholder="From Date"></md-datepicker>
-        <md-datepicker ng-model="ctrl.common.till" md-placeholder="To Date"></md-datepicker>
+        <md-datepicker ng-model="ctrl.common.from" ng-change="ctrl.changeDate()" md-placeholder="From Date"></md-datepicker>
+        <md-datepicker ng-model="ctrl.common.till" ng-change="ctrl.changeDate()" md-placeholder="To Date"></md-datepicker>
         <form id="file-form" action="/files" method="POST" style="display:inline;">
             <input type="file" id="file-select" name="file" multiple class="ng-hide"/>
             <!--<button type="submit" id="upload-button">Upload</button>-->
             <md-button id="uploadButton" class="md-raised md-primary" ng-click="ctrl.showUpload()"> Choose Files </md-button>
         </form>
     </div>
-    <div id="histogram"></div>
+
     <div id="columnchart"></div>
+
     <div flex>
 
-
-
-        <!--<input id="fileInput" name="file" type="file" class="ng-hide" multiple ng-model="ctrl.file" ng-change="ctrl.upload()">-->
+        <md-list>
+            <md-list-item class="noright">
+                <img alt="{{ person.name }}" ng-src="{{ person.img }}" class="md-avatar">
+                <p>Total Transactions: {{ctrl.statistics.transactionsTotal}}</p>
+            </md-list-item>
+            <md-list-item class="noright">
+                <img alt="{{ person.name }}" ng-src="{{ person.img }}" class="md-avatar">
+                <p>Total Classifications: {{ctrl.statistics.classificationsTotal}}</p>
+            </md-list-item>
+            <md-list-item class="noright">
+                <img alt="{{ person.name }}" ng-src="{{ person.img }}" class="md-avatar">
+                <p>Total Customers: {{ctrl.statistics.customersTotal}}</p>
+            </md-list-item>
+        </md-list>
 
     </div>
 </div>

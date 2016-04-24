@@ -8,8 +8,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface ITransactionDao extends JpaRepository<Transaction, Long> {
-
-    public List<Transaction> findById(String Id);
-    public List<Transaction> findByCustomerIdAndTransactionDateBetween(Long customerId, LocalDateTime start, LocalDateTime end);
-    public List<Transaction> findByTransactionDateBetween(LocalDateTime start, LocalDateTime end);
+    List<Transaction> findById(String Id);
+    List<Transaction> findByCustomerIdAndTransactionDateBetween(Long customerId, LocalDateTime start, LocalDateTime end);
+    List<Transaction> findByTransactionDateBetween(LocalDateTime start, LocalDateTime end);
 }

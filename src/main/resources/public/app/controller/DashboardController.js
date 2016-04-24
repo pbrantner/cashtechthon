@@ -16,24 +16,32 @@
         self.statistics        = { };
         self.common = commonService;
 
-        var f = commonService.from.toISOString().slice(0,10);
-        var t = commonService.till.toISOString().slice(0,10);
-        dashboardService
-            .loadStatistics(f, t)
-            .then( function( statistics ) {
-                self.statistics    = statistics.data;
-                //addHistogram();
-                addColumnChart(statistics.data);
-            },function(){
+        function drawChart(){
 
-                /*[{"name":"bauen","percentage":0.32,"total":3200}*/
-                addColumnChart({
-                    classifications : [{"name":"bauen","transactions":3200,"transactionsPercentage":0.32,"customers":54,"customersPercentage":0.36}
-                        ,{"name":"mode","transactions":5000,"transactionsPercentage":0.5,"customers":109,"customersPercentage":0.73}
-                        ,{"name":"sparen","transactions":10000,"transactionsPercentage":1,"customers":67,"customersPercentage":0.45}
-                    ]
+            var f = commonService.from.toISOString().slice(0,10);
+            var t = commonService.till.toISOString().slice(0,10);
+            dashboardService
+                .loadStatistics(f, t)
+                .then( function( statistics ) {
+                    self.statistics    = statistics.data;
+                    addColumnChart(statistics.data);
+                },function(){
+
+                    /*[{"name":"bauen","percentage":0.32,"total":3200}*/
+                    addColumnChart({
+                        classifications : [{"name":"bauen","transactions":3200,"transactionsPercentage":0.32,"customers":54,"customersPercentage":0.36}
+                            ,{"name":"mode","transactions":5000,"transactionsPercentage":0.5,"customers":109,"customersPercentage":0.73}
+                            ,{"name":"sparen","transactions":10000,"transactionsPercentage":1,"customers":67,"customersPercentage":0.45}
+                        ]
+                    });
                 });
-            });
+
+        }
+        drawChart();
+
+        self.changeDate = function(){
+            drawChart();
+        };
 
         function addColumnChart(data){
             var arr = [];
