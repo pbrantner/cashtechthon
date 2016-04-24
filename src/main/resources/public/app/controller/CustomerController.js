@@ -17,6 +17,19 @@
         self.customer        = { };
         self.customerId = $stateParams.customerId;
 
+        self.download = function() {
+            var f = commonService.from.toISOString().slice(0,10);
+            var t = commonService.till.toISOString().slice(0,10);
+
+            customerService
+                .getCsv(self.customerId, f, t)
+                .then( function( data ) {
+                    var d = data.data;
+                    var blob = new Blob([d], {type: "text/csv;charset=utf-8"});
+                    saveAs(blob, "data.csv");
+                });
+        };
+
         var f = commonService.from.toISOString().slice(0,10);
         var t = commonService.till.toISOString().slice(0,10);
 
