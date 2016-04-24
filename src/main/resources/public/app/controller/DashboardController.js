@@ -89,9 +89,9 @@
 
                 var input = fileSelect;
 
-                var data = new FormData()
-                data.append('file', input.files[0])
-                data.append('user', 'hubot')
+                var data = new FormData();
+                data.append('file', input.files[0]);
+                data.append('user', 'hubot');
 
                 fetch('/files', {
                     method: 'POST',
