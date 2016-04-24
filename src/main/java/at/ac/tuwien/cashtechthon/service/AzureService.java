@@ -75,7 +75,7 @@ public class AzureService implements IMLService {
                 Classification classy = new Classification();
 
                 JSONArray val = values.getJSONArray(i);
-                Long customerId = (Long)values.getJSONArray(0).get(0);
+                Long customerId = Long.parseLong((String)values.getJSONArray(0).get(0));
                 String label = val.get(val.length() - 1).toString();
 
                 classy.setCustomerId(customerId);
