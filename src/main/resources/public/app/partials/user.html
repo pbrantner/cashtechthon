@@ -34,16 +34,16 @@
 <div class="Companies">
     <md-button ng-repeat="itm in ctrl.companies">
         <md-button class="md-icon-button logo">
-            <img class="logo-image" src="{{itm.icon}}" title="{{itm.name}}">
+            <img class="logo-image" src="./assets/{{itm.company}}.png" title="{{itm.company}}">
         </md-button>
     </md-button>
 
 </div>
-<h3 class="md-headline">Connections</h3>
-<div class="Connections">
+<h3 class="md-headline" ng-hide="{{ctrl.connections.length === 0}}">Connections</h3>
+<div class="Connections" ng-hide="{{ctrl.connections.length === 0}}">
 
 </div>
-<h3 class="md-headline">Planned</h3>
-<div class="Planned">
+<h3 class="md-headline" ng-hide="{{ctrl.connections.length === 0}}">Planned</h3>
+<div class="Planned" ng-hide="{{ctrl.connections.length === 0}}">
 
 </div>

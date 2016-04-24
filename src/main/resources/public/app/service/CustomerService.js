@@ -16,7 +16,7 @@
                     + '&from=' + from + '&till=' + till);
             },
             getCompanies : function(customerId){
-                return $http.get("/customers/:id/companies", {id:customerId});
+                return $http.get("/customers/"+customerId+"/companies");
             }
         };
     }
