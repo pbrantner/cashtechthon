@@ -1,15 +1,20 @@
 package at.ac.tuwien.cashtechthon.service;
 
+import at.ac.tuwien.cashtechthon.dao.ICustomerDao;
 import at.ac.tuwien.cashtechthon.domain.Transaction;
 import org.apache.http.HttpEntity;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
@@ -26,12 +31,23 @@ public class AzureService implements IMLService {
 
     private List<Transaction> transactions = new ArrayList<Transaction>();
     private String apiKey;
-    public String apiurl;
-    public String jsonBody;
+    private String apiurl;
+    private String jsonBody;
+
+    @Autowired
+    ICustomerDao customerDao;
+
+
+
 
     @Override
     public void setAPIKey(String key) {
         this.apiKey = key;
+    }
+
+    @Override
+    public void setAPIURL(String url) {
+        this.apiurl = url;
     }
 
     @Override
@@ -61,7 +77,7 @@ public class AzureService implements IMLService {
             // setup output message by copying JSON body into
             // apache StringEntity object along with content type
 
-            entity = new StringEntity(jsonBody, HTTP.UTF_8);
+            entity = new StringEntity(convertTransactions().toString(), HTTP.UTF_8);
             entity.setContentEncoding(HTTP.UTF_8);
             entity.setContentType("text/json");
 
@@ -77,13 +93,9 @@ public class AzureService implements IMLService {
             HttpResponse authResponse = client.execute(post);
 
 
-
-            //parseResponse(authResponse.getEntity());
-
-
             System.out.println(EntityUtils.toString(authResponse.getEntity()));
 
-            return null;
+            return parseResponse(authResponse.getEntity());
 
 
         }
@@ -126,7 +138,7 @@ public class AzureService implements IMLService {
             for(Transaction t : transactions) {
                 JSONArray valuesData = new JSONArray();
 
-                valuesData.put(t.getIban());
+                valuesData.put(t.getCustomerId());
                 valuesData.put("");
                 valuesData.put("");
                 valuesData.put("");
@@ -155,18 +167,46 @@ public class AzureService implements IMLService {
         String retSrc = null;
         try {
 
-            //JSONArray =
+            /*
+            -Kdnr
+                - Kategories
+                    - cat : count
+             */
+            JSONObject output = new JSONObject();
+
             retSrc = EntityUtils.toString(response);
             // parsing JSON
             JSONObject result = new JSONObject(retSrc);
 
             JSONArray values = result.getJSONArray("Values");
+
+            String kdNr = values.getJSONArray(0).get(0).toString();
+            HashMap<String, Integer> categories = new HashMap<>();
             for(int i = 0; i < values.length(); i++) {
+
                 JSONArray val = values.getJSONArray(i);
 
-                String labels = val.get(val.length() - 1).toString();
+                String label = val.get(val.length() - 1).toString();
+
+                if(categories.containsKey(label)) {
+                    categories.put(label,categories.get(label) + 1);
+                }
+                else {
+                    categories.put(label,1);
+                }
 
             }
+
+
+            JSONObject cat = new JSONObject();
+
+            for (Map.Entry<String, Integer> entry : categories.entrySet()) {
+                    cat.put(entry.getKey(),entry.getValue());
+            }
+
+
+            output.put("KdNr", kdNr);
+            output.put("Kategorien", cat);
 
 
         } catch (IOException e) {
