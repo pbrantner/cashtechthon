@@ -22,31 +22,35 @@
 
         self.tags = ['Amazon', 'PayPal', '...'];
 
-        customerService
-            .get(self.customerId, f, t)
-            .then( function( customer ) {
-                $log.debug("customer " + self.customerId + "'s details loaded");
-                customer.data.avatar = "http://www.gravatar.com/avatar/" + CryptoJS.MD5(customer.data.firstName + " "
-                        + customer.data.lastName) + "?s=120&d=identicon";
-                self.tags = customer.classifications || self.tags;
-                self.customer    = customer.data;
-            });
-
         self.companies = [{
-           name: "Amazon",
-           icon: "./assets/amazon.png"
+            name: "Amazon",
+            icon: "./assets/amazon.png"
         },{
             name: "PayPal",
             icon: "./assets/paypal.png"
         }];
 
-        self.connections = [{
+        self.connections = [];
+        self.planned = [];
 
-        }];
+        customerService
+            .get(self.customerId, f, t)
+            .then( function( customers ) {
+                var customer = customers.data.length > 0 ? customers.data[0] : {};
+                console.log("customer " + self.customerId + "'s details loaded");
+                customer.avatar = "http://www.gravatar.com/avatar/" + CryptoJS.MD5(customer.firstName + " "
+                        + customer.lastName) + "?s=120&d=identicon";
+                self.tags = customer.classifications || self.tags;
+                self.customer    = customer.data;
+            });
 
-        self.planned = [{
+        customerService
+            .getCompanies(self.customerId)
+            .then(function(comps){
+                self.companies = [].concat(comps.data.content || self.companies);
+                //self.companies = comps.content || self.companies;
+            });
 
-        }];
     }
 
 })();

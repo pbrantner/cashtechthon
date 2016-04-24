@@ -26,6 +26,7 @@
                     self.statistics    = statistics.data;
                     addColumnChart(statistics.data);
                 },function(){
+                    
 
                     /*[{"name":"bauen","percentage":0.32,"total":3200}*/
                     addColumnChart({
@@ -50,15 +51,6 @@
                 var d = data.classifications[i];
                 arr.push([d.name, d.transactionsPercentage, d.customersPercentage]);
             }
-/*
- [
- ["Element", "Density", { role: "style" } ],
- ["Copper", 8.94, "#b87333"],
- ["Silver", 10.49, "silver"],
- ["Gold", 19.30, "gold"],
- ["Platinum", 21.45, "color: #e5e4e2"]
- ]
- */
             var data = google.visualization.arrayToDataTable(arr);
 
             var view = new google.visualization.DataView(data);
@@ -72,8 +64,8 @@
             */
             var options = {
                 title: "Classifications",
-                width: 600,
-                height: 400,
+                width: 400,
+                height: 300,
                 bar: {groupWidth: "95%"},
                 legend: { position: "none" }
             };
