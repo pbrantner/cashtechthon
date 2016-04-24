@@ -22,6 +22,17 @@
 
         self.tags = ['Amazon', 'PayPal', '...'];
 
+        self.companies = [{
+            name: "Amazon",
+            icon: "./assets/amazon.png"
+        },{
+            name: "PayPal",
+            icon: "./assets/paypal.png"
+        }];
+
+        self.connections = [{}];
+        self.planned = [{}];
+
         customerService
             .get(self.customerId, f, t)
             .then( function( customer ) {
@@ -29,24 +40,11 @@
                 customer.data.avatar = "http://www.gravatar.com/avatar/" + CryptoJS.MD5(customer.data.firstName + " "
                         + customer.data.lastName) + "?s=120&d=identicon";
                 self.tags = customer.classifications || self.tags;
+                self.companies = customer.companies || self.companies;
                 self.customer    = customer.data;
             });
 
-        self.companies = [{
-           name: "Amazon",
-           icon: "./assets/amazon.png"
-        },{
-            name: "PayPal",
-            icon: "./assets/paypal.png"
-        }];
 
-        self.connections = [{
-
-        }];
-
-        self.planned = [{
-
-        }];
     }
 
 })();
