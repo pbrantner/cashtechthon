@@ -82,7 +82,8 @@ public class ClassificationController extends AbstractController {
 		mockClassification.setFirstName("Max");
 		mockClassification.setLastName("Mustermann");
 		mockClassification.setClassifications(new ArrayList<String>(){{add("bauen"); add("mode");add("sparen");}});
-		classifications.clear();
+		// TODO remove later on
+		classifications = new ArrayList<>();
 		classifications.add(mockClassification);
 		response = new ResponseEntity<>(classifications, HttpStatus.OK); 
 		return response;
