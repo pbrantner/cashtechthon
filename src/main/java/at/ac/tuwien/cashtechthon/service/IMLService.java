@@ -14,8 +14,6 @@ import java.util.List;
 
 public interface IMLService {
 
-    public void setAPIKey(String key);
-    public void setAPIURL(String key);
     public ClassificationSummary getResult(List<Transaction> transactions);
     public List<Classification> getResultWithCustomers(List<Transaction> transactions);
 }
