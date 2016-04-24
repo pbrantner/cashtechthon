@@ -75,6 +75,7 @@
     </div>
 
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script src="../lib/FileSaver.js"></script>
     <script src="../lib/md5.js"></script>
     <script src="../lib/angular/angular.js"></script>
     <script src="../lib/angular-animate/angular-animate.js"></script>
@@ -97,7 +98,7 @@
 
     <script type="text/javascript">
 
-        google.charts.load("current", {packages:["corechart","bar"]});
+        google.charts.load("current", {packages:["corechart","bar", "gantt"]});
         google.charts.setOnLoadCallback(function() {
             angular.bootstrap(document.body, ['starterApp']);
         });

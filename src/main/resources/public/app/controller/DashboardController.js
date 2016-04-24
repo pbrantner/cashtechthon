@@ -16,7 +16,19 @@
         self.statistics        = { };
         self.common = commonService;
 
-        function drawChart(){
+        self.download = function() {
+            var f = commonService.from.toISOString().slice(0,10);
+            var t = commonService.till.toISOString().slice(0,10);
+            dashboardService
+                .loadStatisticsCsv(f, t)
+                .then( function( statistics ) {
+                    var data = JSON.stringify(statistics.data);
+                    var blob = new Blob([data], {type: "text/plain;charset=utf-8"});
+                    saveAs(blob, "data.txt");
+                });
+        };
+
+        function drawChart() {
 
             var f = commonService.from.toISOString().slice(0,10);
             var t = commonService.till.toISOString().slice(0,10);
