@@ -22,8 +22,56 @@
             .loadStatistics(f, t)
             .then( function( statistics ) {
                 self.statistics    = statistics.data;
-                addHistogram();
+                //addHistogram();
+                addColumnChart(statistics.data);
+            },function(){
+
+                /*[{"name":"bauen","percentage":0.32,"total":3200}*/
+                addColumnChart({
+                    classifications : [{"name":"bauen","transactions":3200,"transactionsPercentage":0.32,"customers":54,"customersPercentage":0.36}
+                        ,{"name":"mode","transactions":5000,"transactionsPercentage":0.5,"customers":109,"customersPercentage":0.73}
+                        ,{"name":"sparen","transactions":10000,"transactionsPercentage":1,"customers":67,"customersPercentage":0.45}
+                    ]
+                });
             });
+
+        function addColumnChart(data){
+            var arr = [];
+            arr.push(["Classification","TransactionPercentage","CustomerPercentage"]);
+            for(var i = 0, length = data.classifications.length; i < length; i++){
+                var d = data.classifications[i];
+                arr.push([d.name, d.transactionsPercentage, d.customersPercentage]);
+            }
+/*
+ [
+ ["Element", "Density", { role: "style" } ],
+ ["Copper", 8.94, "#b87333"],
+ ["Silver", 10.49, "silver"],
+ ["Gold", 19.30, "gold"],
+ ["Platinum", 21.45, "color: #e5e4e2"]
+ ]
+ */
+            var data = google.visualization.arrayToDataTable(arr);
+
+            var view = new google.visualization.DataView(data);
+            /*
+            view.setColumns([0, 1,
+                { calc: "stringify",
+                    sourceColumn: 1,
+                    type: "string",
+                    role: "annotation" },
+                2]);
+            */
+            var options = {
+                title: "Classifications",
+                width: 600,
+                height: 400,
+                bar: {groupWidth: "95%"},
+                legend: { position: "none" }
+            };
+            var chart = new google.visualization.ColumnChart(document.getElementById("columnchart"));
+            chart.draw(view, options);
+        }
 
         function addHistogram() {
             var div = document.getElementById("histogram");
