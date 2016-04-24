@@ -17,20 +17,23 @@
         self.customer        = { };
         self.customerId = $stateParams.customerId;
 
+        self.download = function() {
+            var f = commonService.from.toISOString().slice(0,10);
+            var t = commonService.till.toISOString().slice(0,10);
+
+            customerService
+                .getCsv(self.customerId, f, t)
+                .then( function( data ) {
+                    var d = data.data;
+                    var blob = new Blob([d], {type: "text/csv;charset=utf-8"});
+                    saveAs(blob, "data.csv");
+                });
+        };
+
         var f = commonService.from.toISOString().slice(0,10);
         var t = commonService.till.toISOString().slice(0,10);
 
         self.tags = ['Amazon', 'PayPal', '...'];
-
-        customerService
-            .get(self.customerId, f, t)
-            .then( function( customer ) {
-                $log.debug("customer " + self.customerId + "'s details loaded");
-                customer.data.avatar = "http://www.gravatar.com/avatar/" + CryptoJS.MD5(customer.data.firstName + " "
-                        + customer.data.lastName) + "?s=120&d=identicon";
-                self.tags = customer.classifications || self.tags;
-                self.customer    = customer.data;
-            });
 
         self.companies = [{
             name: "Amazon",
@@ -51,7 +54,7 @@
                 customer.avatar = "http://www.gravatar.com/avatar/" + CryptoJS.MD5(customer.firstName + " "
                         + customer.lastName) + "?s=120&d=identicon";
                 self.tags = customer.classifications || self.tags;
-                self.customer    = customer.data;
+                self.customer    = customer;
             });
 
         customerService

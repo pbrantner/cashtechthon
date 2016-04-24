@@ -36,12 +36,10 @@
                 .loadStatistics(f, t)
                 .then( function( statistics ) {
                     self.statistics    = statistics.data;
-                    addColumnChart(statistics.data);
+                    addBarChart(statistics.data);
                 },function(){
-                    
-
                     /*[{"name":"bauen","percentage":0.32,"total":3200}*/
-                    addColumnChart({
+                    addBarChart({
                         classifications : [{"name":"bauen","transactions":3200,"transactionsPercentage":0.32,"customers":54,"customersPercentage":0.36}
                             ,{"name":"mode","transactions":5000,"transactionsPercentage":0.5,"customers":109,"customersPercentage":0.73}
                             ,{"name":"sparen","transactions":10000,"transactionsPercentage":1,"customers":67,"customersPercentage":0.45}
@@ -56,33 +54,32 @@
             drawChart();
         };
 
-        function addColumnChart(data){
+        function addBarChart(data){
             var arr = [];
-            arr.push(["Classification","TransactionPercentage","CustomerPercentage"]);
-            for(var i = 0, length = data.classifications.length; i < length; i++){
-                var d = data.classifications[i];
-                arr.push([d.name, d.transactionsPercentage, d.customersPercentage]);
+            arr.push(['Classification', 'Transactions']);
+            for(var idx=0; idx < data.classifications.length; idx++){
+                var cl = data.classifications[idx];
+                arr.push([cl.name, cl.transactions]);
             }
+
             var data = google.visualization.arrayToDataTable(arr);
 
-            var view = new google.visualization.DataView(data);
-            /*
-            view.setColumns([0, 1,
-                { calc: "stringify",
-                    sourceColumn: 1,
-                    type: "string",
-                    role: "annotation" },
-                2]);
-            */
             var options = {
-                title: "Classifications",
-                width: 400,
-                height: 300,
-                bar: {groupWidth: "95%"},
-                legend: { position: "none" }
+                chart: {
+                    title: 'Transactions'
+                },
+                legend: { position: 'none' },
+                axes: {
+                    x: {
+                        0: { side: 'top', label: 'Transactions'} // Top x-axis.
+                    }
+                },
+                bars: 'horizontal' // Required for Material Bar Charts.
             };
-            var chart = new google.visualization.ColumnChart(document.getElementById("columnchart"));
-            chart.draw(view, options);
+
+            var chart = new google.charts.Bar(document.getElementById('barchart'));
+
+            chart.draw(data, options);
         }
 
         self.showDashboard = function(){

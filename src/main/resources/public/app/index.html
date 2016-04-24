@@ -68,8 +68,8 @@
           </md-list>
         </md-sidenav>
 
-        <md-content flex id="content">
-            <div ui-view></div>
+        <md-content layout="column" flex style="overflow: scroll;" id="content">
+            <div ui-view flex></div>
         </md-content>
 
     </div>
@@ -98,7 +98,7 @@
 
     <script type="text/javascript">
 
-        google.charts.load("current", {packages:["corechart","gantt"]});
+        google.charts.load("current", {packages:["corechart","bar", "gantt"]});
         google.charts.setOnLoadCallback(function() {
             angular.bootstrap(document.body, ['starterApp']);
         });

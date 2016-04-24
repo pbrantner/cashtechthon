@@ -15,6 +15,10 @@
                 return $http.get('/classifications?customers=' + customerId
                     + '&from=' + from + '&till=' + till);
             },
+            getCsv: function(customerId, from, till) {
+                return $http.get('/classifications?customers=' + customerId
+                    + '&from=' + from + '&till=' + till + '&format=csv');
+            },
             getCompanies : function(customerId){
                 return $http.get("/customers/"+customerId+"/companies");
             }
