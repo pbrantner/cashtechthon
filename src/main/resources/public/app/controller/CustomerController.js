@@ -17,13 +17,12 @@
         self.customer        = { };
         self.customerId = $stateParams.customerId;
 
-        var f = commonService.from.getFullYear() + "-" + (commonService.from.getMonth() + 1) + "-" + commonService.from.getDate();
-        var t = commonService.till.getFullYear() + "-" + (commonService.till.getMonth() + 1) + "-" + commonService.till.getDate();
+        var f = commonService.from.toISOString().slice(0,10);
+        var t = commonService.till.toISOString().slice(0,10);
 
         customerService
-            .get(self.customerId)
+            .get(self.customerId, f, t)
             .then( function( customer ) {
-                var test = commonService;
                 $log.debug("customer " + self.customerId + "'s details loaded");
                 customer.data.avatar = "http://www.gravatar.com/avatar/" + CryptoJS.MD5(customer.data.firstName + " "
                         + customer.data.lastName) + "?s=120&d=identicon";
