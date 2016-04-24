@@ -1,8 +1,9 @@
 package at.ac.tuwien.cashtechthon.dtos;
 
+
 public class FileId {
 	private Long fileId;
-
+	
 	public Long getFileId() {
 		return fileId;
 	}
