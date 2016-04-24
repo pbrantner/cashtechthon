@@ -22,16 +22,6 @@
 
         self.tags = ['Amazon', 'PayPal', '...'];
 
-        customerService
-            .get(self.customerId, f, t)
-            .then( function( customer ) {
-                $log.debug("customer " + self.customerId + "'s details loaded");
-                customer.data.avatar = "http://www.gravatar.com/avatar/" + CryptoJS.MD5(customer.data.firstName + " "
-                        + customer.data.lastName) + "?s=120&d=identicon";
-                self.tags = customer.classifications || self.tags;
-                self.customer    = customer.data;
-            });
-
         self.companies = [{
             name: "Amazon",
             icon: "./assets/amazon.png"
