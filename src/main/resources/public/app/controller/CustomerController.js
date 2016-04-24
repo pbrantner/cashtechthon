@@ -37,7 +37,7 @@
            icon: "./assets/amazon.png"
         },{
             name: "PayPal",
-            icon: "./assets/svg/paypal.svg"
+            icon: "./assets/paypal.png"
         }];
 
         self.connections = [{
