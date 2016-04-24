@@ -81,6 +81,7 @@ public class SampleDataSeeder implements ApplicationListener<ContextRefreshedEve
         transactionOne.setDirection(Direction.OUTGOING);
         transactionOne.setIban("AT2342243424");
         transactionOne.setTransactionDate(LocalDateTime.parse("2016-04-23T16:31:31", DateTimeFormatter.ISO_DATE_TIME));
+        transactionOne.setCompany("Billa");
         transactionOne = transactionDao.save(transactionOne);
         transactions.add(transactionOne);
 
@@ -93,6 +94,7 @@ public class SampleDataSeeder implements ApplicationListener<ContextRefreshedEve
         transactionTwo.setDirection(Direction.OUTGOING);
         transactionTwo.setIban("AT23334222");
         transactionTwo.setTransactionDate(LocalDateTime.parse("2016-04-23T12:31:31", DateTimeFormatter.ISO_DATE_TIME));
+        transactionTwo.setCompany("Obi");
         transactionTwo = transactionDao.save(transactionTwo);
         transactions.add(transactionTwo);
 
@@ -105,18 +107,20 @@ public class SampleDataSeeder implements ApplicationListener<ContextRefreshedEve
         transactionThree.setDirection(Direction.OUTGOING);
         transactionThree.setIban("AT13334222");
         transactionThree.setTransactionDate(LocalDateTime.parse("2016-04-22T09:00:31", DateTimeFormatter.ISO_DATE_TIME));
+        transactionThree.setCompany("Spar");
         transactionThree = transactionDao.save(transactionThree);
         transactions.add(transactionThree);
 
         Transaction transactionFour = new Transaction();
         transactionFour.setCustomerId(customerTwo.getId());
-        transactionFour.setId(3L);
+        transactionFour.setId(4L);
         transactionFour.setAmount(new BigDecimal("23.55"));
         transactionFour.setCurrency(Currency.EUR);
         transactionFour.setDescription("Spar");
         transactionFour.setDirection(Direction.OUTGOING);
         transactionFour.setIban("AT13334222");
         transactionFour.setTransactionDate(LocalDateTime.parse("2016-04-23T09:00:31", DateTimeFormatter.ISO_DATE_TIME));
+        transactionFour.setCompany("Spar");
         transactionFour = transactionDao.save(transactionFour);
         transactions.add(transactionFour);
 
