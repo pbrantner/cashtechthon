@@ -13,6 +13,7 @@ import java.util.List;
 public interface IMLService {
 
     public void setAPIKey(String key);
+    public void setAPIURL(String key);
     public void setData(Transaction transaction);
     public void setDataSet(List<Transaction> transactions);
     public JSONObject getResult();
