@@ -1,5 +1,6 @@
 package at.ac.tuwien.cashtechthon.dtos;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Classification {
@@ -33,6 +34,9 @@ public class Classification {
 	}
 	
 	public List<String> getClassifications() {
+		if(classifications == null) {
+			classifications = new ArrayList<>();
+		}
 		return classifications;
 	}
 	
