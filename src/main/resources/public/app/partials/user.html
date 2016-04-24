@@ -22,6 +22,7 @@
 <div>
 <img src="{{ctrl.customer.avatar}}" class="avatar" style="display:inline;">
     <h3 class="md-headline" style="display: inline">{{ctrl.customer.firstName}} {{ctrl.customer.lastName}}</h3>
+    <md-button id="downloadButton" class="md-raised md-primary" ng-click="ctrl.download()"> Download CSV</md-button>
     <span>
         <md-chips ng-model="ctrl.tags" name="tags" readonly="true">
           <md-chip-template>
@@ -32,7 +33,7 @@
     </span>
 </div>
 
-<md-button id="downloadButton" class="md-raised md-primary" ng-click="ctrl.download()"> Download CSV</md-button>
+
 
 <h3 class="md-headline">Companies</h3>
 <div class="Companies">
