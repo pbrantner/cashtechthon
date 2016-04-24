@@ -33,10 +33,8 @@ import org.apache.http.protocol.HTTP;
 @Service
 public class AzureService implements IMLService {
 
-    private List<Transaction> transactions = new ArrayList<Transaction>();
-    private String apiKey;
-    private String apiurl;
-    private String jsonBody;
+    private static final String apiKey = "Ch3ChwPR9ji5iN8eH9VpRu0KXrH59tzI646cXiaSdZo7o3TWEpasabk6XxgMkrnvzsOKkyECAPA3eRsxvM+yAg==";
+    private static final String apiurl = "https://ussouthcentral.services.azureml.net/workspaces/f759a12f91d6476881f3f034f1dc013c/services/b7bd464dd5d24ca095398a844b28776b/execute?api-version=2.0&details=true";
 
 
     ICustomerDao customerDao;
@@ -46,22 +44,12 @@ public class AzureService implements IMLService {
         this.customerDao = customerDao;
     }
 
-    @Override
-    public void setAPIKey(String key) {
-        this.apiKey = key;
-    }
-
-    @Override
-    public void setAPIURL(String url) {
-        this.apiurl = url;
-    }
-
 
     @Override
     public List<Classification> getResultWithCustomers(List<Transaction> transactions) {
 
 
-        HttpEntity response = queryAzureWS();
+        HttpEntity response = queryAzureWS(transactions);
 
         String retSrc = null;
         try {
@@ -119,7 +107,7 @@ public class AzureService implements IMLService {
     public ClassificationSummary getResult(List<Transaction> transactions) {
 
 
-        HttpEntity response = queryAzureWS();
+        HttpEntity response = queryAzureWS(transactions);
 
         String retSrc = null;
 
@@ -178,7 +166,7 @@ public class AzureService implements IMLService {
     }
 
 
-    private HttpEntity queryAzureWS() {
+    private HttpEntity queryAzureWS(List<Transaction> transactions) {
 
         HttpPost post;
         HttpClient client;
@@ -192,7 +180,7 @@ public class AzureService implements IMLService {
             // setup output message by copying JSON body into
             // apache StringEntity object along with content type
 
-            entity = new StringEntity(convertTransactions().toString(), HTTP.UTF_8);
+            entity = new StringEntity(convertTransactions(transactions).toString(), HTTP.UTF_8);
             entity.setContentEncoding(HTTP.UTF_8);
             entity.setContentType("text/json");
 
@@ -219,7 +207,7 @@ public class AzureService implements IMLService {
         return null;
     }
 
-    private JSONObject convertTransactions() {
+    private JSONObject convertTransactions(List<Transaction> transactions) {
 
 
         if(transactions != null && !transactions.isEmpty()) {
