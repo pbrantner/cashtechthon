@@ -1,30 +1,47 @@
 package at.ac.tuwien.cashtechthon.dtos;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ClassificationSummary {
-	private String name;
-	private Double percentage;
-	private Long total;
-	
-	public String getName() {
-		return name;
+	private long transactionsTotal;
+	private long classificationsTotal;
+	private long customersTotal;
+	private List<ClassificationSummaryEntry> classifications;
+
+	public ClassificationSummary() {
+		classifications = new ArrayList<>();
 	}
-	public void setName(String name) {
-		this.name = name;
+
+	public long getTransactionsTotal() {
+		return transactionsTotal;
 	}
-	
-	public Double getPercentage() {
-		return percentage;
+
+	public void setTransactionsTotal(long transactionsTotal) {
+		this.transactionsTotal = transactionsTotal;
 	}
-	
-	public void setPercentage(Double percentage) {
-		this.percentage = percentage;
+
+	public long getClassificationsTotal() {
+		return classificationsTotal;
 	}
-	
-	public Long getTotal() {
-		return total;
+
+	public void setClassificationsTotal(long classificationsTotal) {
+		this.classificationsTotal = classificationsTotal;
 	}
-	
-	public void setTotal(Long total) {
-		this.total = total;
+
+	public long getCustomersTotal() {
+		return customersTotal;
+	}
+
+	public void setCustomersTotal(long customersTotal) {
+		this.customersTotal = customersTotal;
+	}
+
+	public List<ClassificationSummaryEntry> getClassifications() {
+		return classifications;
+	}
+
+	public void setClassifications(List<ClassificationSummaryEntry> classifications) {
+		this.classifications = classifications;
 	}
 }

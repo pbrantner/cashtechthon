@@ -3,12 +3,10 @@ package at.ac.tuwien.cashtechthon.controller;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import at.ac.tuwien.cashtechthon.controller.exception.CSVGenerationException;
 import at.ac.tuwien.cashtechthon.dtos.Classification;
 import at.ac.tuwien.cashtechthon.dtos.ClassificationSummary;
+import at.ac.tuwien.cashtechthon.dtos.ClassificationSummaryEntry;
 import at.ac.tuwien.cashtechthon.service.IClassificationService;
 import at.ac.tuwien.cashtechthon.util.ConverterUtil;
 
@@ -28,7 +27,6 @@ import at.ac.tuwien.cashtechthon.util.ConverterUtil;
 @RequestMapping("/classifications")
 public class ClassificationController extends AbstractController {
 
-	@Autowired
 	private IClassificationService classificationService;
 
 	@Autowired
@@ -62,6 +60,7 @@ public class ClassificationController extends AbstractController {
 		} else {
 			classification = classificationService.getClassification(from, till);
 		}
+
 		//Use format.orElse("json") for getting format
 		String responseFormat = format.orElse("json");		
 		ResponseEntity<?> response;
@@ -77,17 +76,53 @@ public class ClassificationController extends AbstractController {
 		default:
 			response = new ResponseEntity<>(classification, HttpStatus.OK);
 		}
+		Classification mockClassification = new Classification();
+		mockClassification.setCustomerId(1L);
+		mockClassification.setFirstName("Max");
+		mockClassification.setLastName("Mustermann");
+		mockClassification.setClassifications(new ArrayList<String>(){{add("bauen"); add("mode");add("sparen");}});
+		response = new ResponseEntity<>(mockClassification, HttpStatus.OK); 
 		return response;
 	}
 
 	@RequestMapping(path="/summary",method=RequestMethod.GET, produces=MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody List<ClassificationSummary> getClassifiactionSummary(
+	public @ResponseBody ClassificationSummary getClassifiactionSummary(
 			@RequestParam("include") Optional<String[]> include,
 			@RequestParam("exclude") Optional<String[]> exclude,
 			@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
 			@RequestParam("from") LocalDate from,
 			@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
 			@RequestParam("till") LocalDate till) {
-		return new ArrayList<>();
+
+		ClassificationSummary cs = new ClassificationSummary();
+		cs.setTransactionsTotal(1000);
+		cs.setClassificationsTotal(18200);
+		cs.setCustomersTotal(150);
+
+		ClassificationSummaryEntry cse1 = new ClassificationSummaryEntry();
+		cse1.setName("bauen");
+		cse1.setTransactions(3200);
+		cse1.setTransactionsPercentage(0.32);
+		cse1.setCustomers(54);
+		cse1.setCustomersPercentage(0.36);
+		cs.getClassifications().add(cse1);
+
+		ClassificationSummaryEntry cse2 = new ClassificationSummaryEntry();
+		cse2.setName("mode");
+		cse2.setTransactions(5000);
+		cse2.setTransactionsPercentage(0.5);
+		cse2.setCustomers(109);
+		cse2.setCustomersPercentage(0.73);
+		cs.getClassifications().add(cse2);
+
+		ClassificationSummaryEntry cse3 = new ClassificationSummaryEntry();
+		cse3.setName("sparen");
+		cse3.setTransactions(10000);
+		cse3.setTransactionsPercentage(1);
+		cse3.setCustomers(67);
+		cse3.setCustomersPercentage(0.45);
+		cs.getClassifications().add(cse3);
+
+		return cs;
 	}
 }

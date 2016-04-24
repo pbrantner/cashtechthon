@@ -14,7 +14,7 @@
     function DashboardService($http) {
         return {
             loadStatistics : function(from, till) {
-                return $http.get('/classifications?from=' + from + '&till=' + till);
+                return $http.get('/classifications/summary?from=' + from + '&till=' + till);
             }
         };
     }
