@@ -6,12 +6,14 @@ import java.time.LocalTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import at.ac.tuwien.cashtechthon.dao.ITransactionDao;
 import at.ac.tuwien.cashtechthon.domain.Transaction;
 import at.ac.tuwien.cashtechthon.dtos.Classification;
 import at.ac.tuwien.cashtechthon.dtos.ClassificationSummary;
 
+@Component
 public class ClassificationService implements IClassificationService {
 
 	private IMLService mlService;
@@ -24,14 +26,14 @@ public class ClassificationService implements IClassificationService {
 	}
 	
 	@Override
-	public Classification getClassification(LocalDate from, LocalDate till) {
+	public List<Classification> getClassification(LocalDate from, LocalDate till) {
 		LocalDateTime fromTime = LocalDateTime.of(from, LocalTime.MIN);
 		LocalDateTime tillTime = LocalDateTime.of(till, LocalTime.MAX);
 		return getClassification(transactionDao.findByTransactionDateBetween(fromTime, tillTime));
 	}
 	
 	@Override
-	public Classification getClassification(Long[] customerIds, LocalDate from, LocalDate till) {
+	public List<Classification> getClassification(Long[] customerIds, LocalDate from, LocalDate till) {
 		LocalDateTime fromTime = LocalDateTime.of(from, LocalTime.MIN);
 		LocalDateTime tillTime = LocalDateTime.of(till, LocalTime.MAX);
 		if(customerIds == null || customerIds.length == 0) {
@@ -42,7 +44,7 @@ public class ClassificationService implements IClassificationService {
 		return null;
 	}
 	
-	private Classification getClassification(List<Transaction> transactions) {
+	private List<Classification> getClassification(List<Transaction> transactions) {
 		
 		return null;
 	}
