@@ -18,6 +18,6 @@ public interface IMLService {
     public void setAPIURL(String key);
     public void setData(Transaction transaction);
     public void setDataSet(List<Transaction> transactions);
-    public List<ClassificationSummary> getResult();
+    public ClassificationSummary getResult();
     public List<Classification> getResultWithCustomers();
 }

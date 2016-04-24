@@ -6,4 +6,5 @@ import at.ac.tuwien.cashtechthon.domain.Customer;
 
 public interface ICustomerDao extends JpaRepository<Customer, Long> {
 
+    public Customer findById(Long id);
 }
