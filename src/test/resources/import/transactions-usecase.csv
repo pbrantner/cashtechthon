@@ -1,0 +1,2 @@
+TransactionId,CustomerId,FirstName,LastName,Timestamp,Company,Direction,IBAN,Description,Amount,Currency
+10,3,Foo,Bar,2016-04-23T16:31:31,"Spar",OUTGOING,AT1232142421514,"Spar",24.9,EUR
