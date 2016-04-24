@@ -57,9 +57,9 @@ public class ClassificationController extends AbstractController {
 		//		imlService.getResult();
 		List<Classification> classifications;
 		if(customers.isPresent()) {
-			classifications = classificationService.getClassification(customers.get(), from, till);
+			classifications = classificationService.getClassifications(customers.get(), from, till);
 		} else {
-			classifications = classificationService.getClassification(from, till);
+			classifications = classificationService.getClassifications(from, till);
 		}
 
 		//Use format.orElse("json") for getting format
@@ -82,7 +82,8 @@ public class ClassificationController extends AbstractController {
 		mockClassification.setFirstName("Max");
 		mockClassification.setLastName("Mustermann");
 		mockClassification.setClassifications(new ArrayList<String>(){{add("bauen"); add("mode");add("sparen");}});
-		classifications.clear();
+		// TODO remove later on
+		classifications = new ArrayList<>();
 		classifications.add(mockClassification);
 		response = new ResponseEntity<>(classifications, HttpStatus.OK); 
 		return response;

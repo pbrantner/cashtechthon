@@ -83,7 +83,7 @@ public class AzureService implements IMLService {
             // parsing JSON
             JSONObject result = new JSONObject(retSrc);
 
-            JSONArray values = result.getJSONArray("Values");
+            JSONArray values = result.getJSONObject("Results").getJSONObject("transaction_out").getJSONObject("value").getJSONArray("Values");
 
 
             HashMap<Long, HashMap<String, Integer>> customers = new HashMap<>();
@@ -142,7 +142,7 @@ public class AzureService implements IMLService {
             // parsing JSON
             JSONObject result = new JSONObject(retSrc);
 
-            JSONArray values = result.getJSONArray("Values");
+            JSONArray values = result.getJSONObject("Results").getJSONObject("transaction_out").getJSONObject("value").getJSONArray("Values");
 
 
             long transactionsSum = 0;
