@@ -15,6 +15,9 @@
         return {
             loadStatistics : function(from, till) {
                 return $http.get('/classifications/summary?from=' + from + '&till=' + till);
+            },
+            loadStatisticsCsv: function(from, till) {
+                return $http.get('/classifications/summary?from=' + from + '&till=' + till);
             }
         };
     }
