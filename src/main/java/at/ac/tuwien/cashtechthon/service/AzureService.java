@@ -69,29 +69,40 @@ public class AzureService implements IMLService {
 
 
             ArrayList<Classification> classifications = new ArrayList<>();
+            HashMap<Long, ArrayList<String>> classMapping = new HashMap<>();
 
             for(int i = 0; i < values.length(); i++) {
 
-                Classification classy = new Classification();
-
                 JSONArray val = values.getJSONArray(i);
-                Long customerId = (Long)values.getJSONArray(0).get(0);
+                Long customerId = Long.parseLong((String)values.getJSONArray(0).get(0));
                 String label = val.get(val.length() - 1).toString();
 
-                classy.setCustomerId(customerId);
-
-                Customer customer = customerDao.findById(customerId);
-                classy.setFirstName(customer.getFirstName());
-                classy.setLastName(customer.getLastName());
-
-                if(!classy.getClassifications().contains(label)) {
-                    classy.getClassifications().add(label);
+                if(classMapping.containsKey(customerId)) {
+                    if(!classMapping.get(customerId).contains(label)) {
+                        classMapping.get(customerId).add(label);
+                    }
                 }
-                classifications.add(classy);
+                else {
+                    ArrayList<String> labels = new ArrayList<>();
+                    labels.add(label);
+                    classMapping.put(customerId, labels);
+                }
 
             }
 
-             return classifications;
+            for(Map.Entry<Long, ArrayList<String>> iter : classMapping.entrySet()) {
+                Classification classy = new Classification();
+                classy.setCustomerId(iter.getKey());
+
+                Customer customer = customerDao.findById(iter.getKey());
+                classy.setFirstName(customer.getFirstName());
+                classy.setLastName(customer.getLastName());
+                classy.setClassifications(iter.getValue());
+
+            }
+
+
+            return classifications;
 
 
         } catch (IOException e) {
