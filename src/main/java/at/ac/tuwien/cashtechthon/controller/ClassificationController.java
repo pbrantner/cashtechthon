@@ -1,15 +1,14 @@
 package at.ac.tuwien.cashtechthon.controller;
 
+import java.io.IOException;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import at.ac.tuwien.cashtechthon.service.IMLService;
-import at.ac.tuwien.cashtechthon.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -19,24 +18,30 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import at.ac.tuwien.cashtechthon.controller.exception.CSVGenerationException;
+import at.ac.tuwien.cashtechthon.dtos.Classification;
 import at.ac.tuwien.cashtechthon.dtos.ClassificationSummary;
-import org.springframework.web.context.request.WebRequest;
+import at.ac.tuwien.cashtechthon.service.IClassificationService;
+import at.ac.tuwien.cashtechthon.util.ConverterUtil;
 
 @Controller
 @RequestMapping("/classifications")
 public class ClassificationController extends AbstractController {
 
-
+	@Autowired
+	private IClassificationService classificationService;
 
 	@Autowired
-	IMLService imlService;
+	public ClassificationController(IClassificationService classificationService) {
+		this.classificationService = classificationService;
+	}
 
 	@Override
 	protected String getViewDir() {
 		return "classifications";
 	}
 
-	@RequestMapping(method=RequestMethod.GET, produces={MediaType.APPLICATION_JSON_VALUE,MediaType.APPLICATION_OCTET_STREAM_VALUE})
+	@RequestMapping(method=RequestMethod.GET, produces={MediaType.APPLICATION_JSON_VALUE,"text/csv"})
 	public ResponseEntity<?> getClassifications(
 			@RequestParam("include") Optional<String[]> include,
 			@RequestParam("exclude") Optional<String[]> exclude,
@@ -48,12 +53,31 @@ public class ClassificationController extends AbstractController {
 			@RequestParam("format") Optional<String> format
 			) {
 
-		imlService.setAPIKey(Constants.API_KEY);
+		//		imlService.setAPIKey(Constants.API_KEY);
 		//imlService.setDataSet();
-		imlService.getResult();
-
+		//		imlService.getResult();
+		Classification classification;
+		if(customers.isPresent()) {
+			classification = classificationService.getClassification(customers.get(), from, till);
+		} else {
+			classification = classificationService.getClassification(from, till);
+		}
 		//Use format.orElse("json") for getting format
-		return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+		String responseFormat = format.orElse("json");		
+		ResponseEntity<?> response;
+		switch(responseFormat) {
+		case "csv":
+			try {
+				response = new ResponseEntity<>(ConverterUtil.convertClassficiationToCsv(classification), HttpStatus.OK);
+			} catch (IOException e) {
+				throw new CSVGenerationException(e);
+			}
+			break;
+		case "json":
+		default:
+			response = new ResponseEntity<>(classification, HttpStatus.OK);
+		}
+		return response;
 	}
 
 	@RequestMapping(path="/summary",method=RequestMethod.GET, produces=MediaType.APPLICATION_JSON_VALUE)
