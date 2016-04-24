@@ -26,6 +26,7 @@
                     self.statistics    = statistics.data;
                     addColumnChart(statistics.data);
                 },function(){
+                    
 
                     /*[{"name":"bauen","percentage":0.32,"total":3200}*/
                     addColumnChart({
