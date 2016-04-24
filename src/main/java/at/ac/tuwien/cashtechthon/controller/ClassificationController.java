@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -40,7 +42,8 @@ public class ClassificationController extends AbstractController {
 		return "classifications";
 	}
 
-	@RequestMapping(method=RequestMethod.GET, produces={MediaType.APPLICATION_JSON_VALUE,"text/csv"})
+	@RequestMapping(method=RequestMethod.GET, produces={MediaType.APPLICATION_JSON_VALUE,MediaType.TEXT_PLAIN_VALUE})
+	@ResponseBody
 	public ResponseEntity<?> getClassifications(
 			@RequestParam("include") Optional<String[]> include,
 			@RequestParam("exclude") Optional<String[]> exclude,
@@ -49,7 +52,8 @@ public class ClassificationController extends AbstractController {
 			@RequestParam("from") LocalDate from,
 			@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
 			@RequestParam("till") LocalDate till,
-			@RequestParam("format") Optional<String> format
+			@RequestParam("format") Optional<String> format,
+			HttpServletResponse response
 			) {
 
 		//		imlService.setAPIKey(Constants.API_KEY);
@@ -64,18 +68,22 @@ public class ClassificationController extends AbstractController {
 
 		//Use format.orElse("json") for getting format
 		String responseFormat = format.orElse("json");		
-		ResponseEntity<?> response;
+		ResponseEntity<?> responseEntity;
 		switch(responseFormat) {
 		case "csv":
 			try {
-				response = new ResponseEntity<>(ConverterUtil.convertClassficiationsToCsv(classifications), HttpStatus.OK);
+				response.setContentType(MediaType.TEXT_PLAIN_VALUE);
+				response.getWriter().println(ConverterUtil.convertClassficiationsToCsv(classifications));
+				response.getWriter().flush();
+				return null;
+				//responseEntity = new ResponseEntity<>(ConverterUtil.convertClassficiationsToCsv(classifications), HttpStatus.OK);
 			} catch (IOException e) {
 				throw new CSVGenerationException(e);
 			}
-			break;
 		case "json":
 		default:
-			response = new ResponseEntity<>(classifications, HttpStatus.OK);
+			response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+			responseEntity = new ResponseEntity<>(classifications, HttpStatus.OK);
 		}
 		Classification mockClassification = new Classification();
 		mockClassification.setCustomerId(1L);
@@ -86,7 +94,7 @@ public class ClassificationController extends AbstractController {
 //		classifications = new ArrayList<>();
 //		classifications.add(mockClassification);
 //		response = new ResponseEntity<>(classifications, HttpStatus.OK); 
-		return response;
+		return responseEntity;
 	}
 
 	@RequestMapping(path="/summary",method=RequestMethod.GET, produces=MediaType.APPLICATION_JSON_VALUE)
