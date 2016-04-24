@@ -4,13 +4,18 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import at.ac.tuwien.cashtechthon.dao.ICustomerDao;
+import at.ac.tuwien.cashtechthon.dao.ITransactionDao;
+import at.ac.tuwien.cashtechthon.domain.Transaction;
 import at.ac.tuwien.cashtechthon.service.IMLService;
 import at.ac.tuwien.cashtechthon.util.Constants;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -24,8 +29,18 @@ public class ClassificationController extends AbstractController {
 
 
 
-	@Autowired
+
 	IMLService imlService;
+
+	ITransactionDao transactionDao;
+
+
+	@Autowired
+	public ClassificationController(ITransactionDao transactionDao, IMLService imlService) {
+		this.imlService = imlService;
+		this.transactionDao = transactionDao;
+	}
+
 
 	@Override
 	protected String getViewDir() {
@@ -42,11 +57,16 @@ public class ClassificationController extends AbstractController {
 			@RequestParam("format") String format) {
 
 
+
+
+		List<Transaction> transactions = transactionDao.findByCustomerIdAndTransactionDateBetween(customers[0],from,till);
+
 		imlService.setAPIKey(Constants.API_KEY);
-		//imlService.setDataSet();
-		imlService.getResult();
+		imlService.setAPIURL(Constants.API_URL);
+		imlService.setDataSet(transactions);
+		JSONObject result = imlService.getResult();
 
-
+		//result.append()
 
 		return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
 	}
@@ -56,6 +76,17 @@ public class ClassificationController extends AbstractController {
 			@RequestParam("exclude") String[] exclude,
 			@RequestParam("from") LocalDateTime from,
 			@RequestParam("till") LocalDateTime till) {
+
+
+		List<Transaction> transactions = transactionDao.findByTransactionDateBetween(from,till);
+
+		imlService.setAPIKey(Constants.API_KEY);
+		imlService.setAPIURL(Constants.API_URL);
+		imlService.setDataSet(transactions);
+		imlService.getResult();
+
+
+
 		return new ArrayList<>();
 	}
 }
