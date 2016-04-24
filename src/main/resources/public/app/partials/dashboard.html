@@ -8,13 +8,25 @@
             <md-button id="uploadButton" class="md-raised md-primary" ng-click="ctrl.showUpload()"> Choose Files </md-button>
         </form>
     </div>
-    <div id="histogram"></div>
+
     <div id="columnchart"></div>
+
     <div flex>
 
-
-
-        <!--<input id="fileInput" name="file" type="file" class="ng-hide" multiple ng-model="ctrl.file" ng-change="ctrl.upload()">-->
+        <md-list>
+            <md-list-item class="noright">
+                <img alt="{{ person.name }}" ng-src="{{ person.img }}" class="md-avatar">
+                <p>Total Transactions: {{ctrl.statistics.transactionsTotal}}</p>
+            </md-list-item>
+            <md-list-item class="noright">
+                <img alt="{{ person.name }}" ng-src="{{ person.img }}" class="md-avatar">
+                <p>Total Classifications: {{ctrl.statistics.classificationsTotal}}</p>
+            </md-list-item>
+            <md-list-item class="noright">
+                <img alt="{{ person.name }}" ng-src="{{ person.img }}" class="md-avatar">
+                <p>Total Customers: {{ctrl.statistics.customersTotal}}</p>
+            </md-list-item>
+        </md-list>
 
     </div>
 </div>
