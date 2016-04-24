@@ -27,9 +27,7 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.protocol.HTTP;
 
 
-/**
- * Created by Chris on 23.04.16.
- */
+
 @Service
 public class AzureService implements IMLService {
 
@@ -74,7 +72,7 @@ public class AzureService implements IMLService {
             for(int i = 0; i < values.length(); i++) {
 
                 JSONArray val = values.getJSONArray(i);
-                Long customerId = Long.parseLong((String)values.getJSONArray(0).get(0));
+                Long customerId = Long.parseLong(values.getJSONArray(i).get(0).toString());
                 String label = val.get(val.length() - 1).toString();
 
                 if(classMapping.containsKey(customerId)) {
