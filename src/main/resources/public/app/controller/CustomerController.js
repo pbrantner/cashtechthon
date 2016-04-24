@@ -15,6 +15,7 @@
         var self = this;
 
         self.customer        = { };
+        
         self.customerId = $stateParams.customerId;
 
         self.download = function() {
