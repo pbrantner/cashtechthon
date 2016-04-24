@@ -3,6 +3,7 @@ package at.ac.tuwien.cashtechthon.controller;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,11 +55,11 @@ public class ClassificationController extends AbstractController {
 		//		imlService.setAPIKey(Constants.API_KEY);
 		//imlService.setDataSet();
 		//		imlService.getResult();
-		Classification classification;
+		List<Classification> classifications;
 		if(customers.isPresent()) {
-			classification = classificationService.getClassification(customers.get(), from, till);
+			classifications = classificationService.getClassification(customers.get(), from, till);
 		} else {
-			classification = classificationService.getClassification(from, till);
+			classifications = classificationService.getClassification(from, till);
 		}
 
 		//Use format.orElse("json") for getting format
@@ -67,21 +68,23 @@ public class ClassificationController extends AbstractController {
 		switch(responseFormat) {
 		case "csv":
 			try {
-				response = new ResponseEntity<>(ConverterUtil.convertClassficiationToCsv(classification), HttpStatus.OK);
+				response = new ResponseEntity<>(ConverterUtil.convertClassficiationsToCsv(classifications), HttpStatus.OK);
 			} catch (IOException e) {
 				throw new CSVGenerationException(e);
 			}
 			break;
 		case "json":
 		default:
-			response = new ResponseEntity<>(classification, HttpStatus.OK);
+			response = new ResponseEntity<>(classifications, HttpStatus.OK);
 		}
 		Classification mockClassification = new Classification();
 		mockClassification.setCustomerId(1L);
 		mockClassification.setFirstName("Max");
 		mockClassification.setLastName("Mustermann");
 		mockClassification.setClassifications(new ArrayList<String>(){{add("bauen"); add("mode");add("sparen");}});
-		response = new ResponseEntity<>(mockClassification, HttpStatus.OK); 
+		classifications.clear();
+		classifications.add(mockClassification);
+		response = new ResponseEntity<>(classifications, HttpStatus.OK); 
 		return response;
 	}
 

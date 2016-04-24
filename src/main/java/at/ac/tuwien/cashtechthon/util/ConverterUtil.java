@@ -32,4 +32,8 @@ public class ConverterUtil {
 		}
 		return buffer.toString();
 	}
+	
+	public static String convertClassficiationsToCsv(List<Classification> classifications) throws IOException {
+		return null;
+	}
 }
