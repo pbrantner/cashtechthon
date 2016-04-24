@@ -2,6 +2,8 @@ package at.ac.tuwien.cashtechthon.service;
 
 import at.ac.tuwien.cashtechthon.dao.ICustomerDao;
 import at.ac.tuwien.cashtechthon.domain.Transaction;
+import at.ac.tuwien.cashtechthon.dtos.Classification;
+import at.ac.tuwien.cashtechthon.dtos.ClassificationSummary;
 import org.apache.http.HttpEntity;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
@@ -63,7 +65,115 @@ public class AzureService implements IMLService {
 
 
     @Override
-    public JSONObject getResult() {
+    public List<Classification> getResultWithCustomers() {
+
+
+        HttpEntity response = queryAzureWS();
+
+        String retSrc = null;
+        try {
+
+            /*
+            -Kdnr
+                - Kategories
+                    - cat : count
+             */
+            JSONObject output = new JSONObject();
+
+            retSrc = EntityUtils.toString(response);
+            // parsing JSON
+            JSONObject result = new JSONObject(retSrc);
+
+            JSONArray values = result.getJSONArray("Values");
+
+
+            HashMap<Long, HashMap<String, Integer>> customers = new HashMap<>();
+
+            String kdNr = values.getJSONArray(0).get(0).toString();
+
+            for(int i = 0; i < values.length(); i++) {
+
+
+                JSONArray val = values.getJSONArray(i);
+                Long customerId = (Long)values.getJSONArray(0).get(0);
+
+                if(customers.containsKey(customerId)) {
+
+                    String label = val.get(val.length() - 1).toString();
+                    HashMap<String, Integer> catVals = customers.get(customerId);
+
+                    if(catVals.containsKey(label)) {
+                        catVals.put(label,catVals.get(label) + 1);
+                    }
+                    else {
+                        catVals.put(label,1);
+                    }
+
+                }
+                else {
+                    HashMap<String, Integer> categories = new HashMap<>();
+                    String label = val.get(val.length() - 1).toString();
+                    categories.put(label,1);
+                }
+
+
+            }
+             return null;
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+
+        return null;
+    }
+
+    @Override
+    public List<ClassificationSummary> getResult() {
+/*
+
+        HttpEntity response = queryAzureWS();
+
+        String retSrc = null;
+
+        try {
+
+        JSONObject output = new JSONObject();
+
+        retSrc = EntityUtils.toString(response);
+        // parsing JSON
+        JSONObject result = new JSONObject(retSrc);
+
+        JSONArray values = result.getJSONArray("Values");
+
+        for(int i = 0; i < values.length(); i++) {
+
+
+            JSONArray val = values.getJSONArray(i);
+
+                String label = val.get(val.length() - 1).toString();
+                HashMap<String, Integer> catVals = customers.get(customerId);
+
+                if(catVals.containsKey(label)) {
+                    catVals.put(label,catVals.get(label) + 1);
+                }
+                else {
+                    catVals.put(label,1);
+                }
+
+        }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+*/
+        return null;
+    }
+
+
+    private HttpEntity queryAzureWS() {
 
         HttpPost post;
         HttpClient client;
@@ -93,11 +203,9 @@ public class AzureService implements IMLService {
             HttpResponse authResponse = client.execute(post);
 
 
-            System.out.println(EntityUtils.toString(authResponse.getEntity()));
+           // System.out.println(EntityUtils.toString(authResponse.getEntity()));
 
-            return parseResponse(authResponse.getEntity());
-
-
+            return authResponse.getEntity();
         }
         catch (Exception e) {
 
@@ -105,7 +213,6 @@ public class AzureService implements IMLService {
 
         return null;
     }
-
 
     private JSONObject convertTransactions() {
 
@@ -214,6 +321,7 @@ public class AzureService implements IMLService {
         }
 
 
+        Classification c = new Classification();
 
         return null;
     }
