@@ -56,10 +56,10 @@
 
         function addBarChart(data){
             var arr = [];
-            arr.push(['Classification', 'Transactions']);
+            arr.push(['Classification', 'Customers']);
             for(var idx=0; idx < data.classifications.length; idx++){
                 var cl = data.classifications[idx];
-                arr.push([cl.name, cl.transactions]);
+                arr.push([cl.name, cl.customers]);
             }
 
             var data = google.visualization.arrayToDataTable(arr);
@@ -71,7 +71,7 @@
                 legend: { position: 'none' },
                 axes: {
                     x: {
-                        0: { side: 'top', label: 'Transactions'} // Top x-axis.
+                        0: { side: 'top', label: 'Customers'} // Top x-axis.
                     }
                 },
                 bars: 'horizontal' // Required for Material Bar Charts.

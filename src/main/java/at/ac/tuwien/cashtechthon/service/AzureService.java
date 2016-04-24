@@ -132,20 +132,40 @@ public class AzureService implements IMLService {
 
 
             long transactionsSum = 0;
+            ArrayList<Long> customers = new ArrayList<>();
+            long customerCount = 0;
             HashMap<String, Integer> catVals = new HashMap<String, Integer>();
+            HashMap<String, ArrayList<Long>> catCustomerCount = new HashMap<String, ArrayList<Long>>();
             for(int i = 0; i < values.length(); i++) {
+
+                Long customerId = Long.parseLong(values.getJSONArray(i).get(0).toString());
+
+                if(!customers.contains(customerId)) {
+                    customerCount++;
+                }
 
                 transactionsSum += 1;
                 JSONArray val = values.getJSONArray(i);
 
-                    String label = val.get(val.length() - 1).toString();
+                String label = val.get(val.length() - 1).toString();
 
-                    if(catVals.containsKey(label)) {
-                        catVals.put(label,catVals.get(label) + 1);
+                if(catCustomerCount.containsKey(label)) {
+                    if(!catCustomerCount.get(label).contains(customerId)) {
+                        catCustomerCount.get(label).add(customerId);
                     }
-                    else {
-                        catVals.put(label,1);
-                    }
+                }
+                else {
+                    ArrayList<Long> cats = new ArrayList<>();
+                    cats.add(customerId);
+                    catCustomerCount.put(label, cats);
+                }
+
+                if(catVals.containsKey(label)) {
+                    catVals.put(label,catVals.get(label) + 1);
+                }
+                else {
+                    catVals.put(label,1);
+                }
             }
 
             ClassificationSummary summary = new ClassificationSummary();
@@ -158,9 +178,12 @@ public class AzureService implements IMLService {
                 summaryEntry.setName(entry.getKey());
                 summaryEntry.setTransactions(entry.getValue());
                 summaryEntry.setTransactionsPercentage((double)entries.size()/(double)transactionsSum);
+                summaryEntry.setCustomers(catCustomerCount.get(entry.getKey()).size());
+                summaryEntry.setCustomersPercentage((double)catCustomerCount.get(entry.getKey()).size()/(double)customerCount);
                 entries.add(summaryEntry);
             }
 
+            summary.setCustomersTotal(customerCount);
             summary.setTransactionsTotal(transactionsSum);
             summary.setClassificationsTotal(entries.size());
             summary.setClassifications(entries);
