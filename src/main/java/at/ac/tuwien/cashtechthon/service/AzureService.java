@@ -56,20 +56,9 @@ public class AzureService implements IMLService {
         this.apiurl = url;
     }
 
-    @Override
-    public void setData(Transaction transaction) {
-        this.transactions.clear();
-        this.transactions.add(transaction);
-    }
 
     @Override
-    public void setDataSet(List<Transaction> transactions) {
-        this.transactions = transactions;
-    }
-
-
-    @Override
-    public List<Classification> getResultWithCustomers() {
+    public List<Classification> getResultWithCustomers(List<Transaction> transactions) {
 
 
         HttpEntity response = queryAzureWS();
@@ -127,7 +116,7 @@ public class AzureService implements IMLService {
     }
 
     @Override
-    public ClassificationSummary getResult() {
+    public ClassificationSummary getResult(List<Transaction> transactions) {
 
 
         HttpEntity response = queryAzureWS();
