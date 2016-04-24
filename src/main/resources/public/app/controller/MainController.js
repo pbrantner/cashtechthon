@@ -3,17 +3,17 @@
     angular
         .module('MDC')
         .controller('MainController', [
-            'mainService', '$log', '$state',
+            'mainService', '$log', '$state','$mdSidenav',
             MainController
         ]);
 
     /**
      * Manages basic information, e.g. the existing users
      */
-    function MainController(mainService, $log, $state ) {
+    function MainController(mainService, $log, $state, $mdSidenav) {
         var self = this;
 
-        self.customers        = [ ];
+        self.customers        = [];
 
         // Load all registered users
 
@@ -34,6 +34,10 @@
         self.selectUser = function(cust){
             $state.go('user',{customerId : cust.id});
         };
+
+        self.toggleList = function() {
+            $mdSidenav('left').toggle();
+        }
     }
 
 
