@@ -57,9 +57,9 @@ public class ClassificationController extends AbstractController {
 		//		imlService.getResult();
 		List<Classification> classifications;
 		if(customers.isPresent()) {
-			classifications = classificationService.getClassification(customers.get(), from, till);
+			classifications = classificationService.getClassifications(customers.get(), from, till);
 		} else {
-			classifications = classificationService.getClassification(from, till);
+			classifications = classificationService.getClassifications(from, till);
 		}
 
 		//Use format.orElse("json") for getting format
