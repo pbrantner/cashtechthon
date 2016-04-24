@@ -3,6 +3,7 @@ package at.ac.tuwien.cashtechthon.service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -54,6 +55,11 @@ public class ClassificationService implements IClassificationService {
 		LocalDateTime fromTime = LocalDateTime.of(from, LocalTime.MIN);
 		LocalDateTime tillTime = LocalDateTime.of(till, LocalTime.MAX);
 
-		return mlService.getResult(transactionDao.findByTransactionDateBetween(fromTime, tillTime));
+		List<Transaction> trans = transactionDao.findByTransactionDateBetween(fromTime, tillTime);
+		if(trans.size() < 1) {
+			return new ClassificationSummary();
+		} else {
+			return mlService.getResult(trans);
+		}
 	}
 }
