@@ -6,40 +6,32 @@
 
     Simple Profiles & Autoren
 
+- Problem: What is it, why does it matter
+
+    BIG DATA
+
+    + Kunden mit zielgerichteten Angeboten versorgen.
+    + Datenanalyselösung in eine starre Unternehmensstruktur integrieren.
+    + Überfluss an kundenbezogenen Daten verwenden. -> Kontotransaktionen
+
 - Short description
     
     Simple Profiles verarbeitet die Transaktions-Historie von Bankkunden und 
     klassifiziert mit Hilfe von Machine Learning Transaktionen, erkennt Trends über Kunden hinweg
     und weißt auf außergewöhnliche Muster innerhalb der Transaktios-Historien hin.
 
-- Problem: What is it, why does it matter
-
-    + Kunden mit zielgerichteten Angeboten versorgen.
-    + Datenanalyselösung in eine starre Unternehmensstruktur integrieren.
-    + Überfluss an kundenbezogenen Daten verwenden.
-
 - Target audience
 
-    + Kundenbetreuer
-    + Markting
+    Nicht Zielgruppen sondern Zieleinsatzgebiete
+
+    + Persönliche Beratungsgespräche
+    + Zielgerichtetes Marketing
 
 - Our design: About our machine learning and ubiquitous io
 
     + Machine learning
 
         - Transaktionen kategorisieren
-
-        - Anomalien erkennen - Abnormale Transaktionen erkennen
-
-            Intuitiv: *Wer hat in einem Zeitraum besonders viel/oft in ein Kategorie investiert*
-
-            Beispiele: Neues Auto, periodische Überweisungen auf Sparbuch
-
-        - Trends erkennen - Verwandte Transaktionen von Kunden verfolgen und bei anderen Kunden Trend identifzieren
-
-            Intuitiv: *Trends kundenübergreifend feststellen und bei Kunden in Entstehungphase erkennen*
-
-            Beispiel: Kunden die sich 
 
     + Dateneingabe
 
@@ -53,10 +45,29 @@
     + Datenselektion
 
         - Zeitraum
-        - Nach Klassifizierung, Firma und Trend
+        - Pro Kunde
 
 - Live Demo
 
-- What's done and what's to come
+- Ausblick
     
-    Zusammenfassung der vorherigen Slides mit Checklist
+    + Anomalien erkennen - Abnormale Transaktionen erkennen
+
+        Intuitiv: *Wer hat in einem Zeitraum besonders viel/oft in ein Kategorie investiert*
+
+        Beispiel: Neues Auto
+
+    + Trends erkennen - Verwandte Transaktionen von Kunden verfolgen und bei anderen Kunden Trend identifzieren
+
+        Intuitiv: *Trends kundenübergreifend feststellen und bei Kunden in Entstehungphase erkennen*
+
+        Beispiel: Kunden die sich 
+
+    + Dateneingabe
+
+        - REST
+
+    + Datenselektion
+
+        - Nach Klassifizierung, Firma und Trend
+        - Über alle Kunden

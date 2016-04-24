@@ -13,6 +13,7 @@ public class Transaction {
     @Id
     private Long id;
     private Long customerId;
+    private String company;
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime transactionDate;
     @NotNull
@@ -37,6 +38,14 @@ public class Transaction {
 	public void setCustomerId(Long customerId) {
 		this.customerId = customerId;
 	}
+
+    public String getCompany() {
+        return company;
+    }
+
+    public void setCompany(String company) {
+        this.company = company;
+    }
 
     public LocalDateTime getTransactionDate() {
         return transactionDate;

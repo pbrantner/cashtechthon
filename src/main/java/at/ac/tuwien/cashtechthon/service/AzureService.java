@@ -1,9 +1,11 @@
 package at.ac.tuwien.cashtechthon.service;
 
 import at.ac.tuwien.cashtechthon.dao.ICustomerDao;
+import at.ac.tuwien.cashtechthon.domain.Customer;
 import at.ac.tuwien.cashtechthon.domain.Transaction;
 import at.ac.tuwien.cashtechthon.dtos.Classification;
 import at.ac.tuwien.cashtechthon.dtos.ClassificationSummary;
+import at.ac.tuwien.cashtechthon.dtos.ClassificationSummaryEntry;
 import org.apache.http.HttpEntity;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
@@ -36,11 +38,13 @@ public class AzureService implements IMLService {
     private String apiurl;
     private String jsonBody;
 
-    @Autowired
+
     ICustomerDao customerDao;
 
-
-
+    @Autowired
+    public AzureService(ICustomerDao customerDao) {
+        this.customerDao = customerDao;
+    }
 
     @Override
     public void setAPIKey(String key) {
@@ -73,11 +77,6 @@ public class AzureService implements IMLService {
         String retSrc = null;
         try {
 
-            /*
-            -Kdnr
-                - Kategories
-                    - cat : count
-             */
             JSONObject output = new JSONObject();
 
             retSrc = EntityUtils.toString(response);
@@ -91,34 +90,31 @@ public class AzureService implements IMLService {
 
             String kdNr = values.getJSONArray(0).get(0).toString();
 
+
+            ArrayList<Classification> classifications = new ArrayList<>();
+
             for(int i = 0; i < values.length(); i++) {
 
+                Classification classy = new Classification();
 
                 JSONArray val = values.getJSONArray(i);
                 Long customerId = (Long)values.getJSONArray(0).get(0);
+                String label = val.get(val.length() - 1).toString();
 
-                if(customers.containsKey(customerId)) {
+                classy.setCustomerId(customerId);
 
-                    String label = val.get(val.length() - 1).toString();
-                    HashMap<String, Integer> catVals = customers.get(customerId);
+                Customer customer = customerDao.findById(customerId);
+                classy.setFirstName(customer.getFirstName());
+                classy.setLastName(customer.getLastName());
 
-                    if(catVals.containsKey(label)) {
-                        catVals.put(label,catVals.get(label) + 1);
-                    }
-                    else {
-                        catVals.put(label,1);
-                    }
-
+                if(!classy.getClassifications().contains(label)) {
+                    classy.getClassifications().add(label);
                 }
-                else {
-                    HashMap<String, Integer> categories = new HashMap<>();
-                    String label = val.get(val.length() - 1).toString();
-                    categories.put(label,1);
-                }
-
+                classifications.add(classy);
 
             }
-             return null;
+
+             return classifications;
 
 
         } catch (IOException e) {
@@ -131,8 +127,8 @@ public class AzureService implements IMLService {
     }
 
     @Override
-    public List<ClassificationSummary> getResult() {
-/*
+    public ClassificationSummary getResult() {
+
 
         HttpEntity response = queryAzureWS();
 
@@ -140,35 +136,55 @@ public class AzureService implements IMLService {
 
         try {
 
-        JSONObject output = new JSONObject();
+            JSONObject output = new JSONObject();
 
-        retSrc = EntityUtils.toString(response);
-        // parsing JSON
-        JSONObject result = new JSONObject(retSrc);
+            retSrc = EntityUtils.toString(response);
+            // parsing JSON
+            JSONObject result = new JSONObject(retSrc);
 
-        JSONArray values = result.getJSONArray("Values");
-
-        for(int i = 0; i < values.length(); i++) {
+            JSONArray values = result.getJSONArray("Values");
 
 
-            JSONArray val = values.getJSONArray(i);
+            long transactionsSum = 0;
+            HashMap<String, Integer> catVals = new HashMap<String, Integer>();
+            for(int i = 0; i < values.length(); i++) {
 
-                String label = val.get(val.length() - 1).toString();
-                HashMap<String, Integer> catVals = customers.get(customerId);
+                transactionsSum += 1;
+                JSONArray val = values.getJSONArray(i);
 
-                if(catVals.containsKey(label)) {
-                    catVals.put(label,catVals.get(label) + 1);
-                }
-                else {
-                    catVals.put(label,1);
-                }
+                    String label = val.get(val.length() - 1).toString();
 
-        }
+                    if(catVals.containsKey(label)) {
+                        catVals.put(label,catVals.get(label) + 1);
+                    }
+                    else {
+                        catVals.put(label,1);
+                    }
+            }
+
+            ClassificationSummary summary = new ClassificationSummary();
+
+            ArrayList<ClassificationSummaryEntry> entries = new ArrayList<ClassificationSummaryEntry>();
+
+            for(Map.Entry<String, Integer> entry : catVals.entrySet()) {
+
+                ClassificationSummaryEntry summaryEntry = new ClassificationSummaryEntry();
+                summaryEntry.setName(entry.getKey());
+                summaryEntry.setTransactions(entry.getValue());
+                summaryEntry.setTransactionsPercentage(entries.size()/(double)transactionsSum);
+                entries.add(summaryEntry);
+            }
+
+            summary.setTransactionsTotal(transactionsSum);
+            summary.setClassificationsTotal(entries.size());
+            summary.setClassifications(entries);
+
+            return summary;
 
         } catch (IOException e) {
             e.printStackTrace();
         }
-*/
+
         return null;
     }
 
@@ -268,17 +284,13 @@ public class AzureService implements IMLService {
         return null;
     }
 
+    /*
     private JSONObject parseResponse(HttpEntity response) {
 
 
         String retSrc = null;
         try {
 
-            /*
-            -Kdnr
-                - Kategories
-                    - cat : count
-             */
             JSONObject output = new JSONObject();
 
             retSrc = EntityUtils.toString(response);
@@ -325,5 +337,6 @@ public class AzureService implements IMLService {
 
         return null;
     }
+        */
 
 }
