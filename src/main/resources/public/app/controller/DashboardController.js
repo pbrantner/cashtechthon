@@ -16,8 +16,10 @@
         self.statistics        = { };
         self.common = commonService;
 
+        var f = commonService.from.toISOString().slice(0,10);
+        var t = commonService.till.toISOString().slice(0,10);
         dashboardService
-            .loadStatistics()
+            .loadStatistics(f, t)
             .then( function( statistics ) {
                 self.statistics    = statistics.data;
                 addHistogram();
