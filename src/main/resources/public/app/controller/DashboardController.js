@@ -3,17 +3,18 @@
     angular
         .module('MDC')
         .controller('DashboardController', [
-            'dashboardService', '$log', '$state',
+            'dashboardService', 'commonService', '$log', '$state',
             DashboardController
         ]);
 
     /**
      * Manages basic information, e.g. the existing users
      */
-    function DashboardController(dashboardService, $log, $state ) {
+    function DashboardController(dashboardService, commonService, $log, $state ) {
         var self = this;
 
         self.statistics        = { };
+        self.common = commonService;
 
         dashboardService
             .loadStatistics()
