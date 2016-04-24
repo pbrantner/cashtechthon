@@ -157,7 +157,7 @@ public class AzureService implements IMLService {
                 ClassificationSummaryEntry summaryEntry = new ClassificationSummaryEntry();
                 summaryEntry.setName(entry.getKey());
                 summaryEntry.setTransactions(entry.getValue());
-                summaryEntry.setTransactionsPercentage(entries.size()/(double)transactionsSum);
+                summaryEntry.setTransactionsPercentage((double)entries.size()/(double)transactionsSum);
                 entries.add(summaryEntry);
             }
 
