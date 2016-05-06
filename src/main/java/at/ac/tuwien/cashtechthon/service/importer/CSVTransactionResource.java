@@ -42,16 +42,18 @@ public class CSVTransactionResource implements Iterator<Transaction>{
 		Long transactionId = Long.parseLong(record.get(0));
 		Long customerId = Long.parseLong(record.get(1));
 		LocalDateTime timestamp = LocalDateTime.parse(record.get(4), DateTimeFormatter.ISO_DATE_TIME);
-		Direction direction = Direction.valueOf(record.get(5));
-		String iban = record.get(6);
-		String description = record.get(7);
-		BigDecimal amount = new BigDecimal(record.get(8));
-		Currency currency = Currency.valueOf(record.get(9));
+		String company = record.get(5);
+		Direction direction = Direction.valueOf(record.get(6));
+		String iban = record.get(7);
+		String description = record.get(8);
+		BigDecimal amount = new BigDecimal(record.get(9));
+		Currency currency = Currency.valueOf(record.get(10));
 		
 		Transaction transaction = new Transaction();
 		transaction.setId(transactionId);
 		transaction.setCustomerId(customerId);
 		transaction.setTransactionDate(timestamp);
+		transaction.setCompany(company);
 		transaction.setDirection(direction);
 		transaction.setIban(iban);
 		transaction.setDescription(description);
