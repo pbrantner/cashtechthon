@@ -1,5 +1,6 @@
 package at.ac.tuwien.cashtechthon.controller;
 
+import at.ac.tuwien.cashtechthon.domain.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -26,6 +27,12 @@ public class TransactionController extends AbstractRestController {
 								 ITransactionDao transactionDao) {
 		this.transactionService = transactionService;
 		this.transactionDao = transactionDao;
+	}
+
+	@RequestMapping(path="/single", method=RequestMethod.POST)
+	public ResponseEntity<?> importTransaction(@RequestBody Transaction transaction) {
+		//TODO: implement
+		return new ResponseEntity<>(HttpStatus.CREATED);
 	}
 
 	@RequestMapping(method=RequestMethod.POST, consumes=MediaType.APPLICATION_JSON_VALUE)
