@@ -1,7 +1,27 @@
 <div>
     <div>
+        <form name="reportForm">
+            <div layout-gt-xs="row">
+                <md-input-container class="md-block" flex-gt-sm="">
+                    <label>Transactions from Customer</label>
+                    <md-select ng-model="report.customer">
+                        <md-option ng-repeat="cust in ctrl.customers" value="{{cust.customerId}}">
+                            {{cust.name}}
+                        </md-option>
+                    </md-select>
+                </md-input-container>
+                <md-input-container class="md-block" flex-gt-sm="">
+                    <label>Age</label>
+                    <input ng-model="report.age" type="number" step="1">
+                </md-input-container>
+                <md-input-container class="md-block" flex-gt-sm="">
+                    <label>Income</label>
+                    <input ng-model="report.income" type="number">
+                </md-input-container>
+            </div>
+        </form>
     </div>
-
+    <md-divider></md-divider>
     <div flex>
     </div>
 </div>

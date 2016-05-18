@@ -16,6 +16,14 @@
         self.statistics        = { };
         self.common = commonService;
 
+        self.customers = self.customers || [{
+                name : "Test McTestington",
+                customerId : 123
+            },{
+                name : "Gabriel McKormick",
+                customerId : 222
+            }];
+
     }
 
 
