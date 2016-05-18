@@ -35,6 +35,10 @@
             $state.go('user',{customerId : cust.id});
         };
 
+        self.toReportPage = function(){
+            $state.go("report");
+        };
+
         self.toggleList = function() {
             $mdSidenav('left').toggle();
         }
