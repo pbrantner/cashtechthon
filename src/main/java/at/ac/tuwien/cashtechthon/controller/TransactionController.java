@@ -2,18 +2,21 @@ package at.ac.tuwien.cashtechthon.controller;
 
 import at.ac.tuwien.cashtechthon.domain.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import at.ac.tuwien.cashtechthon.dao.ITransactionDao;
 import at.ac.tuwien.cashtechthon.dtos.FileId;
 import at.ac.tuwien.cashtechthon.service.ITransactionService;
 import at.ac.tuwien.cashtechthon.service.exception.TransactionServiceException;
+
+import java.time.LocalDateTime;
+import java.time.temporal.TemporalAmount;
+import java.util.List;
 
 @RestController
 @RequestMapping("/transactions")
@@ -27,6 +30,15 @@ public class TransactionController extends AbstractRestController {
 								 ITransactionDao transactionDao) {
 		this.transactionService = transactionService;
 		this.transactionDao = transactionDao;
+	}
+
+	@RequestMapping(value = "/{customerId}", method = RequestMethod.GET)
+	public Page<Transaction> getTransactions(@PathVariable("customerId") Long customerId){
+		LocalDateTime from = LocalDateTime.now().withDayOfYear(1);
+		LocalDateTime now = LocalDateTime.now();
+		List<Transaction> list = transactionDao.findByCustomerIdAndTransactionDateBetween(customerId, from, now);
+
+		return new PageImpl<Transaction>(list);
 	}
 
 	@RequestMapping(path="/single", method=RequestMethod.POST)
