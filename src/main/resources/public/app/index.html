@@ -10,6 +10,7 @@
 
     <link rel='stylesheet' href='http://fonts.googleapis.com/css?family=Roboto:400,500,700,400italic'>
     <link rel="stylesheet" href="../lib/angular-material/angular-material.css"/>
+    <link rel="stylesheet" href="../lib/angular-material-data-table/md-data-table.css"/>
     <link rel="stylesheet" href="assets/app.css"/>
 
     <style type="text/css">
@@ -87,6 +88,7 @@
     <script src="../lib/fetch/fetch.js"></script>
 
     <script type="text/javascript" src="../lib/angular-material/angular-material.js"></script>
+    <script type="text/javascript" src="../lib/angular-material-data-table/md-data-table.js"></script>
 
 
     <script src="./module/mdc.js"></script>
@@ -109,7 +111,7 @@
 
 
           angular
-              .module('starterApp', ['ui.router','ngMaterial','MDC'])
+              .module('starterApp', ['ui.router','ngMaterial','md.data.table','MDC'])
               .config(function($mdThemingProvider, $mdIconProvider, $stateProvider, $urlRouterProvider){
 
                   $mdIconProvider
