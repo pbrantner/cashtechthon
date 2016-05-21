@@ -49,13 +49,14 @@
                     income: self.report.income
                 }
             }).then(function(resp){
-                self.drawChart(resp.data);
+                self.drawChart("piechart", resp.data.customer);
+                self.drawChart("groupPieChart", resp.data.group);
             },function(resp){
-                self.drawChart(report_dummy_data);
+                self.drawChart("piechart", report_dummy_data);
             });
         };
 
-        self.drawChart = function (data) {
+        self.drawChart = function (elmId, data) {
             var data_arr = [];
             data_arr.push(data.headers);
             data_arr = data_arr.concat(data.data);
@@ -66,7 +67,7 @@
                 title: 'Spend money per category'
             };
 
-            var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+            var chart = new google.visualization.PieChart(document.getElementById(elmId));
 
             chart.draw(data, options);
         };

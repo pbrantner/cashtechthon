@@ -4,6 +4,7 @@ import at.ac.tuwien.cashtechthon.dao.ITransactionDao;
 import at.ac.tuwien.cashtechthon.domain.Transaction;
 import at.ac.tuwien.cashtechthon.dtos.Classification;
 import at.ac.tuwien.cashtechthon.dtos.CustomerReport;
+import at.ac.tuwien.cashtechthon.dtos.ReportResponse;
 import at.ac.tuwien.cashtechthon.service.IClassificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -33,7 +34,7 @@ public class ReportController {
     }
 
     @RequestMapping(value = "/customers/{customerId}", method = RequestMethod.GET)
-    public CustomerReport getTransactions(@PathVariable("customerId") Long customerId,
+    public ReportResponse getTransactions(@PathVariable("customerId") Long customerId,
                                           @RequestParam(value = "age", required = false) Long age,
                                           @RequestParam(value = "income", required = false) BigDecimal income){
         LocalDate firstDayOfYear = LocalDate.now().withDayOfYear(1);
@@ -41,10 +42,14 @@ public class ReportController {
 
         List<Classification> classifications = classificationService.getClassifications(new Long[]{customerId}, firstDayOfYear, now);
 
-        CustomerReport report = new CustomerReport();
 
-        report.getHeaders().add("Class");
-        report.getHeaders().add("Money");
+        ReportResponse resp = new ReportResponse();
+
+        /* CUSTOMER */
+        resp.setCustomer(new CustomerReport());
+
+        resp.getCustomer().getHeaders().add("Class");
+        resp.getCustomer().getHeaders().add("Money");
 
         List<String> classList = classifications.stream().map(x -> x.getClassifications()).flatMap(l -> l.stream()).collect(Collectors.toList());
 
@@ -52,10 +57,19 @@ public class ReportController {
             Object[] d = new Object[2];
             d[0] = c;
             d[1] = 999;
-            report.getData().add(d);
+            resp.getCustomer().getData().add(d);
         });
 
+        /* GROUP */
+        resp.setGroup(new CustomerReport());
+        resp.getGroup().getHeaders().add("Class");
+        resp.getGroup().getHeaders().add("Money");
 
-        return report;
+        Object[] d = new Object[2];
+        d[0] = "FAKE";
+        d[1] = 123;
+        resp.getGroup().getData().add(d);
+
+        return resp;
     }
 }

@@ -129,3 +129,15 @@ span.name {
   font-size:1.1em;
   padding-left:5px;
 }
+
+/* report page */
+
+.piechart{
+  width: 400px;
+  height: 250px;
+  display: inline;
+}
+
+.piechart div{
+  display: inline-block;
+}
