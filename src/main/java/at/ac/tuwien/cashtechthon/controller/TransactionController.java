@@ -44,6 +44,7 @@ public class TransactionController extends AbstractRestController {
 	@RequestMapping(path="/single", method=RequestMethod.POST)
 	public ResponseEntity<?> importTransaction(@RequestBody Transaction transaction) {
 		//TODO: implement
+		transaction.setTransactionDate(LocalDateTime.now());
 		return new ResponseEntity<>(HttpStatus.CREATED);
 	}
 
