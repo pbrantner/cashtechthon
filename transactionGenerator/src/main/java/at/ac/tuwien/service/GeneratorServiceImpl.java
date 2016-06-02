@@ -36,7 +36,10 @@ public class GeneratorServiceImpl implements GeneratorService {
     public void start() throws InterruptedException {
         logger.debug("Generator started");
 
-        authService.authenticate(new LoginRequest(username, password));
+        if (!authService.authenticate(new LoginRequest(username, password))) {
+            logger.debug("Stopping GeneratorService since authentication failed");
+            return;
+        }
 
         while(true) {
             List<Classification> c = classificationGenerator.generate();
