@@ -3,6 +3,8 @@ package at.ac.tuwien.cashtechthon.controller;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.ServletException;
@@ -39,6 +41,11 @@ public class ApiController {
         return new LoginResponse(Jwts.builder().setSubject(login.username)
                 .claim("roles", userDb.get(login.username)).setIssuedAt(new Date())
                 .signWith(SignatureAlgorithm.HS256, SECRET_KEY).compact());
+    }
+
+    @RequestMapping(value = "/classification", method = RequestMethod.POST)
+    public ResponseEntity<?> sendClassifications() {
+        return new ResponseEntity<>("Classifications created", HttpStatus.CREATED);
     }
 
     private static class UserLogin {
