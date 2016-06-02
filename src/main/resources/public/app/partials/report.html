@@ -51,6 +51,10 @@
                     <label>Income</label>
                     <input ng-model="ctrl.report.income" type="number">
                 </md-input-container>
+                <md-input-container class="md-block" flex-gt-sm="">
+                    <label>Months</label>
+                    <input ng-model="ctrl.report.months" type="number">
+                </md-input-container>
             </div>
             <md-button class="md-primary" ng-click="ctrl.query();">Query</md-button>
         </form>
