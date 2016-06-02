@@ -1,6 +1,6 @@
 package at.ac.tuwien.service;
 
-import at.ac.tuwien.domain.Classification;
+import at.ac.tuwien.shared.dtos.Classification;
 import at.ac.tuwien.domain.LoginRequest;
 import at.ac.tuwien.persistence.ClassificationPersistence;
 import org.apache.log4j.Logger;
@@ -20,7 +20,7 @@ public class GeneratorServiceImpl implements GeneratorService {
     private AuthService authService;
     private String username = "patrick"; //TODO: autowire and move to properties file
     private String password = "password"; //TODO: autowire and move to properties file
-    private int interval = 5; //000; //TODO: autowire and move to properties file
+    private int interval = 5000; //TODO: autowire and move to properties file
 
     @Override
     public void start() throws InterruptedException {

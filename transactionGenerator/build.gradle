@@ -27,6 +27,7 @@ repositories {
 
 
 dependencies {
+	compile project(':shared')
 	compile('org.springframework.boot:spring-boot-starter-web')
 	compile('org.springframework.boot:spring-boot-starter-ws')
 	compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.5'

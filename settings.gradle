@@ -2,3 +2,4 @@ rootProject.name = 'cashtechthon'
 
 include 'web'
 include 'transactionGenerator'
+include 'shared'

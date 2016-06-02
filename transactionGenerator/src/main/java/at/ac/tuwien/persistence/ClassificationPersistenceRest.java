@@ -1,6 +1,6 @@
 package at.ac.tuwien.persistence;
 
-import at.ac.tuwien.domain.Classification;
+import at.ac.tuwien.shared.dtos.Classification;
 import at.ac.tuwien.service.HttpSingleton;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;

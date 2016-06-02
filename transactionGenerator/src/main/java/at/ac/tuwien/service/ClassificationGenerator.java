@@ -1,6 +1,6 @@
 package at.ac.tuwien.service;
 
-import at.ac.tuwien.domain.Classification;
+import at.ac.tuwien.shared.dtos.Classification;
 
 import java.util.List;
 

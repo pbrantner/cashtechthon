@@ -1,4 +1,4 @@
-package at.ac.tuwien.domain;
+package at.ac.tuwien.shared.dtos;
 
 public enum Gender {
     Female,

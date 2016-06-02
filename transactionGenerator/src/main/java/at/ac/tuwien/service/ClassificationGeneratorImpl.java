@@ -1,6 +1,6 @@
 package at.ac.tuwien.service;
 
-import at.ac.tuwien.domain.*;
+import at.ac.tuwien.shared.dtos.*;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
