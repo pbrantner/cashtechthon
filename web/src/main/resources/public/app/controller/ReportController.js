@@ -17,63 +17,51 @@
         self.statistics = {};
         self.common = commonService;
         self.customer = {};
+        self.customerName = "";
 
         self.report = {};
         self.report.customerId = $stateParams.customerId;
 
-        self.customers = [];
-        self.categories = [];
-        self.locations = [{id:0,name:"Wien"}];
+        self.switchEarnExp = "Expenses";
+        self.switchPieChart = ["Earnings","Expenses"];
+        self.pieChartData = null;
 
-        self.genders = [{
-            id: 0,
-            name: "undefined"
-        },{
-            id: 1,
-            name: "male"
-        },{
-            id: 2,
-            name: "female"
-        }];
+
+        self.classifications = [];
+        self.locations = ["Wien"];
+
+        self.genders = ["male","female"];
 
         CustomerService.getCustomer($stateParams.customerId)
             .then(function(resp){
                 self.customer = resp.data;
+                self.customerName = self.customer.firstName + " " + self.customer.lastName;
             },function(resp){
                 alert(resp);
             });
-
 
         self.queryLocation   = queryLocation;
         self.selectedLocationChange = selectedLocationChange;
         self.searchLocationChange = searchLocationChange;
         self.drawLineChart = drawLineChart;
 
-
-        $http.get("/customers").then(function(resp){
-            self.customers = resp.data.content;
-        },function(resp){
-
-        });
-
         $http.get("/classifications").then(function(resp){
             console.log("/classifications", resp.data);
-            self.categories = resp.data.content;
+            self.classifications = resp.data;
         },function(resp){
 
         });
 
         $http.get("/locations").then(function(resp){
-            console.log("/locations", resp.data);
-            self.categories = resp.data.content;
+            self.locations = resp.data;
         },function(resp){
 
         });
 
         self.query = function () {
-            self.loadReport();
+            self.loadPieChartData();
             $scope.getTransactions();
-            self.loadHistoryData();
+            self.loadLineChartData();
 
             ReportHistoryService.addToHistory(self.report);
         };
@@ -93,15 +81,22 @@
             return angular.extend({}, self.report);
         }
 
-        self.loadReport = function (){
-            $http.get("/reports/customers/" + self.report.customerId,{
+        self.loadPieChartData = function (){
+            $http.get("/customers/" + self.report.customerId + "/classifications/comparison",{
                 params: buildRequestParams()
             }).then(function(resp){
-                self.drawChart("piechart", resp.data.customer);
-                self.drawChart("groupPieChart", resp.data.group);
+                self.pieChartData = resp.data;
+                self.drawPieCharts();
             },function(resp){
                 self.drawChart("piechart", report_dummy_data);
             });
+        };
+
+        self.drawPieCharts = function(){
+            if(self.pieChartData !== null){
+                self.drawChart("piechart", self.pieChartData.customer[self.switchEarnExp]);
+                self.drawChart("groupPieChart", self.pieChartData.group[self.switchEarnExp]);
+            }
         };
 
         self.drawChart = function (elmId, data) {
@@ -148,7 +143,7 @@
         }
 
         $scope.getTransactions = function () {
-            $scope.promise = $http.get("/transactions/"+ self.report.customerId,{
+            $scope.promise = $http.get("/customers/"+ self.report.customerId + "/classifications",{
                 params: $scope.query
             }).then(success);
         };
@@ -184,15 +179,15 @@
          */
         function createFilterFor(query) {
             var lowercaseQuery = angular.lowercase(query);
-            return function filterFn(state) {
-                return (state.name.toLowerCase().indexOf(lowercaseQuery) === 0);
+            return function filterFn(location) {
+                return (location.toLowerCase().indexOf(lowercaseQuery) === 0);
             };
         }
 
 
         /* draw chart*/
 
-        self.loadHistoryData = function () {
+        self.loadLineChartData = function () {
             $http.get("/customers/" + self.report.customerId + "/comparison",{
                 params: buildRequestParams()
             }).then(function(resp){
