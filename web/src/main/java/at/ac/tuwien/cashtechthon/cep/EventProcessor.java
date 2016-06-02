@@ -46,11 +46,15 @@ public class EventProcessor {
 		int pastMonths = filter.getPastMonths();
 		LocalDateTime startOfMonth = LocalDateTime.now().withDayOfMonth(1).withHour(0).withHour(0).withSecond(0).withNano(0).minusMonths(pastMonths);
 		ResultListener resultListener = new ResultListener(pastMonths);
+		CustomerResultListener customerResultListener = new CustomerResultListener();
+		String customerQuery = "select from Classification c where c.customerId = " + filter.getCustomerId()
+				+ " group by c.classificationDate";
+		epAdmin.createEPL(customerQuery).addListener(customerResultListener);;
 		do {
 			LocalDateTime startOfNextMonth = startOfMonth.plusMonths(1L);
 			ChronoUnit.YEARS.between(LocalDateTime.now(), LocalDateTime.now());
 			StringBuilder query = new StringBuilder();
-			query.append("select " + startOfMonth.toString() + " as month, avg(amount) as avgAmount from Classification as c where c.classificationDate.between(")
+			query.append("select " + startOfMonth.toString() + " as month, avg(amountInEur) as avgAmount from Classification as c where c.classificationDate.between(")
 			.append(startOfMonth).append(", ").append(startOfNextMonth).append(", true, false)");
 			if(filter.getAgeFrom() != null) {
 				query.append(" and age(c.birthday) >= ").append(filter.getAgeFrom());
@@ -59,25 +63,25 @@ public class EventProcessor {
 				query.append(" and age(c.birthday) <= ").append(filter.getAgeTill());
 			}
 			if(filter.getSex() != null) {
-				query.append(" and c.sex");
-				if(filter.getSex()) {
-					query.append(" = 1");
-				} else {
-					query.append(" = 0");
-				}
+				query.append(" and c.sex = ")
+				.append(filter.getSex());
+//				if(filter.getSex()) {
+//					query.append(" = 1");
+//				} else {
+//					query.append(" = 0");
+//				}
 			}
 			if(filter.getLocations() != null && !filter.getLocations().isEmpty()) {
-				query.append(" and c.location IN (")
+				query.append(" and c.location in (")
 				.append(String.join(",", filter.getLocations()))
 				.append(")");
 			}
 			if(filter.getClassifications() != null && !filter.getClassifications().isEmpty()) {
-				query.append(" and c.classification IN (")
+				query.append(" and c.classification in (")
 				.append(String.join(",", filter.getClassifications()))
 				.append(")");
 			}
-			EPStatement statement = epAdmin.createEPL(query.toString());
-			statement.addListener(resultListener);
+			epAdmin.createEPL(query.toString()).addListener(resultListener);
 			startOfMonth = startOfNextMonth;
 		} while(startOfMonth.isBefore(LocalDateTime.now()));
 		Map<String, Double> results = resultListener.awaitResults();
@@ -142,6 +146,16 @@ public class EventProcessor {
 			}
 			return results;
 		}
+	}
+	
+	private static class CustomerResultListener implements StatementAwareUpdateListener {
+
+		@Override
+		public void update(EventBean[] newEvents, EventBean[] oldEvents, EPStatement statement, EPServiceProvider epServiceProvider) {
+			// TODO Auto-generated method stub
+			statement.destroy();
+		}
+		
 	}
 	
 	public static class AgeFunction {

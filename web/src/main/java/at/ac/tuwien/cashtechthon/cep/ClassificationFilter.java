@@ -3,6 +3,7 @@ package at.ac.tuwien.cashtechthon.cep;
 import java.util.List;
 
 public class ClassificationFilter {
+	private Long customerId;
 	private Integer pastMonths;
 	private Integer ageFrom;
 	private Integer ageTill;
@@ -11,6 +12,14 @@ public class ClassificationFilter {
 	private Double incomeTo;
 	private List<String> locations;
 	private List<String> classifications;
+	
+	public Long getCustomerId() {
+		return customerId;
+	}
+
+	public void setCustomerId(Long customerId) {
+		this.customerId = customerId;
+	}
 	
 	public Integer getPastMonths() {
 		return pastMonths;
