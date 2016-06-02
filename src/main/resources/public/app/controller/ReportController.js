@@ -146,10 +146,9 @@
         }
 
         $scope.getTransactions = function () {
-            $scope.promise = $http.get("/transactions/"+ self.report.customerId).then(success);
-
-            //$scope.promise = $q.when(transactions_data,success);
-            //$scope.promise = $nutrition.desserts.get($scope.query, success).$promise;
+            $scope.promise = $http.get("/transactions/"+ self.report.customerId,{
+                params: $scope.query
+            }).then(success);
         };
 
 
@@ -192,7 +191,7 @@
         /* draw chart*/
 
         self.loadHistoryData = function () {
-            $http.get("/reports/customers/" + self.report.customerId + "/history",{
+            $http.get("/customers/" + self.report.customerId + "/comparison",{
                 params: buildRequestParams()
             }).then(function(resp){
                 self.drawLineChart(resp.data);
