@@ -1,7 +1,7 @@
 package at.ac.tuwien.service;
 
-import at.ac.tuwien.domain.LoginRequest;
-import at.ac.tuwien.domain.TokenLoginResponse;
+import at.ac.tuwien.shared.dtos.LoginRequest;
+import at.ac.tuwien.shared.dtos.TokenLoginResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
