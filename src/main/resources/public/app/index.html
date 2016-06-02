@@ -98,6 +98,7 @@
     <script src="./service/DashboardService.js"></script>
     <script src="./controller/DashboardController.js"></script>
     <script src="./service/CustomerService.js"></script>
+    <script src="./service/ReportHistoryService.js"></script>
     <script src="./controller/CustomerController.js"></script>
     <script src="./controller/ReportController.js"></script>
 
@@ -134,7 +135,7 @@
                   $stateProvider
                           .state('dashboard', {
                               url: "/dashboard",
-                              templateUrl: "partials/dashboard.html",
+                              templateUrl: "partials/newDashboard.html",
                               controllerAs: 'ctrl',
                               controller: "DashboardController"
                           })

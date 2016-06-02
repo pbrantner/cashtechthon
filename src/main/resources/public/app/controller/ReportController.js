@@ -4,14 +4,14 @@
         .module('MDC')
         .controller('ReportController', [
             'commonService', '$log', '$state', '$scope', '$q', '$http', '$stateParams',
-            'CustomerService',
+            'CustomerService', 'ReportHistoryService',
             ReportController
         ]);
 
     /**
      * Manages basic information, e.g. the existing users
      */
-    function ReportController(commonService, $log, $state, $scope, $q, $http, $stateParams, CustomerService) {
+    function ReportController(commonService, $log, $state, $scope, $q, $http, $stateParams, CustomerService, ReportHistoryService) {
         var self = this;
 
         self.statistics = {};
@@ -74,6 +74,8 @@
             self.loadReport();
             $scope.getTransactions();
             self.loadHistoryData();
+
+            ReportHistoryService.addToHistory(self.report);
         };
 
         var report_dummy_data = {

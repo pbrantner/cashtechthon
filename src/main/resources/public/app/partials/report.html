@@ -4,7 +4,7 @@
             <div layout-gt-xs="row">
                 <md-input-container class="md-block" flex-gt-sm="">
                     <label>Transactions from Customer</label>
-                    <md-select ng-model="ctrl.report.customerId">
+                    <md-select ng-model="ctrl.report.customerId" disabled>
                         <md-option ng-repeat="cust in ctrl.customers" value="{{cust.id}}">
                             {{cust.firstName}} {{cust.lastName}}
                         </md-option>
