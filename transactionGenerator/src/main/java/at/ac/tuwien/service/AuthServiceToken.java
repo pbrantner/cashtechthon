@@ -2,6 +2,7 @@ package at.ac.tuwien.service;
 
 import at.ac.tuwien.shared.dtos.LoginRequest;
 import at.ac.tuwien.shared.dtos.TokenLoginResponse;
+import at.ac.tuwien.shared.util.PropertiesReader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -15,7 +16,9 @@ public class AuthServiceToken implements AuthService {
 
     @Override
     public void authenticate(LoginRequest request) {
-        String path = httpSingleton.getPath() + "login/api";
+        String endpoint = new PropertiesReader().getString("endpoint.login");
+        String path = httpSingleton.getPath() + endpoint;
+
         RestTemplate template = httpSingleton.getRestTemplate();
         HttpHeaders headers = httpSingleton.getHttpHeaders();
         HttpEntity<LoginRequest> entity = new HttpEntity<LoginRequest>(request, headers);

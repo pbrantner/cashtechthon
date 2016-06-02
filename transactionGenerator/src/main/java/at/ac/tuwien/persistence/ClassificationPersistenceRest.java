@@ -2,6 +2,7 @@ package at.ac.tuwien.persistence;
 
 import at.ac.tuwien.shared.dtos.Classification;
 import at.ac.tuwien.service.HttpSingleton;
+import at.ac.tuwien.shared.util.PropertiesReader;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
@@ -26,7 +27,8 @@ public class ClassificationPersistenceRest implements ClassificationPersistence 
 
     @PostConstruct
     private void init() {
-        path = httpSingleton.getPath() + "api/classification";
+        String endpoint = new PropertiesReader().getString("endpoint.classification");
+        path = httpSingleton.getPath() + endpoint;
         template = httpSingleton.getRestTemplate();
     }
 

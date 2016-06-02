@@ -1,6 +1,7 @@
 package at.ac.tuwien.service;
 
 import at.ac.tuwien.shared.dtos.*;
+import at.ac.tuwien.shared.util.PropertiesReader;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -11,12 +12,13 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 import java.util.Random;
 
 @Service
 public class ClassificationGeneratorImpl implements ClassificationGenerator {
-    private int amountOfCustomers = 100;
-    private long secondsBetweenClassifications = 2*28800L; //i.e. every 8 hours
+    private int amountOfCustomers;
+    private long secondsBetweenClassifications;
     private LocalDateTime currentDate;
     private List<String> femaleNames = new ArrayList<String>();
     private List<String> maleNames = new ArrayList<String>();
@@ -28,6 +30,10 @@ public class ClassificationGeneratorImpl implements ClassificationGenerator {
 
     @PostConstruct
     public void init() {
+        PropertiesReader pr = new PropertiesReader();
+        amountOfCustomers = pr.getInt("amountOfCustomers");
+        secondsBetweenClassifications = pr.getInt("secondsBetweenClassifications");
+
         initFemaleNames();
         initMaleNames();
         initLastNames();
