@@ -14,7 +14,7 @@
             addToHistory : function(d){
 
                 history.push(angular.extend({
-                    requestDate: new Date()
+                    requestDate: moment().format("DD.MM.YYYY HH:mm:ss")
                 }, d));
             },
             getHistory : function () {
