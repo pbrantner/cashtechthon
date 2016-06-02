@@ -125,14 +125,14 @@ Returns the percentage of each classification of customer with ```:customerid```
 
 ```javascript
 {"Expenses":
- ["Groceries":0.33
- ,"Transportation":0.2
- ,"Health":0.05
- ,"Rent":0.42
+ [["Groceries",0.33]
+ ,["Transportation",0.2]
+ ,["Health",0.05]
+ ,["Rent",0.42]
  ],
  "Earnings":
- ["Income":0.82
- ,"Subsidy":0.18
+ [["Income",0.82]
+ ,["Subsidy",0.18]
  ]
 }
 ```
@@ -175,26 +175,26 @@ Returns the classification summary for customer with ```:customerid``` and the g
 ```javascript
 {"customer":
  {"Expenses":
-  ["Groceries":0.33
-  ,"Transportation":0.2
-  ,"Health":0.05
-  ,"Rent":0.42
+  [["Groceries",0.33]
+  ,["Transportation",0.2]
+  ,["Health",0.05]
+  ,["Rent",0.42]
   ],
   "Earnings":
-  ["Income":0.82
-  ,"Subsidy":0.18
+  [["Income",0.82]
+  ,["Subsidy",0.18]
   ]
  },
  "group":
  {"Expenses":
-  ["Groceries":0.32
-  ,"Transportation":0.21
-  ,"Health":0.04
-  ,"Rent":0.46
+  [["Groceries",0.33]
+  ,["Transportation",0.2]
+  ,["Health",0.05]
+  ,["Rent",0.42]
   ],
   "Earnings":
-  ["Income":0.8
-  ,"Subsidy":0.2
+  [["Income",0.82]
+  ,["Subsidy",0.18]
   ]
  }
 }
@@ -245,6 +245,28 @@ Returns comparison between customer with ```:customerid``` and group matching gi
  ,['2015-12', 1050.23, 1802.12]
  ,['2016-01', 303.55 , 280.78 ]
  ,['2016-02', 405.20 , 480.10 ]
+ ]
+}
+```
+
+### ```GET /stats```
+
+Returns the following values:
+
++ Total amount of classifications (called transactions)
++ Total amount of customers
++ Percentage per classification
+
+#### Response
+
+```javascript
+{"totalClassifications":103305
+,"totalCustomers":1022
+,"classifications":
+ [["Groceries",0.33]
+ ,["Transportation",0.2]
+ ,["Health",0.05]
+ ,["Rent",0.42]
  ]
 }
 ```
