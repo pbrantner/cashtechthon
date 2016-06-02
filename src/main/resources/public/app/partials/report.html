@@ -18,6 +18,37 @@
                     <label>Income</label>
                     <input ng-model="ctrl.report.income" type="number">
                 </md-input-container>
+                <!--
+                <md-input-container class="md-block" flex-gt-sm="">
+                    <label>Income</label>
+                    <md-slider flex class="md-primary" md-discrete ng-model="ctrl.report.income" step="1000" min="0" max="300000" aria-label="income">
+                    </md-slider>
+                </md-input-container>
+                -->
+                <md-autocomplete flex
+                        md-selected-item="ctrl.report.location"
+                        md-search-text-change="ctrl.searchLocationChange(ctrl.searchLocation)"
+                        md-search-text="ctrl.searchLocation"
+                        md-selected-item-change="ctrl.selectedLocationChange(item)"
+                        md-items="item in ctrl.queryLocation(ctrl.searchLocation)"
+                        md-item-text="item.name"
+                        md-min-length="0"
+                        md-floating-label="Location">
+                    <md-item-template>
+                        <span md-highlight-text="ctrl.searchLocation" md-highlight-flags="^i">{{item.name}}</span>
+                    </md-item-template>
+                    <md-not-found>
+                        No location matching "{{ctrl.searchLocation}}" were found.
+                    </md-not-found>
+                </md-autocomplete>
+                <md-input-container class="md-block" flex-gt-sm="">
+                    <label>Gender</label>
+                    <md-select ng-model="ctrl.report.gender">
+                        <md-option ng-repeat="gen in ctrl.genders" value="{{gen.id}}">
+                            {{gen.name}}
+                        </md-option>
+                    </md-select>
+                </md-input-container>
             </div>
             <md-button class="md-primary" ng-click="ctrl.query();">Query</md-button>
         </form>
@@ -28,6 +59,19 @@
             <div id="piechart" class="piechart"></div>
             <div id="groupPieChart" class="piechart"></div>
         </div>
+        <div>
+            <h3>History</h3>
+            <md-input-container class="md-block" flex-gt-sm="">
+                <label>Category</label>
+                <md-select ng-model="ctrl.report.category">
+                    <md-option ng-repeat="cat in ctrl.categories" value="{{cat.id}}">
+                        {{cat.name}}
+                    </md-option>
+                </md-select>
+            </md-input-container>
+            <div id="linechart" class="linechart"></div>
+        </div>
+
         <md-divider></md-divider>
         <md-toolbar class="md-table-toolbar md-default">
             <div class="md-toolbar-tools">
