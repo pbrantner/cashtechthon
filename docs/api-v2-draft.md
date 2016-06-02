@@ -163,9 +163,6 @@ Returns the classification summary for customer with ```:customerid``` and the g
 + location (optional)
 	- **Values**: *Vienna, Graz, ...*
 	- **Description**: Limits the comparison to customers within the given location
-+ classification (optional)
-	- **Values**: *Groceries, Income, Transportation, ...*
-	- **Description**: Limits the comparison to the given classification. If this parameter is given all returned numbers must be absolute.
 
 #### Response
 
