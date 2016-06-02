@@ -27,10 +27,10 @@ public class LoginController extends AbstractController {
 
     private static final String SECRET_KEY = "secretkey";
 
-    private final Map<String, List<String>> restUserDb = new HashMap<>();
+    private final Map<String, String> restUserDb = new HashMap<>();
 
     public LoginController() {
-        restUserDb.put("user", Arrays.asList("user", "admin"));
+        restUserDb.put("user", "password");
     }
 
     /**
@@ -59,18 +59,18 @@ public class LoginController extends AbstractController {
      *
      * @param login user credentials
      * @return token if login successful
-     * @throws ServletException
      */
     @RequestMapping(value = "/api", method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity<?> login(@RequestBody final LoginRequest login) {
-        if (login.getUsername() == null || !restUserDb.containsKey(login.getUsername())) {
+        if (login.getUsername() == null || !restUserDb.containsKey(login.getUsername()) ||
+            !restUserDb.get(login.getUsername()).equals(login.getPassword())) {
             return new ResponseEntity<>("Invalid login", HttpStatus.UNAUTHORIZED);
         }
 
         TokenLoginResponse loginResponse = new TokenLoginResponse();
         loginResponse.setToken(Jwts.builder().setSubject(login.getUsername())
-                .claim("roles", restUserDb.get(login.getUsername())).setIssuedAt(new Date())
+                .claim("roles", "admin").setIssuedAt(new Date())
                 .signWith(SignatureAlgorithm.HS256, SECRET_KEY).compact());
 
         return new ResponseEntity<>(loginResponse, HttpStatus.OK);
