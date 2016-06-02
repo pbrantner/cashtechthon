@@ -22,7 +22,7 @@ public class ApiController {
     }
 
     @RequestMapping(value = "/classification", method = RequestMethod.POST)
-    public ResponseEntity<?> processClassification(String classification) {
+    public ResponseEntity<?> processClassification(@RequestBody String classification) {
         System.out.println("new classification: " + classification);
         return new ResponseEntity<>("Classifications created", HttpStatus.CREATED);
     }
