@@ -70,7 +70,7 @@ public class LoginController extends AbstractController {
 
         TokenLoginResponse loginResponse = new TokenLoginResponse();
         loginResponse.setToken(Jwts.builder().setSubject(login.getUsername())
-                .claim("roles", "admin").setIssuedAt(new Date())
+                .setIssuedAt(new Date())
                 .signWith(SignatureAlgorithm.HS256, SECRET_KEY).compact());
 
         return new ResponseEntity<>(loginResponse, HttpStatus.OK);
