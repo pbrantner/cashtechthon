@@ -3,16 +3,10 @@
 
         <md-list>
             <md-list-item class="noright">
-                <img alt="{{ person.name }}" ng-src="{{ person.img }}" class="md-avatar">
-                <p>Total Transactions: {{ctrl.statistics.transactionsTotal}}</p>
+                <p>Total Classifications: {{ctrl.statistics.totalClassifications}}</p>
             </md-list-item>
             <md-list-item class="noright">
-                <img alt="{{ person.name }}" ng-src="{{ person.img }}" class="md-avatar">
-                <p>Total Classifications: {{ctrl.statistics.classificationsTotal}}</p>
-            </md-list-item>
-            <md-list-item class="noright">
-                <img alt="{{ person.name }}" ng-src="{{ person.img }}" class="md-avatar">
-                <p>Total Customers: {{ctrl.statistics.customersTotal}}</p>
+                <p>Total Customers: {{ctrl.statistics.totalCustomers}}</p>
             </md-list-item>
         </md-list>
 
@@ -23,7 +17,9 @@
             <md-list-item class="md-3-line" ng-repeat="item in ctrl.reportHistory" ng-click="null">
                 <div class="md-list-item-text" layout="column">
                     <p class="md-body-1">{{item.requestDate}}</p>
-                    <span class="md-caption" ng-repeat="(key,val) in item">{{key}}:{{val}}</span>
+                    <span class="md-caption">
+                        <span ng-repeat="(key,val) in item">{{key}}: {{val}} <span ng-if="$last===false">, </span></span>
+                    </span>
                 </div>
                 <md-divider></md-divider>
             </md-list-item>

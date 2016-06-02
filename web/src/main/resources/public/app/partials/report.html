@@ -3,28 +3,24 @@
         <form name="reportForm">
             <div layout-gt-xs="row">
                 <md-input-container class="md-block" flex-gt-sm="">
-                    <label>Transactions from Customer</label>
-                    <md-select ng-model="ctrl.report.customerId" disabled>
-                        <md-option ng-repeat="cust in ctrl.customers" value="{{cust.id}}">
-                            {{cust.firstName}} {{cust.lastName}}
+                    <label>Customer</label>
+                    <input ng-model="ctrl.customerName" type="text" step="1" disabled>
+                </md-input-container>
+                <md-input-container class="md-block" flex-gt-sm="">
+                    <label>Sex</label>
+                    <md-select ng-model="ctrl.report.sex">
+                        <md-option ng-repeat="gen in ctrl.genders" value="{{gen}}">
+                            {{gen}}
                         </md-option>
                     </md-select>
                 </md-input-container>
                 <md-input-container class="md-block" flex-gt-sm="">
-                    <label>Gender</label>
-                    <md-select ng-model="ctrl.report.gender">
-                        <md-option ng-repeat="gen in ctrl.genders" value="{{gen.id}}">
-                            {{gen.name}}
-                        </md-option>
-                    </md-select>
+                    <label>Age from</label>
+                    <input ng-model="ctrl.report.ageFrom" type="number" step="1">
                 </md-input-container>
                 <md-input-container class="md-block" flex-gt-sm="">
-                    <label>From Age</label>
-                    <input ng-model="ctrl.report.fromAge" type="number" step="1">
-                </md-input-container>
-                <md-input-container class="md-block" flex-gt-sm="">
-                    <label>To Age</label>
-                    <input ng-model="ctrl.report.ToAge" type="number" step="1">
+                    <label>Age till</label>
+                    <input ng-model="ctrl.report.ageTill" type="number" step="1">
                 </md-input-container>
             </div>
             <div layout-gt-xs="row">
@@ -34,23 +30,27 @@
                         md-search-text="ctrl.searchLocation"
                         md-selected-item-change="ctrl.selectedLocationChange(item)"
                         md-items="item in ctrl.queryLocation(ctrl.searchLocation)"
-                        md-item-text="item.name"
+                        md-item-text="item"
                         md-min-length="0"
                         md-floating-label="Location">
                     <md-item-template>
-                        <span md-highlight-text="ctrl.searchLocation" md-highlight-flags="^i">{{item.name}}</span>
+                        <span md-highlight-text="ctrl.searchLocation" md-highlight-flags="^i">{{item}}</span>
                     </md-item-template>
                     <md-not-found>
                         No location matching "{{ctrl.searchLocation}}" were found.
                     </md-not-found>
                 </md-autocomplete>
                 <md-input-container class="md-block" flex-gt-sm="">
-                    <label>Income</label>
-                    <input ng-model="ctrl.report.income" type="number" step="100">
+                    <label>Income from</label>
+                    <input ng-model="ctrl.report.incomeFrom" type="number" step="100">
+                </md-input-container>
+                <md-input-container class="md-block" flex-gt-sm="">
+                    <label>Income till</label>
+                    <input ng-model="ctrl.report.incomeTill" type="number" step="100">
                 </md-input-container>
                 <md-input-container class="md-block" flex-gt-sm="">
                     <label>Months</label>
-                    <input ng-model="ctrl.report.months" type="number">
+                    <input ng-model="ctrl.report.pastMonths" type="number">
                 </md-input-container>
             </div>
             <md-button class="md-primary" ng-click="ctrl.query();">Query</md-button>
@@ -59,16 +59,25 @@
     <md-divider></md-divider>
     <div flex>
         <div>
+            <h3>Classifications</h3>
+            <md-input-container class="md-block" flex-gt-sm="">
+                <label>Income/Expenses</label>
+                <md-select ng-model="ctrl.switchEarnExp" ng-change="ctrl.drawPieCharts()">
+                    <md-option ng-repeat="val in ctrl.switchPieChart" value="{{val}}">
+                        {{val}}
+                    </md-option>
+                </md-select>
+            </md-input-container>
             <div id="piechart" class="piechart"></div>
             <div id="groupPieChart" class="piechart"></div>
         </div>
         <div>
-            <h3>History</h3>
+            <h3>Timeline</h3>
             <md-input-container class="md-block" flex-gt-sm="">
                 <label>Category</label>
-                <md-select ng-model="ctrl.report.category">
-                    <md-option ng-repeat="cat in ctrl.categories" value="{{cat.id}}">
-                        {{cat.name}}
+                <md-select ng-model="ctrl.report.classification">
+                    <md-option ng-repeat="cla in ctrl.classifications" value="{{cla}}">
+                        {{cla}}
                     </md-option>
                 </md-select>
             </md-input-container>
