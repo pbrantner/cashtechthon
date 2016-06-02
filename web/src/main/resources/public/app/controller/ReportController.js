@@ -198,16 +198,30 @@
         };
 
         function drawLineChart(respData){
+            console.log("drawLineChart", respData);
 
             var data = new google.visualization.DataTable();
-            data.addColumn('number', 'Day');
-            data.addColumn('number', 'Guardians of the Galaxy');
-            data.addColumn('number', 'The Avengers');
-            data.addColumn('number', 'Transformers: Age of Extinction');
 
             if(respData){
+                for(var idx=0; idx < respData.columns; idx++){
+                    var v = respData.columns[idx];
+                    if(idx===0){
+                        data.addColumn("date",v);
+                    }else{
+                        data.addColumn('number', v);
+                    }
+                }
 
+
+                for(var idx=0; idx < respData.data.length; idx++){
+                    respData.data[idx][0] = moment().unix(respData.data[idx][0])._d;
+                }
+                data.addRows(respData.data);
             }else{
+                data.addColumn('number', 'Day');
+                data.addColumn('number', 'Guardians of the Galaxy');
+                data.addColumn('number', 'The Avengers');
+                data.addColumn('number', 'Transformers: Age of Extinction');
                 data.addRows([
                     [1,  37.8, 80.8, 41.8],
                     [2,  -30.9, -69.5, -32.4],
