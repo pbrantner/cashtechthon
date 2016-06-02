@@ -3,7 +3,7 @@
     angular
         .module('MDC')
         .controller('CustomerController', [
-            'customerService', 'commonService', '$stateParams', '$log',
+            'CustomerService', 'commonService', '$stateParams', '$log',
             CustomerController
         ]);
 
@@ -11,7 +11,7 @@
     /**
      * Manages details for a specific customer
      */
-    function CustomerController(customerService, commonService, $stateParams, $log ) {
+    function CustomerController(CustomerService, commonService, $stateParams, $log ) {
         var self = this;
 
         self.customer        = { };
@@ -22,7 +22,7 @@
             var f = commonService.from.toISOString().slice(0,10);
             var t = commonService.till.toISOString().slice(0,10);
 
-            customerService
+            CustomerService
                 .getCsv(self.customerId, f, t)
                 .then( function( data ) {
                     var d = data.data;
@@ -47,7 +47,7 @@
         self.connections = [];
         self.planned = [];
 
-        customerService
+        CustomerService
             .get(self.customerId, f, t)
             .then( function( customers ) {
                 var customer = customers.data.length > 0 ? customers.data[0] : {};
@@ -58,7 +58,7 @@
                 self.customer    = customer;
             });
 
-        customerService
+        CustomerService
             .getCompanies(self.customerId)
             .then(function(comps){
                 self.companies = [].concat(comps.data.content || self.companies);

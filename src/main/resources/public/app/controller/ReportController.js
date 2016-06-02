@@ -4,17 +4,19 @@
         .module('MDC')
         .controller('ReportController', [
             'commonService', '$log', '$state', '$scope', '$q', '$http', '$stateParams',
+            'CustomerService',
             ReportController
         ]);
 
     /**
      * Manages basic information, e.g. the existing users
      */
-    function ReportController(commonService, $log, $state, $scope, $q, $http, $stateParams) {
+    function ReportController(commonService, $log, $state, $scope, $q, $http, $stateParams, CustomerService) {
         var self = this;
 
         self.statistics = {};
         self.common = commonService;
+        self.customer = {};
 
         self.report = {};
         self.report.customerId = $stateParams.customerId;
@@ -22,14 +24,9 @@
         self.customers = [];
         self.categories = [];
         self.locations = [{id:0,name:"Wien"}];
-        
-        self.queryLocation   = queryLocation;
-        self.selectedLocationChange = selectedLocationChange;
-        self.searchLocationChange = searchLocationChange;
-        self.drawLineChart = drawLineChart;
 
         self.genders = [{
-           id: 0,
+            id: 0,
             name: "undefined"
         },{
             id: 1,
@@ -38,6 +35,20 @@
             id: 2,
             name: "female"
         }];
+
+        CustomerService.getCustomer($stateParams.customerId)
+            .then(function(resp){
+                self.customer = resp.data;
+            },function(resp){
+                alert(resp);
+            });
+
+
+        self.queryLocation   = queryLocation;
+        self.selectedLocationChange = selectedLocationChange;
+        self.searchLocationChange = searchLocationChange;
+        self.drawLineChart = drawLineChart;
+
 
         $http.get("/customers").then(function(resp){
             self.customers = resp.data.content;
@@ -76,12 +87,13 @@
             ]
         };
 
+        function buildRequestParams(){
+            return angular.extend({}, self.report);
+        }
+
         self.loadReport = function (){
             $http.get("/reports/customers/" + self.report.customerId,{
-                params: {
-                    age : self.report.age,
-                    income: self.report.income
-                }
+                params: buildRequestParams()
             }).then(function(resp){
                 self.drawChart("piechart", resp.data.customer);
                 self.drawChart("groupPieChart", resp.data.group);
@@ -181,10 +193,7 @@
 
         self.loadHistoryData = function () {
             $http.get("/reports/customers/" + self.report.customerId + "/history",{
-                params: {
-                    age : self.report.age,
-                    income: self.report.income
-                }
+                params: buildRequestParams()
             }).then(function(resp){
                 self.drawLineChart(resp.data);
             },function(resp){

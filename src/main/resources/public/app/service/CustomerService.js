@@ -2,7 +2,7 @@
     'use strict';
 
     angular.module('MDC')
-        .service('customerService', ['$http', CustomerService]);
+        .service('CustomerService', ['$http', CustomerService]);
 
     /**
      * customer-Details Data Service
@@ -18,6 +18,9 @@
             getCsv: function(customerId, from, till) {
                 return $http.get('/classifications?customers=' + customerId
                     + '&from=' + from + '&till=' + till + '&format=csv');
+            },
+            getCustomer : function(customerId){
+                return $http.get("/customers/"+ customerId);
             },
             getCompanies : function(customerId){
                 return $http.get("/customers/"+customerId+"/companies");
