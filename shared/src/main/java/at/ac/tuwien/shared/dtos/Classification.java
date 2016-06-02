@@ -61,14 +61,12 @@ public class Classification {
 
     @Override
     public String toString() {
-        return "myList.add(new CustomerClassification(" + customer.getId()
-                + "L, LocalDateTime.of(" + customer.getDateOfBirth().getYear() + ", "
-                + customer.getDateOfBirth().getMonthValue() + ", " + customer.getDateOfBirth().getDayOfMonth() + ", 0, 0), \""
-                + customer.getLocation() + "\", " + (customer.getGender() == Gender.Female) + ", \"" + classification
-                + "\", " + "LocalDateTime.of(" + classificationDate.getYear() + ", " +
-                classificationDate.getMonthValue() + ", " + classificationDate.getDayOfMonth() + ", "
-                + classificationDate.getHour() + ", " + classificationDate.getMinute() + ", "
-                + classificationDate.getSecond() + "), "
-                + "Currency.getInstance(\"EUR\"), new BigDecimal(\"" + amount + "\"), new BigDecimal(\"" + amount + "\")));";
+        return "Classification{" +
+                "customer=" + customer +
+                ", currency=" + currency +
+                ", amount=" + amount +
+                ", classification='" + classification + '\'' +
+                ", classificationDate=" + classificationDate +
+                '}';
     }
 }

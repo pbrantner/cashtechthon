@@ -1,5 +1,6 @@
 package at.ac.tuwien.cashtechthon.controller;
 
+import at.ac.tuwien.shared.dtos.Classification;
 import io.jsonwebtoken.Claims;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +23,7 @@ public class ApiController {
     }
 
     @RequestMapping(value = "/classification", method = RequestMethod.POST)
-    public ResponseEntity<?> processClassification(@RequestBody String classification) {
+    public ResponseEntity<?> processClassification(@RequestBody Classification classification) {
         System.out.println("new classification: " + classification);
         return new ResponseEntity<>("Classifications created", HttpStatus.CREATED);
     }

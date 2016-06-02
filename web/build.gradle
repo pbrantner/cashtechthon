@@ -26,6 +26,7 @@ repositories {
 }
 
 dependencies {
+	compile project(':shared')
 	compile('org.springframework.boot:spring-boot-starter-data-jpa')
 	compile('org.springframework.boot:spring-boot-starter-security')
 	compile('org.springframework.boot:spring-boot-starter-thymeleaf')

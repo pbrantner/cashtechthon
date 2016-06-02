@@ -58,4 +58,15 @@ public class Customer {
         this.location = location;
     }
 
+    @Override
+    public String toString() {
+        return "Customer{" +
+                "id=" + id +
+                ", firstname='" + firstname + '\'' +
+                ", lastname='" + lastname + '\'' +
+                ", dateOfBirth=" + dateOfBirth +
+                ", gender=" + gender +
+                ", location='" + location + '\'' +
+                '}';
+    }
 }
