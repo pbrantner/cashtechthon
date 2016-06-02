@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.util.Currency;
 
 public class CustomerClassification {
+	private Long customerId;
 	private LocalDateTime birthday;
 	private String location;
 	private Boolean sex;
@@ -14,8 +15,9 @@ public class CustomerClassification {
 	private BigDecimal amount;
 	private BigDecimal amountInEur;
 
-	public CustomerClassification(LocalDateTime birthday, String location, Boolean sex, String classification,
+	public CustomerClassification(Long customerId, LocalDateTime birthday, String location, Boolean sex, String classification,
 			LocalDateTime classificationDate, Currency currency, BigDecimal amount, BigDecimal amountInEur) {
+		this.customerId = customerId;
 		this.birthday = birthday;
 		this.location = location;
 		this.sex = sex;
@@ -24,6 +26,14 @@ public class CustomerClassification {
 		this.classification = classification;
 		this.amount = amount;
 		this.amountInEur = amountInEur;
+	}
+	
+	public Long getCustomerId() {
+		return customerId;
+	}
+
+	public void setCustomerId(Long customerId) {
+		this.customerId = customerId;
 	}
 
 	public BigDecimal getAmount() {
@@ -88,7 +98,5 @@ public class CustomerClassification {
 
 	public void setAmountInEur(BigDecimal amountInEur) {
 		this.amountInEur = amountInEur;
-	}
-	
-	
+	}	
 }
