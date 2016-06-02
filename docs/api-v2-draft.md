@@ -1,23 +1,5 @@
 # API Draft V0.2
 
-### ```POST /transactions```
-
-> TODO change this to classifications
-
-Imports transactions into the database from a file.
-
-#### Request
-
-```javascript
-{"fileid":14}
-```
-
-#### Response
-
-+ **202** Import has been started
-+ **404** File with ```:fileid``` does not exist
-+ **409** File with ```:fileid``` has been already imported/is being imported
-
 ### ```GET /locations```
 
 Returns a list of all saved locations.
@@ -26,27 +8,66 @@ Returns a list of all saved locations.
 
 ```javascript
 {"locations":
- ["Wien"
+ ["Vienna"
  ,"St. Pölten"
  ,"Graz"
  ]
 }
 ```
 
-### ```GET /customers?offset=:offset&limit=:limit```
+### ```GET /classifications```
 
-> TODO change from offset and limit to Spring's Pageable
+#### Response 
 
-Returns ```:limit``` users offset by ```:offset``` ordered by most recenty imported transactions.
+```javascript
+{"classifications":
+ ["Groceries"
+ ,"Rent"
+ ,"Income"
+ ]
+}
+```
+
+### ```GET /customers/:customerid```
+
+Returns customer with ```:customerid```.
 
 #### Response
+
++ **200** Returns response
++ **404** Customer with ```:customerid``` does not exist
+
+```javascript
+{"firstname":"John"
+,"lastname":"Doe"
+,"age":21
+,"sex":0
+,"location":"Vienna"
+,"customerid":1
+ }
+```
+
+### ```GET /customers```
+
+Returns customers ordered by most recent classification.
+
+#### GET Parameters
+
++ page (optional)
+	- **Default**: 1
++ limit (optional)
+	- **Default**: 10
+
+#### Response
+
++ **200** Returns response
 
 ```javascript
 [{"firstname":"John"
  ,"lastname":"Doe"
  ,"age":21
  ,"sex":0
- ,"location":"Wien"
+ ,"location":"Vienna"
  ,"customerid":1
  }
 ,...
@@ -54,108 +75,126 @@ Returns ```:limit``` users offset by ```:offset``` ordered by most recenty impor
  ,"lastname":"Doe"
  ,"age":23
  ,"sex":1
- ,"location":"Wien"
+ ,"location":"Vienna"
  ,"customerid":100
  }
 ]
 ```
 
-### ```GET /customers/:customerid```
+### ```GET /customers/:customerid/classifications```
 
-Returns customer with :customerid
+Returns classifications of customer with ```:customerid``` ordered by transactionDateTime (newest first).
+
+#### GET Parameters
+
++ page (optional)
+	- **Default**: 1
++ limit (optional)
+	- **Default**: 10
 
 #### Response
 
 + **200** Returns response
-+ **404** Customer with :customerid does not exist
++ **404** Customer with ```:customerid``` does not exist
 
 ```javascript
-{"firstname":"John"
-,"lastname":"Doe"
-,"customerid":13
-}
-```
-
-### ```GET /classifications```
-
-> TODO return all known classifications
-
-#### GET Parameters
-
-+ age[] (optional)
-	- **Values**: *bauen, mode, sparen*
-	- **Description**: Only classifications in :include[] will be returned
-+ exclude[] (optional)
-	- **Values**: *bauen, mode*
-	- **Description**: Classifications in :exclude[] will not be returned
-+ customers[] (optional)
-	- **Values**: *123484, 860958, ...*
-	- **Description**: Only classifications for :customers[] will be returned
-+ from
-	- **Values**: *2016-04-24, 2013-01-08, ...*
-	- **Description**: Only transactions after and at :from are included
-+ till
-	- **Values**: *2016-04-30, 2013-01-20, ...*
-	- **Description**: Only transactions before and at :till are included
-+ format (optional, default: json)
-	- **Values**: *json, csv*
-	- **Description**: Sets output of response
-
-#### Request
-
-```https://lan.bank.at/mdc/classifications?include=bauen,sparen,mode&customers=948482&from=2016-04-24&till=2016-04-30```
-
-#### Response (json)
-
-```javascript
-[{"customerid":13
- ,"firstname":"John"
- ,"lastname":"Doe"
- ,"classifications":["bauen","sparen"]
+[{"currency":"EUR"
+ ,"amount":-20
+ ,"classification":"Transportation"
+ ,"transactionDateTime":"2016-04-23T18:25:43.511Z"
+ },
+ ...
+ {"currency":"EUR"
+ ,"amount":-420
+ ,"classification":"Rent"
+ ,"transactionDateTime":"2016-04-23T18:25:43.511Z"
  }
 ]
 ```
 
-#### Response (csv)
+### ```GET /customers/:customerid/classifications/summary```
 
-|customerid|firstname|lastname|classifications|
-|----------|---------|--------|---------------|
-|1         |John     |Doe     |"bauen,sparen" |
+Returns the percentage of each classification of customer with ```:customerid```.
 
-
-### ```GET /classifications/summary```
-
-#### GET Parameters
-
-+ include[] (optional)
-	- **Values**: *bauen, mode*
-	- **Description**: Only classifications in :include[] will be returned
-+ exclude[] (optional)
-	- **Values**: *bauen, mode*
-	- **Description**: Classifications in :exclude[] will not be returned
-+ from
-	- **Values**: *2016-04-24, 2013-01-08, ...*
-	- **Description**: Only transactions after and at :from are included
-+ till
-	- **Values**: *2016-04-30, 2013-01-20, ...*
-	- **Description**: Only transactions before and at :till are included
-
-#### Request
-
-```https://lan.bank.at/mdc/classifications/summary?include=bauen,sparen,mode&from=2016-04-24&till=2016-04-30```
+> Does not need to be implemented
 
 #### Response
 
++ **200** Returns response
++ **404** Customer with ```:customerid``` does not exist
+
 ```javascript
-{"transactionsTotal":10000
-,"classificationsTotal":18200
-,"customersTotal":150
-,"classifications":
- [{"name":"bauen","transactions":3200,"transactionsPercentage":0.32,"customers":54,"customersPercentage":0.36}
- ,{"name":"mode","transactions":5000,"transactionsPercentage":0.5,"customers":109,"customersPercentage":0.73}
- ,{"name":"sparen","transactions":10000,"transactionsPercentage":1,"customers":67,"customersPercentage":0.45}
+{"Expenses":
+ [["Groceries",0.33]
+ ,["Transportation",0.2]
+ ,["Health",0.05]
+ ,["Rent",0.42]
+ ],
+ "Earnings":
+ [["Income",0.82]
+ ,["Subsidy",0.18]
  ]
-]
+}
+```
+
+### ```GET /customers/:customerid/classifications/comparison```
+
+Returns the classification summary for customer with ```:customerid``` and the group matching the given ```GET Parameters```.
+
+#### Response
+
+#### GET Parameters
+
++ ageFrom (optional)
+	- **Values**: *18, 20, 25, ...*
+	- **Description**: Limits the comparision to customers who are atleast age-from old.
++ ageTill (optional)
+	- **Values**: *18, 20, 25, ...*
+	- **Description**: Limits the comparision to customers who are atmost age-till old.
++ sex (optional)
+	- **Values**: *0 or 1*
+	- **Description**: Limits the comparision to customers who are of sex.
++ incomeFrom (optional)
+	- **Values**: *15000, 20100, 70200, ...*
+	- **Description**: Limits the comparision to customers who have a min. monthly income of income-from. 
++ incomeTill (optional)
+	- **Values**: *15000, 20100, 70200, ...*
+	- **Description**: Limits the comparision to customers who have a max. monthly income of income-till.
++ location (optional)
+	- **Values**: *Vienna, Graz, ...*
+	- **Description**: Limits the comparison to customers within the given location
+
+#### Response
+
++ **200** Returns response
++ **404** Customer with ```:customerid``` does not exist
+
+```javascript
+{"customer":
+ {"Expenses":
+  [["Groceries",0.33]
+  ,["Transportation",0.2]
+  ,["Health",0.05]
+  ,["Rent",0.42]
+  ],
+  "Earnings":
+  [["Income",0.82]
+  ,["Subsidy",0.18]
+  ]
+ },
+ "group":
+ {"Expenses":
+  [["Groceries",0.33]
+  ,["Transportation",0.2]
+  ,["Health",0.05]
+  ,["Rent",0.42]
+  ],
+  "Earnings":
+  [["Income",0.82]
+  ,["Subsidy",0.18]
+  ]
+ }
+}
 ```
 
 ### ```GET /customers/:customerid/comparison```
@@ -164,45 +203,67 @@ Returns comparison between customer with ```:customerid``` and group matching gi
 
 #### GET Parameters
 
-+ past-months
++ pastMonths
 	- **Values**: *1, 2, 8, ...*
 	- **Description**: Limits the comparision from (today - past-months) till today.
-+ age-from (optional)
++ ageFrom (optional)
 	- **Values**: *18, 20, 25, ...*
 	- **Description**: Limits the comparision to customers who are atleast age-from old.
-+ age-till (optional)
++ ageTill (optional)
 	- **Values**: *18, 20, 25, ...*
 	- **Description**: Limits the comparision to customers who are atmost age-till old.
 + sex (optional)
 	- **Values**: *0 or 1*
 	- **Description**: Limits the comparision to customers who are of sex.
-+ income-from (optional)
++ incomeFrom (optional)
 	- **Values**: *15000, 20100, 70200, ...*
 	- **Description**: Limits the comparision to customers who have a min. monthly income of income-from. 
-+ income-till (optional)
++ incomeTill (optional)
 	- **Values**: *15000, 20100, 70200, ...*
 	- **Description**: Limits the comparision to customers who have a max. monthly income of income-till.
 + location (optional)
-	- **Values**: *Wien, Graz, ...*
+	- **Values**: *Vienna, Graz, ...*
 	- **Description**: Limits the comparison to customers within the given location
 + classification (optional)
-	- **Values**: *Lebensmittel, Einkommen, Transport, ...*
+	- **Values**: *Groceries, Income, Transportation, ...*
 	- **Description**: Limits the comparison to the given classification. If this parameter is given all returned numbers must be absolute.
 
 #### Response
 
 + **200** Returns response
-+ **404** Customer with :customerid does not exist
++ **404** Customer with ```:customerid``` does not exist
 
 ```javascript
 {"start":"2015-11"
 ,"end":"2016-02"
 ,"columns":['Month', 'Customer', 'Group']
 ,"data":
-	[['2015-11', 630.77 , 722.10 ]
-	,['2015-12', 1050.23, 1802.12]
-	,['2016-01', 303.55 , 280.78 ]
-	,['2016-02', 405.20 , 480.10 ]
-	]
+ [['2015-11', 630.77 , 722.10 ]
+ ,['2015-12', 1050.23, 1802.12]
+ ,['2016-01', 303.55 , 280.78 ]
+ ,['2016-02', 405.20 , 480.10 ]
+ ]
+}
+```
+
+### ```GET /stats```
+
+Returns the following values:
+
++ Total amount of classifications (called transactions)
++ Total amount of customers
++ Percentage per classification
+
+#### Response
+
+```javascript
+{"totalClassifications":103305
+,"totalCustomers":1022
+,"classifications":
+ [["Groceries",0.33]
+ ,["Transportation",0.2]
+ ,["Health",0.05]
+ ,["Rent",0.42]
+ ]
 }
 ```
