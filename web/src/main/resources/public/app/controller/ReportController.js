@@ -46,14 +46,14 @@
         self.drawLineChart = drawLineChart;
 
         $http.get("/classifications").then(function(resp){
-            console.log("/classifications", resp.data.classifications);
-            self.classifications = resp.data.classifications;
+            console.log("/classifications", resp.data);
+            self.classifications = resp.data;
         },function(resp){
 
         });
 
         $http.get("/locations").then(function(resp){
-            self.locations = resp.data.locations;
+            self.locations = resp.data;
         },function(resp){
 
         });
