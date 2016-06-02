@@ -35,9 +35,6 @@
       </md-button>
       <h1 class="app-name">Simple Profiles</h1>
         <span flex></span>
-        <md-button ng-click="ul.toReportPage();">
-            Report
-        </md-button>
         <md-button>
             <md-icon md-svg-icon="./assets/svg/avatar-1.svg" style="height:64px; width: 64px" class="avatar"></md-icon>
         </md-button>
@@ -101,12 +98,13 @@
     <script src="./service/DashboardService.js"></script>
     <script src="./controller/DashboardController.js"></script>
     <script src="./service/CustomerService.js"></script>
+    <script src="./service/ReportHistoryService.js"></script>
     <script src="./controller/CustomerController.js"></script>
     <script src="./controller/ReportController.js"></script>
 
     <script type="text/javascript">
 
-        google.charts.load("current", {packages:["corechart","bar", "gantt"]});
+        google.charts.load("current", {packages:["corechart","bar", "gantt", "line"]});
         google.charts.setOnLoadCallback(function() {
             angular.bootstrap(document.body, ['starterApp']);
         });
@@ -137,10 +135,17 @@
                   $stateProvider
                           .state('dashboard', {
                               url: "/dashboard",
-                              templateUrl: "partials/dashboard.html",
+                              templateUrl: "partials/newDashboard.html",
                               controllerAs: 'ctrl',
                               controller: "DashboardController"
                           })
+                          .state('user', {
+                              url: "/user/:customerId",
+                              templateUrl: "partials/report.html",
+                              controllerAs: 'ctrl',
+                              controller: "ReportController"
+                          })
+                          /*
                           .state('user', {
                               url: "/user/:customerId",
                               templateUrl: "partials/user.html",
@@ -153,6 +158,7 @@
                               controllerAs: "ctrl",
                               controller: "ReportController"
                           })
+                          */
                           .state('state2.list', {
                               url: "/list",
                               templateUrl: "partials/state2.list.html",

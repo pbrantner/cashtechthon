@@ -18,7 +18,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public FilterRegistrationBean jwtFilter() {
         final FilterRegistrationBean registrationBean = new FilterRegistrationBean();
         registrationBean.setFilter(new JwtFilter());
-        registrationBean.addUrlPatterns("/api/**");
+        registrationBean.addUrlPatterns("/api/*");
 
         return registrationBean;
     }
@@ -31,6 +31,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .antMatchers("/lib/**").permitAll()
                     .antMatchers("/app/assets/**").permitAll()
                     .antMatchers("/api/**").permitAll()
+                    .antMatchers("/login/api").permitAll()
                     .anyRequest().authenticated()
                     .and()
                 .formLogin()
