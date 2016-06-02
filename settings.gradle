@@ -1,0 +1,6 @@
+rootProject.name = 'cashtechthon'
+
+//include 'shop'
+//include 'uploadClient'
+include 'web'
+
