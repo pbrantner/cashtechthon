@@ -33,6 +33,7 @@ dependencies {
 	compile('org.springframework.boot:spring-boot-starter-web')
 	compile('org.apache.httpcomponents:httpclient:4.5.2')
 	compile('org.json:json:20160212')
+	compile('io.jsonwebtoken:jjwt:0.6.0')
 	//runtime('org.postgresql:postgresql')
 	compile('com.h2database:h2')
 	compile('org.apache.commons:commons-csv:1.1')
