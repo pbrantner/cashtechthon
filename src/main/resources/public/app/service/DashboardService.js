@@ -13,6 +13,9 @@
      */
     function DashboardService($http) {
         return {
+            loadStats : function(){
+                return $http.get("/stats");
+            },
             loadStatistics : function(from, till) {
                 return $http.get('/classifications/summary?from=' + from + '&till=' + till);
             },

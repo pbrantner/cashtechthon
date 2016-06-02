@@ -14,9 +14,15 @@
     function DashboardController(dashboardService, commonService, $log, $state, ReportHistoryService) {
         var self = this;
 
-        self.statistics        = { };
+        self.statistics = {};
         self.common = commonService;
         self.reportHistory = ReportHistoryService.getHistory();
+
+        dashboardService.loadStats().then(function (resp) {
+            self.statistics = resp.data;
+        },function (resp) {
+
+        });
 
         self.showDashboard = function(){
             $state.go('dashboard');
