@@ -37,6 +37,7 @@ dependencies {
 	//runtime('org.postgresql:postgresql')
 	compile('com.h2database:h2')
 	compile('org.apache.commons:commons-csv:1.1')
+	compile('com.espertech:esper:5.2.0')
 	testCompile('org.springframework.boot:spring-boot-starter-test') 
 }
 
