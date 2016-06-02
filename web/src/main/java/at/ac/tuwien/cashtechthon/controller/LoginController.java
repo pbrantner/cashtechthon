@@ -1,7 +1,11 @@
 package at.ac.tuwien.cashtechthon.controller;
 
+import at.ac.tuwien.shared.dtos.LoginRequest;
+import at.ac.tuwien.shared.dtos.TokenLoginResponse;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,11 +27,10 @@ public class LoginController extends AbstractController {
 
     private static final String SECRET_KEY = "secretkey";
 
-    private final Map<String, List<String>> userDb = new HashMap<>();
+    private final Map<String, List<String>> restUserDb = new HashMap<>();
 
     public LoginController() {
-        userDb.put("thomas", Arrays.asList("user", "admin"));
-        userDb.put("patrick", Arrays.asList("user", "admin"));
+        restUserDb.put("user", Arrays.asList("user", "admin"));
     }
 
     /**
@@ -60,33 +63,16 @@ public class LoginController extends AbstractController {
      */
     @RequestMapping(value = "/api", method = RequestMethod.POST)
     @ResponseBody
-    public LoginResponse login(@RequestBody final UserLogin login) throws ServletException {
-        if (login.username == null || !userDb.containsKey(login.username)) {
-            throw new ServletException("Invalid login");
+    public ResponseEntity<?> login(@RequestBody final LoginRequest login) {
+        if (login.getUsername() == null || !restUserDb.containsKey(login.getUsername())) {
+            return new ResponseEntity<>("Invalid login", HttpStatus.UNAUTHORIZED);
         }
 
-        LoginResponse loginResponse = new LoginResponse();
-        loginResponse.setToken(Jwts.builder().setSubject(login.username)
-                .claim("roles", userDb.get(login.username)).setIssuedAt(new Date())
+        TokenLoginResponse loginResponse = new TokenLoginResponse();
+        loginResponse.setToken(Jwts.builder().setSubject(login.getUsername())
+                .claim("roles", restUserDb.get(login.getUsername())).setIssuedAt(new Date())
                 .signWith(SignatureAlgorithm.HS256, SECRET_KEY).compact());
 
-        return loginResponse;
-    }
-
-    public static class UserLogin {
-        public String username;
-        public String password;
-    }
-
-    public static class LoginResponse {
-        public String token;
-
-        public String getToken() {
-            return token;
-        }
-
-        public void setToken(String token) {
-            this.token = token;
-        }
+        return new ResponseEntity<>(loginResponse, HttpStatus.OK);
     }
 }
