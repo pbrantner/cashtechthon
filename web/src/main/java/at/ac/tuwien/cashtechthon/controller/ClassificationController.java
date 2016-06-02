@@ -1,142 +1,20 @@
 package at.ac.tuwien.cashtechthon.controller;
 
-import java.io.IOException;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
-import javax.servlet.http.HttpServletResponse;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
-import at.ac.tuwien.cashtechthon.controller.exception.CSVGenerationException;
-import at.ac.tuwien.cashtechthon.dtos.Classification;
-import at.ac.tuwien.cashtechthon.dtos.ClassificationSummary;
-import at.ac.tuwien.cashtechthon.dtos.ClassificationSummaryEntry;
-import at.ac.tuwien.cashtechthon.service.IClassificationService;
-import at.ac.tuwien.cashtechthon.util.ConverterUtil;
+import java.util.Arrays;
+import java.util.List;
 
-@Controller
+@RestController
 @RequestMapping("/classifications")
-public class ClassificationController extends AbstractController {
+public class ClassificationController extends AbstractRestController {
 
-	private IClassificationService classificationService;
-
-	@Autowired
-	public ClassificationController(IClassificationService classificationService) {
-		this.classificationService = classificationService;
-	}
-
-	@Override
-	protected String getViewDir() {
-		return "classifications";
-	}
-
-	@RequestMapping(method=RequestMethod.GET, produces={MediaType.APPLICATION_JSON_VALUE,MediaType.TEXT_PLAIN_VALUE})
-	@ResponseBody
-	public ResponseEntity<?> getClassifications(
-			@RequestParam("include") Optional<String[]> include,
-			@RequestParam("exclude") Optional<String[]> exclude,
-			@RequestParam("customers") Optional<Long[]> customers,
-			@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-			@RequestParam("from") LocalDate from,
-			@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-			@RequestParam("till") LocalDate till,
-			@RequestParam("format") Optional<String> format,
-			HttpServletResponse response
-			) {
-
-		//		imlService.setAPIKey(Constants.API_KEY);
-		//imlService.setDataSet();
-		//		imlService.getResult();
-		List<Classification> classifications;
-		if(customers.isPresent()) {
-			classifications = classificationService.getClassifications(customers.get(), from, till);
-		} else {
-			classifications = classificationService.getClassifications(from, till);
-		}
-
-		//Use format.orElse("json") for getting format
-		String responseFormat = format.orElse("json");		
-		ResponseEntity<?> responseEntity;
-		switch(responseFormat) {
-		case "csv":
-			try {
-				response.setContentType(MediaType.TEXT_PLAIN_VALUE);
-				response.getWriter().println(ConverterUtil.convertClassficiationsToCsv(classifications));
-				response.getWriter().flush();
-				return null;
-				//responseEntity = new ResponseEntity<>(ConverterUtil.convertClassficiationsToCsv(classifications), HttpStatus.OK);
-			} catch (IOException e) {
-				throw new CSVGenerationException(e);
-			}
-		case "json":
-		default:
-			response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-			responseEntity = new ResponseEntity<>(classifications, HttpStatus.OK);
-		}
-		Classification mockClassification = new Classification();
-		mockClassification.setCustomerId(1L);
-		mockClassification.setFirstName("Max");
-		mockClassification.setLastName("Mustermann");
-		mockClassification.setClassifications(new ArrayList<String>(){{add("bauen"); add("mode");add("sparen");}});
-		// TODO remove later on
-//		classifications = new ArrayList<>();
-//		classifications.add(mockClassification);
-//		response = new ResponseEntity<>(classifications, HttpStatus.OK); 
-		return responseEntity;
-	}
-
-	@RequestMapping(path="/summary",method=RequestMethod.GET, produces=MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody ClassificationSummary getClassifiactionSummary(
-			@RequestParam("include") Optional<String[]> include,
-			@RequestParam("exclude") Optional<String[]> exclude,
-			@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-			@RequestParam("from") LocalDate from,
-			@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-			@RequestParam("till") LocalDate till) {
-
-		ClassificationSummary cs = new ClassificationSummary();
-		cs.setTransactionsTotal(1000);
-		cs.setClassificationsTotal(18200);
-		cs.setCustomersTotal(150);
-
-		ClassificationSummaryEntry cse1 = new ClassificationSummaryEntry();
-		cse1.setName("bauen");
-		cse1.setTransactions(3200);
-		cse1.setTransactionsPercentage(0.32);
-		cse1.setCustomers(54);
-		cse1.setCustomersPercentage(0.36);
-		cs.getClassifications().add(cse1);
-
-		ClassificationSummaryEntry cse2 = new ClassificationSummaryEntry();
-		cse2.setName("mode");
-		cse2.setTransactions(5000);
-		cse2.setTransactionsPercentage(0.5);
-		cse2.setCustomers(109);
-		cse2.setCustomersPercentage(0.73);
-		cs.getClassifications().add(cse2);
-
-		ClassificationSummaryEntry cse3 = new ClassificationSummaryEntry();
-		cse3.setName("sparen");
-		cse3.setTransactions(10000);
-		cse3.setTransactionsPercentage(1);
-		cse3.setCustomers(67);
-		cse3.setCustomersPercentage(0.45);
-		cs.getClassifications().add(cse3);
-		
-//		return cs;
-		
-		return classificationService.getClassificationSummary(from, till);
-	}
+    @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<String> getClassifications() {
+        //return (new Classifications()).add("Groceries").add("Transportation").add("Income");
+        return Arrays.asList("Groceries", "Transportation", "Income");
+    }
 }

@@ -7,12 +7,10 @@ Returns a list of all saved locations.
 #### Response
 
 ```javascript
-{"locations":
- ["Vienna"
- ,"St. Pölten"
- ,"Graz"
- ]
-}
+["Vienna"
+,"St. Pölten"
+,"Graz"
+]
 ```
 
 ### ```GET /classifications```
@@ -20,12 +18,10 @@ Returns a list of all saved locations.
 #### Response 
 
 ```javascript
-{"classifications":
- ["Groceries"
- ,"Rent"
- ,"Income"
- ]
-}
+["Groceries"
+,"Rent"
+,"Income"
+]
 ```
 
 ### ```GET /customers/:customerid```
