@@ -11,12 +11,16 @@
                     </md-select>
                 </md-input-container>
                 <md-input-container class="md-block" flex-gt-sm="">
-                    <label>Age</label>
-                    <input ng-model="ctrl.report.age" type="number" step="1">
+                    <label>Gender</label>
+                    <md-select ng-model="ctrl.report.gender">
+                        <md-option ng-repeat="gen in ctrl.genders" value="{{gen.id}}">
+                            {{gen.name}}
+                        </md-option>
+                    </md-select>
                 </md-input-container>
                 <md-input-container class="md-block" flex-gt-sm="">
-                    <label>Income</label>
-                    <input ng-model="ctrl.report.income" type="number">
+                    <label>Age</label>
+                    <input ng-model="ctrl.report.age" type="number" step="1">
                 </md-input-container>
                 <!--
                 <md-input-container class="md-block" flex-gt-sm="">
@@ -25,6 +29,8 @@
                     </md-slider>
                 </md-input-container>
                 -->
+            </div>
+            <div layout-gt-xs="row">
                 <md-autocomplete flex
                         md-selected-item="ctrl.report.location"
                         md-search-text-change="ctrl.searchLocationChange(ctrl.searchLocation)"
@@ -42,12 +48,8 @@
                     </md-not-found>
                 </md-autocomplete>
                 <md-input-container class="md-block" flex-gt-sm="">
-                    <label>Gender</label>
-                    <md-select ng-model="ctrl.report.gender">
-                        <md-option ng-repeat="gen in ctrl.genders" value="{{gen.id}}">
-                            {{gen.name}}
-                        </md-option>
-                    </md-select>
+                    <label>Income</label>
+                    <input ng-model="ctrl.report.income" type="number">
                 </md-input-container>
             </div>
             <md-button class="md-primary" ng-click="ctrl.query();">Query</md-button>
