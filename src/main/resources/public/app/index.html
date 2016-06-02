@@ -35,9 +35,6 @@
       </md-button>
       <h1 class="app-name">Simple Profiles</h1>
         <span flex></span>
-        <md-button ng-click="ul.toReportPage();">
-            Report
-        </md-button>
         <md-button>
             <md-icon md-svg-icon="./assets/svg/avatar-1.svg" style="height:64px; width: 64px" class="avatar"></md-icon>
         </md-button>
@@ -143,6 +140,13 @@
                           })
                           .state('user', {
                               url: "/user/:customerId",
+                              templateUrl: "partials/report.html",
+                              controllerAs: 'ctrl',
+                              controller: "ReportController"
+                          })
+                          /*
+                          .state('user', {
+                              url: "/user/:customerId",
                               templateUrl: "partials/user.html",
                               controllerAs: 'ctrl',
                               controller: "CustomerController"
@@ -153,6 +157,7 @@
                               controllerAs: "ctrl",
                               controller: "ReportController"
                           })
+                          */
                           .state('state2.list', {
                               url: "/list",
                               templateUrl: "partials/state2.list.html",

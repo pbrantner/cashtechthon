@@ -19,9 +19,40 @@
         self.report = {};
 
         self.customers = [];
+        self.categories = [];
+        self.locations = [{id:0,name:"Wien"}];
+        
+        self.queryLocation   = queryLocation;
+        self.selectedLocationChange = selectedLocationChange;
+        self.searchLocationChange = searchLocationChange;
+
+        self.genders = [{
+           id: 0,
+            name: "undefined"
+        },{
+            id: 1,
+            name: "male"
+        },{
+            id: 2,
+            name: "female"
+        }];
 
         $http.get("/customers").then(function(resp){
             self.customers = resp.data.content;
+        },function(resp){
+
+        });
+
+        $http.get("/classifications").then(function(resp){
+            console.log("/classifications", resp.data);
+            self.categories = resp.data.content;
+        },function(resp){
+
+        });
+
+        $http.get("/locations").then(function(resp){
+            console.log("/locations", resp.data);
+            self.categories = resp.data.content;
         },function(resp){
 
         });
@@ -105,6 +136,43 @@
             //$scope.promise = $q.when(transactions_data,success);
             //$scope.promise = $nutrition.desserts.get($scope.query, success).$promise;
         };
+
+
+        /* Autocomplete */
+
+        /**
+         * Search for states... use $timeout to simulate
+         * remote dataservice call.
+         */
+        function queryLocation (query) {
+            if(self.locations){
+                return query ? self.locations.filter( createFilterFor(query) ) : [];
+            }
+
+            return $http.get("/locations").then(function(resp){
+                self.locations = resp.data;
+                return query ? resp.data.filter( createFilterFor(query) ) : [];
+            }, function(resp){
+                return [];
+            });
+        }
+
+        function searchLocationChange(text) {
+            $log.info('Text changed to ' + text);
+        }
+        function selectedLocationChange(item) {
+            $log.info('Item changed to ' + JSON.stringify(item));
+        }
+        /**
+         * Create filter function for a query string
+         */
+        function createFilterFor(query) {
+            var lowercaseQuery = angular.lowercase(query);
+            return function filterFn(state) {
+                return (state.name.toLowerCase().indexOf(lowercaseQuery) === 0);
+            };
+        }
+
     }
 
 })();
