@@ -1,7 +1,7 @@
 package at.ac.tuwien.service;
 
-import at.ac.tuwien.domain.LoginRequest;
+import at.ac.tuwien.shared.dtos.LoginRequest;
 
 public interface AuthService {
-    void authenticate(LoginRequest request);
+    boolean authenticate(LoginRequest request);
 }

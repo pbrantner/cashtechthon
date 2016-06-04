@@ -1,5 +1,6 @@
 package at.ac.tuwien.service;
 
+import at.ac.tuwien.shared.util.PropertiesReader;
 import org.springframework.context.annotation.Scope;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
@@ -9,11 +10,11 @@ import org.springframework.web.client.RestTemplate;
 @Scope("singleton")
 public class HttpSingleton {
     private HttpHeaders headers;
-    //TODO: autowire and move to properties file
-    private String path = "http://localhost:8080/"; //"https://cashtechthon.herokuapp.com/";
+    private String path;
 
     public HttpSingleton() {
         headers = new HttpHeaders();
+        path = new PropertiesReader().getString("path");
     }
 
     public String getPath() {

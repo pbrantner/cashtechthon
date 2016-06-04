@@ -1,9 +1,12 @@
 package at.ac.tuwien.shared.dtos;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class ExtendedCustomer extends Customer {
+    @JsonIgnore
     private List<Classification> defaultClassifications;
 
     public ExtendedCustomer() {
