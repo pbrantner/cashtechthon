@@ -34,6 +34,7 @@ public class EventProcessor {
 		configuration.addEventType("Balance", AccountBalanceEvent.class.getName());
 		configuration.addPlugInSingleRowFunction("age", "at.ac.tuwien.cashtechthon.cep.AgeFunction", "calculateAge");
 		configuration.addPlugInSingleRowFunction("millis", "at.ac.tuwien.cashtechthon.cep.TimeFunction", "calculateMilliseconds");
+		configuration.addPlugInSingleRowFunction("isInCycle", "at.ac.tuwien.cashtechthon.cep.TimeFunction", "isInCycle");
 		configuration.addPlugInSingleRowFunction("startOfMonth", "at.ac.tuwien.cashtechthon.cep.TimeFunction", "getStartOfMonth");
 		epService = EPServiceProviderManager.getProvider("TransactionEngine", configuration);
 		epAdmin = epService.getEPAdministrator();
@@ -55,46 +56,44 @@ public class EventProcessor {
 		epService.getEPRuntime().sendEvent(event);
 	}
 
-	public Long createRelativeThreshold(Long customerId, BigDecimal thresholdInEur, String type, String direction, AlertCallback callback) {
-		return createRelativeThreshold(customerId, thresholdInEur, null, type, direction, callback);
-	}
-	
-	public Long createRelativeThreshold(Long customerId, BigDecimal thresholdInEur, String classification, String type, String direction, AlertCallback callback) {
+	public Long createRelativeThreshold(RelativeThresholdParameter parameter) {
 		StringBuilder thresholdQuery = new StringBuilder();
 		thresholdQuery.append("select * from Classification(customerId=")
-		.append(customerId)
+		.append(parameter.getCustomerId())
 		.append(").win:keepall() c")
 		.append(" where")
 		.append(" (select sum(c2.amountInEur) from Classification(customerId=")
-		.append(customerId);
-		if(classification != null) {
+		.append(parameter.getCustomerId());
+		if(parameter.getClassification() != null) {
 			thresholdQuery.append(", classification='")
-			.append(classification).append("'");
+			.append(parameter.getClassification()).append("'");
 		}
 		thresholdQuery.append(").win:keepall() c2 where millis(c2.classificationDate) > ")
 		.append(TimeFunction.calculateMilliseconds(LocalDateTime.now()));
-//		if(classification != null) {
-//			thresholdQuery.append(" and c.classification = '")
-//			.append(classification).append("'");
-//		}
-		if(direction.equals("unidirectional")) {
+		if(parameter.getDirection().equals("unidirectional")) {
 			thresholdQuery.append(" and c.amountInEur ");
-			if(type.equals("positive")) {
+			if(parameter.getType().equals("positive")) {
 				thresholdQuery.append(" > 0");
-			} else if(type.equals("negative")) {
+			} else if(parameter.getType().equals("negative")) {
 				thresholdQuery.append(" < 0");
 			} else {
-				throw new IllegalArgumentException("Don't know what to do with type " + type + " expected positive or negative");
+				throw new IllegalArgumentException("Don't know what to do with type " + parameter.getType() + " expected positive or negative");
 			}
 		}
+		if(parameter.getWindowSize() != null) {
+			Long windowSize = parameter.getWindowSize();
+			Long windowStart = TimeFunction.calculateMilliseconds(parameter.getWindowStart() != null ? parameter.getWindowStart() : LocalDateTime.now());
+			thresholdQuery.append(" and isInCycle(classificationDate, ")
+			.append(windowStart).append(", ").append(windowSize).append(")");
+		}
 		thresholdQuery.append(")");
-		if(type.equals("positive")) {
-			thresholdQuery.append(" >= ").append(thresholdInEur);
+		if(parameter.getType().equals("positive")) {
+			thresholdQuery.append(" >= ").append(parameter.getThresholdInEur());
 		} else {
-			thresholdQuery.append(" <= ").append(thresholdInEur.negate());
+			thresholdQuery.append(" <= ").append(parameter.getThresholdInEur().negate());
 		}
 		long alertId = alertCounter.incrementAndGet();
-		epAdmin.createEPL(thresholdQuery.toString()).addListener(new AlertListener(alertId, callback));
+		epAdmin.createEPL(thresholdQuery.toString()).addListener(new AlertListener(alertId, parameter.getCallback()));
 		return alertId;
 	}
 
