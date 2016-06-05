@@ -8,10 +8,6 @@ public class TimeFunction {
 		return time.toInstant(ZoneOffset.UTC).toEpochMilli();
 	}
 	
-	public static LocalDateTime getStartOfMonth(LocalDateTime time) {
-		return time.withDayOfMonth(1).withHour(0).withHour(0).withMinute(0).withSecond(0).withNano(0);
-	}
-	
 	public static long calculateWindowEnd(long windowStart, long windowSize) {
 		long windowEnd = windowStart;
 		long now = calculateMilliseconds(LocalDateTime.now());

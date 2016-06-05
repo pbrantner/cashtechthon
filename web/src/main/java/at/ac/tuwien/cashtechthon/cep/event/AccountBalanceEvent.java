@@ -8,6 +8,15 @@ public class AccountBalanceEvent {
 	private BigDecimal balanceInEur;
 	private LocalDateTime determinedAt;
 	
+	public AccountBalanceEvent() {
+	}
+	
+	public AccountBalanceEvent(Long customerId, BigDecimal balanceInEur, LocalDateTime determinedAt) {
+		this.customerId = customerId;
+		this.balanceInEur = balanceInEur;
+		this.determinedAt = determinedAt;
+	}
+	
 	public Long getCustomerId() {
 		return customerId;
 	}

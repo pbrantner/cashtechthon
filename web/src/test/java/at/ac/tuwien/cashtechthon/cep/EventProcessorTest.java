@@ -32,13 +32,13 @@ public class EventProcessorTest {
 
 	@Test
 	public void testAbsoluteThresholdWithZeroBalance() throws InterruptedException {
-		AccountBalanceEvent balanceEvent = new AccountBalanceEvent();
-		balanceEvent.setBalanceInEur(BigDecimal.ZERO);
-		balanceEvent.setCustomerId(1L);
 		LocalDateTime now = LocalDateTime.now();
-		balanceEvent.setDeterminedAt(now);
+		AccountBalanceEvent balanceEvent = new AccountBalanceEvent(1L, BigDecimal.ZERO, now);
 		CountingAlertCallback callback = new CountingAlertCallback();
-		Long alertId = eventProcessor.createAbsoluteThreshold(BigDecimal.TEN, "positive", balanceEvent, callback);
+		AbsoluteThresholdParameter parameter = AbsoluteThresholdParameter.newInstance()
+				.accountBalance(balanceEvent).thresholdInEur(BigDecimal.TEN).type("positive")
+				.callback(callback).build();
+		Long alertId = eventProcessor.createAbsoluteThreshold(parameter);
 		eventProcessor.addEvent(new ClassificationEvent(1L, "Transportation", now.plusSeconds(5L), new BigDecimal("4")));
 		eventProcessor.addEvent(new ClassificationEvent(1L, "Travel", now.plusSeconds(10L), new BigDecimal("6")));
 		assertEquals(1, callback.getNumberOfCalls(alertId));
@@ -54,13 +54,13 @@ public class EventProcessorTest {
 
 	@Test
 	public void testPositiveAbsoluteThresholdWithNonZeroBalance() {
-		AccountBalanceEvent balanceEvent = new AccountBalanceEvent();
-		balanceEvent.setBalanceInEur(new BigDecimal("5"));
-		balanceEvent.setCustomerId(1L);
 		LocalDateTime now = LocalDateTime.now();
-		balanceEvent.setDeterminedAt(now);
+		AccountBalanceEvent balanceEvent = new AccountBalanceEvent(1L, new BigDecimal("5"), now);
 		CountingAlertCallback callback = new CountingAlertCallback();
-		Long alertId = eventProcessor.createAbsoluteThreshold(BigDecimal.TEN, "positive", balanceEvent, callback);
+		AbsoluteThresholdParameter parameter = AbsoluteThresholdParameter.newInstance()
+				.accountBalance(balanceEvent).thresholdInEur(BigDecimal.TEN).type("positive")
+				.callback(callback).build();
+		Long alertId = eventProcessor.createAbsoluteThreshold(parameter);
 		assertEquals(0, callback.getNumberOfCalls(alertId));
 		eventProcessor.addEvent(new ClassificationEvent(1L, "Travel", now.plusSeconds(5L), new BigDecimal("4")));
 		assertEquals(0, callback.getNumberOfCalls(alertId));
@@ -70,13 +70,13 @@ public class EventProcessorTest {
 
 	@Test
 	public void testPositiveAbsoluteThresholdWithUpdatedBalance() {
-		AccountBalanceEvent balanceEvent = new AccountBalanceEvent();
-		balanceEvent.setBalanceInEur(BigDecimal.ZERO);
-		balanceEvent.setCustomerId(1L);
 		LocalDateTime now = LocalDateTime.now();
-		balanceEvent.setDeterminedAt(now);
+		AccountBalanceEvent balanceEvent = new AccountBalanceEvent(1L, BigDecimal.ZERO, now);
 		CountingAlertCallback callback = new CountingAlertCallback();
-		Long alertId = eventProcessor.createAbsoluteThreshold(BigDecimal.TEN, "positive", balanceEvent, callback);
+		AbsoluteThresholdParameter parameter = AbsoluteThresholdParameter.newInstance()
+				.accountBalance(balanceEvent).thresholdInEur(BigDecimal.TEN).type("positive")
+				.callback(callback).build();
+		Long alertId = eventProcessor.createAbsoluteThreshold(parameter);
 		assertEquals(0, callback.getNumberOfCalls(alertId));
 		eventProcessor.addEvent(new ClassificationEvent(1L, "Travel", now.plusSeconds(5L), new BigDecimal("11")));
 		assertEquals(1, callback.getNumberOfCalls(alertId));
@@ -84,24 +84,24 @@ public class EventProcessorTest {
 		assertEquals(2, callback.getNumberOfCalls(alertId));
 
 		// new balance event triggers alert!!!!
-		balanceEvent = new AccountBalanceEvent();
-		balanceEvent.setBalanceInEur(new BigDecimal("20"));
-		balanceEvent.setCustomerId(1L);
 		now = LocalDateTime.now();
-		balanceEvent.setDeterminedAt(now);
-		eventProcessor.createAbsoluteThreshold(BigDecimal.TEN, "positive", balanceEvent, callback);
+		balanceEvent = new AccountBalanceEvent(1L,new BigDecimal("20"), now);
+		parameter = AbsoluteThresholdParameter.newInstance()
+				.accountBalance(balanceEvent).thresholdInEur(BigDecimal.TEN).type("positive")
+				.callback(callback).build();
+		eventProcessor.createAbsoluteThreshold(parameter);
 		assertEquals(3, callback.getNumberOfCalls(alertId));
 	}
 
 	@Test
-	public void testPositiveAbsoluteThresholdWithoutClassifications() {
-		AccountBalanceEvent balanceEvent = new AccountBalanceEvent();
-		balanceEvent.setBalanceInEur(BigDecimal.TEN);
-		balanceEvent.setCustomerId(1L);
+	public void testPositiveAbsoluteThresholdWithoutEvents() {
 		LocalDateTime now = LocalDateTime.now();
-		balanceEvent.setDeterminedAt(now);
+		AccountBalanceEvent balanceEvent = new AccountBalanceEvent(1L, BigDecimal.TEN, now);
 		CountingAlertCallback callback = new CountingAlertCallback();
-		Long alertId = eventProcessor.createAbsoluteThreshold(BigDecimal.TEN, "positive", balanceEvent, callback);
+		AbsoluteThresholdParameter parameter = AbsoluteThresholdParameter.newInstance()
+				.accountBalance(balanceEvent).thresholdInEur(BigDecimal.TEN).type("positive")
+				.callback(callback).build();
+		Long alertId = eventProcessor.createAbsoluteThreshold(parameter);
 		// query cannot join balance event with classifications if there are no classifications for a customer
 		// therefore no alert is triggered even though absolute threshold would have been reached
 		assertEquals(0, callback.getNumberOfCalls(alertId));
@@ -109,13 +109,13 @@ public class EventProcessorTest {
 
 	@Test
 	public void testNegativeAbsoluteThresholdWithZeroBalance() {
-		AccountBalanceEvent balanceEvent = new AccountBalanceEvent();
-		balanceEvent.setBalanceInEur(BigDecimal.ZERO);
-		balanceEvent.setCustomerId(1L);
 		LocalDateTime now = LocalDateTime.now();
-		balanceEvent.setDeterminedAt(now);
+		AccountBalanceEvent balanceEvent = new AccountBalanceEvent(1L, BigDecimal.ZERO, now);
 		CountingAlertCallback callback = new CountingAlertCallback();
-		Long alertId = eventProcessor.createAbsoluteThreshold(BigDecimal.TEN, "negative", balanceEvent, callback);
+		AbsoluteThresholdParameter parameter = AbsoluteThresholdParameter.newInstance()
+				.accountBalance(balanceEvent).thresholdInEur(BigDecimal.TEN).type("negative")
+				.callback(callback).build();
+		Long alertId = eventProcessor.createAbsoluteThreshold(parameter);
 		eventProcessor.addEvent(new ClassificationEvent(1L, "Transportation", now.plusSeconds(5L), new BigDecimal("-4")));
 		eventProcessor.addEvent(new ClassificationEvent(1L, "Travel", now.plusSeconds(10L), new BigDecimal("-6")));
 		assertEquals(1, callback.getNumberOfCalls(alertId));
@@ -131,13 +131,13 @@ public class EventProcessorTest {
 
 	@Test
 	public void testNegativeAbsoluteThresholdWithNonZeroBalance() {
-		AccountBalanceEvent balanceEvent = new AccountBalanceEvent();
-		balanceEvent.setBalanceInEur(new BigDecimal("-5"));
-		balanceEvent.setCustomerId(1L);
 		LocalDateTime now = LocalDateTime.now();
-		balanceEvent.setDeterminedAt(now);
+		AccountBalanceEvent balanceEvent = new AccountBalanceEvent(1L, new BigDecimal(-5), now);
 		CountingAlertCallback callback = new CountingAlertCallback();
-		Long alertId = eventProcessor.createAbsoluteThreshold(BigDecimal.TEN, "negative", balanceEvent, callback);
+		AbsoluteThresholdParameter parameter = AbsoluteThresholdParameter.newInstance()
+				.accountBalance(balanceEvent).thresholdInEur(BigDecimal.TEN).type("negative")
+				.callback(callback).build();
+		Long alertId = eventProcessor.createAbsoluteThreshold(parameter);
 		assertEquals(0, callback.getNumberOfCalls(alertId));
 		eventProcessor.addEvent(new ClassificationEvent(1L, "Travel", now.plusSeconds(5L), new BigDecimal("-4")));
 		assertEquals(0, callback.getNumberOfCalls(alertId));
@@ -147,13 +147,13 @@ public class EventProcessorTest {
 
 	@Test
 	public void testNegativeAbsoluteThresholdWithUpdatedBalance() {
-		AccountBalanceEvent balanceEvent = new AccountBalanceEvent();
-		balanceEvent.setBalanceInEur(BigDecimal.ZERO);
-		balanceEvent.setCustomerId(1L);
 		LocalDateTime now = LocalDateTime.now();
-		balanceEvent.setDeterminedAt(now);
+		AccountBalanceEvent balanceEvent = new AccountBalanceEvent(1L, BigDecimal.ZERO, now);
 		CountingAlertCallback callback = new CountingAlertCallback();
-		Long alertId = eventProcessor.createAbsoluteThreshold(BigDecimal.TEN, "negative", balanceEvent, callback);
+		AbsoluteThresholdParameter parameter = AbsoluteThresholdParameter.newInstance()
+				.accountBalance(balanceEvent).thresholdInEur(BigDecimal.TEN).type("negative")
+				.callback(callback).build();
+		Long alertId = eventProcessor.createAbsoluteThreshold(parameter);
 		assertEquals(0, callback.getNumberOfCalls(alertId));
 		eventProcessor.addEvent(new ClassificationEvent(1L, "Travel", now.plusSeconds(5L), new BigDecimal("-11")));
 		assertEquals(1, callback.getNumberOfCalls(alertId));
@@ -161,24 +161,24 @@ public class EventProcessorTest {
 		assertEquals(2, callback.getNumberOfCalls(alertId));
 
 		// new balance event triggers alert!!!!
-		balanceEvent = new AccountBalanceEvent();
-		balanceEvent.setBalanceInEur(new BigDecimal("-20"));
-		balanceEvent.setCustomerId(1L);
 		now = LocalDateTime.now();
-		balanceEvent.setDeterminedAt(now);
-		eventProcessor.createAbsoluteThreshold(BigDecimal.TEN, "negative", balanceEvent, callback);
+		balanceEvent = new AccountBalanceEvent(1L, new BigDecimal("-20"), now);
+		parameter = AbsoluteThresholdParameter.newInstance()
+				.accountBalance(balanceEvent).thresholdInEur(BigDecimal.TEN).type("negative")
+				.callback(callback).build();
+		eventProcessor.createAbsoluteThreshold(parameter);
 		assertEquals(3, callback.getNumberOfCalls(alertId));
 	}
 
 	@Test
-	public void testNegativeAbsoluteThresholdWithoutClassifications() {
-		AccountBalanceEvent balanceEvent = new AccountBalanceEvent();
-		balanceEvent.setBalanceInEur(BigDecimal.TEN.negate());
-		balanceEvent.setCustomerId(1L);
+	public void testNegativeAbsoluteThresholdWithoutEvents() {
 		LocalDateTime now = LocalDateTime.now();
-		balanceEvent.setDeterminedAt(now);
+		AccountBalanceEvent balanceEvent = new AccountBalanceEvent(1L, BigDecimal.TEN.negate(), now);
 		CountingAlertCallback callback = new CountingAlertCallback();
-		Long alertId = eventProcessor.createAbsoluteThreshold(BigDecimal.TEN, "negative", balanceEvent, callback);
+		AbsoluteThresholdParameter parameter = AbsoluteThresholdParameter.newInstance()
+				.accountBalance(balanceEvent).thresholdInEur(BigDecimal.TEN).type("negative")
+				.callback(callback).build();
+		Long alertId = eventProcessor.createAbsoluteThreshold(parameter);
 		// query cannot join balance event with classifications if there are no classifications for a customer
 		// therefore no alert is triggered even though absolute threshold would have been reached
 		assertEquals(0, callback.getNumberOfCalls(alertId));
@@ -380,19 +380,20 @@ public class EventProcessorTest {
 		Thread.sleep(1_000L);
 		eventProcessor.addEvent(new ClassificationEvent(1L, "Misc", LocalDateTime.now(), new BigDecimal("-5")));
 		assertEquals(0, callback.getNumberOfCalls(alertId));
-		
+		// move to next cycle and check if only 1 alert is raised
 		Thread.sleep(5_000L);
 		eventProcessor.addEvent(new ClassificationEvent(1L, "Misc", LocalDateTime.now(), new BigDecimal("-5")));
 		eventProcessor.addEvent(new ClassificationEvent(1L, "Misc", LocalDateTime.now(), new BigDecimal("-5")));
 		assertEquals(1, callback.getNumberOfCalls(alertId));
-		
+		// move to next windows and check if next classification triggers event
 		Thread.sleep(5_000L);
 		eventProcessor.addEvent(new ClassificationEvent(1L, "Misc", LocalDateTime.now(), new BigDecimal("-5")));
 		assertEquals(1, callback.getNumberOfCalls(alertId));
+		// current window has -5 as sum, this one should trigger another alert
 		eventProcessor.addEvent(new ClassificationEvent(1L, "Misc", LocalDateTime.now(), new BigDecimal("-5")));
-		Thread.sleep(5_000L);
-		
 		assertEquals(2, callback.getNumberOfCalls(alertId));
+		// move to next window and check if one classification with exact threshold value is enough to trigger alert
+		Thread.sleep(5_000L);
 		eventProcessor.addEvent(new ClassificationEvent(1L, "Misc", LocalDateTime.now(), new BigDecimal("-10")));
 		assertEquals(3, callback.getNumberOfCalls(alertId));
 	}
@@ -405,7 +406,10 @@ public class EventProcessorTest {
 		LocalDateTime now = LocalDateTime.now();
 		balanceEvent.setDeterminedAt(now);
 		CountingAlertCallback callback = new CountingAlertCallback();
-		Long savingsAlertId1 = eventProcessor.createAbsoluteThreshold(new BigDecimal("100"), "positive", balanceEvent, callback);
+		AbsoluteThresholdParameter parameter = AbsoluteThresholdParameter.newInstance()
+				.accountBalance(balanceEvent).thresholdInEur(new BigDecimal("100")).type("positive")
+				.callback(callback).build();
+		Long savingsAlertId1 = eventProcessor.createAbsoluteThreshold(parameter);
 		eventProcessor.addEvent(new ClassificationEvent(1L, "Income", now.plusSeconds(5L), new BigDecimal("35")));
 		assertEquals(0, callback.getNumberOfCalls(savingsAlertId1));
 		balanceEvent = new AccountBalanceEvent();
@@ -413,7 +417,10 @@ public class EventProcessorTest {
 		balanceEvent.setCustomerId(1L);
 		now = LocalDateTime.now().plusSeconds(6L);
 		balanceEvent.setDeterminedAt(now);
-		Long savingsAlertId2 = eventProcessor.createAbsoluteThreshold(new BigDecimal("200"), "positive", balanceEvent, callback);
+		parameter = AbsoluteThresholdParameter.newInstance()
+				.accountBalance(balanceEvent).thresholdInEur(new BigDecimal("200")).type("positive")
+				.callback(callback).build();
+		Long savingsAlertId2 = eventProcessor.createAbsoluteThreshold(parameter);
 		assertEquals(0, callback.getNumberOfCalls(savingsAlertId1));
 		assertEquals(0, callback.getNumberOfCalls(savingsAlertId2));
 		eventProcessor.addEvent(new ClassificationEvent(1L, "Income", now.plusSeconds(10L), new BigDecimal("50")));
@@ -464,6 +471,4 @@ public class EventProcessorTest {
 			return alerts.getOrDefault(alertId, 0);
 		}
 	}
-
-	
 }
