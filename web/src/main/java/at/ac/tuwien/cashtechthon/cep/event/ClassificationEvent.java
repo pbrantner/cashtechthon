@@ -1,10 +1,10 @@
-package at.ac.tuwien.cashtechthon.cep;
+package at.ac.tuwien.cashtechthon.cep.event;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Currency;
 
-public class CustomerClassification {
+public class ClassificationEvent {
 	private Long customerId;
 	private LocalDateTime birthday;
 	private String location;
@@ -15,7 +15,14 @@ public class CustomerClassification {
 	private BigDecimal amount;
 	private BigDecimal amountInEur;
 
-	public CustomerClassification(Long customerId, LocalDateTime birthday, String location, Boolean sex, String classification,
+	public ClassificationEvent(Long customerId, String classification, LocalDateTime classificationDate, BigDecimal amountInEur) {
+		this.customerId = customerId;
+		this.classificationDate = classificationDate;
+		this.classification = classification;
+		this.amountInEur = amountInEur;
+	}
+	
+	public ClassificationEvent(Long customerId, LocalDateTime birthday, String location, Boolean sex, String classification,
 			LocalDateTime classificationDate, Currency currency, BigDecimal amount, BigDecimal amountInEur) {
 		this.customerId = customerId;
 		this.birthday = birthday;
