@@ -2,6 +2,8 @@
 
 ## Thresholds
 
+A threshold is a customer defined limit on transaction amounts which will trigger a message, called alert, if the limit is reached.
+
 Properties
 
 * A threshold can be either positive or negative.
@@ -61,23 +63,3 @@ There are two types of thresholds:
   	+ A cyclic unidirectional negative relative € 200 threshold constrained to the classification "Groceries" creates an alert if the customer spent € 200 since the start of the current cycle.
   	  	
   	  	Intuitive: Alert the customer if they spent € 200 within the current timeframe (e.g. a month, a week)
-
-## Technical Notes
-
-### Absolute Threshold
-
-#### Create
-
-1.  Neuer Threshold via REST-Schnittstelle
-2.  Speichern in DB (neue ID wird generiert)
-3.  Momentanen Kontostand aus DB ausrechnen
-4.  Kontostand an CEP 
-5.  Neue Query für Threshold erstellen mit ID aus DB
-
-#### Update
-
-1.  
-
-#### Occurence
-
-### Relative Threshold

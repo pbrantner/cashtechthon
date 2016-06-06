@@ -15,6 +15,11 @@ import at.ac.tuwien.cashtechthon.controller.exception.CustomerNotFoundException;
 import at.ac.tuwien.cashtechthon.dao.ICustomerDao;
 import at.ac.tuwien.cashtechthon.domain.Customer;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
+
 @RestController
 @RequestMapping("/customers")
 public class CustomerController extends AbstractRestController {
@@ -39,6 +44,12 @@ public class CustomerController extends AbstractRestController {
 		if(customer == null) {
 			throw new CustomerNotFoundException();
 		}
+
+		List<String> xs = new ArrayList<>();
+		List<Integer> ys = new ArrayList<>();
+
+		xs.stream().filter(c -> !ys.stream().map(d -> d.toString()).collect(Collectors.toList()).contains(c));
+
 		return customer;
 	}
 
