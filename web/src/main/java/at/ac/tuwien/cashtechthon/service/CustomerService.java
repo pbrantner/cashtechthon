@@ -1,13 +1,13 @@
 package at.ac.tuwien.cashtechthon.service;
 
-import at.ac.tuwien.cashtechthon.cep.AbsoluteThresholdParameter;
-import at.ac.tuwien.cashtechthon.cep.AlertCallback;
-import at.ac.tuwien.cashtechthon.cep.EventProcessor;
+import at.ac.tuwien.cashtechthon.cep.*;
 import at.ac.tuwien.cashtechthon.cep.event.AccountBalanceEvent;
 import at.ac.tuwien.cashtechthon.dao.ICustomerDao;
+import at.ac.tuwien.cashtechthon.dao.IEventDao;
 import at.ac.tuwien.cashtechthon.dao.IThresholdDao;
 import at.ac.tuwien.cashtechthon.domain.Customer;
 import at.ac.tuwien.cashtechthon.domain.Threshold;
+import javafx.scene.control.Alert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,13 +21,15 @@ public class CustomerService implements ICustomerService {
 
     private ICustomerDao customerDao;
     private IThresholdDao thresholdDao;
+    private IEventDao eventDao;
     private EventProcessor eventProcessor;
 
     @Autowired
     public CustomerService(ICustomerDao customerDao,
-                           IThresholdDao thresholdDao) {
+                           IThresholdDao thresholdDao, IEventDao eventDao) {
         this.customerDao = customerDao;
         this.thresholdDao = thresholdDao;
+        this.eventDao = eventDao;
 
         eventProcessor = EventProcessor.getInstance();
     }
@@ -51,36 +53,36 @@ public class CustomerService implements ICustomerService {
             Threshold threshold = thresholdDtoToThreshold(customer, thresholdDto);
             thresholdsToPersist.add(threshold);
 
-            AccountBalanceEvent accountBalanceEvent = new AccountBalanceEvent();
-            accountBalanceEvent.setCustomerId(customer.getId());
-            accountBalanceEvent.setDeterminedAt(LocalDateTime.now());
-            accountBalanceEvent.setBalanceInEur(new BigDecimal(0));
-
-            AbsoluteThresholdParameter absoluteThresholdParameter = AbsoluteThresholdParameter.newInstance().accountBalance(accountBalanceEvent).thresholdInEur(threshold.getThreshold()).type(threshold.getClassification()).callback(new AlertCallback() {
-                @Override
-                public void onAlert(Long alertId) {
-                    System.out.println("ESPER ALERT");
-                    System.out.println("ESPER ALERT");
-                    System.out.println("ESPER ALERT");
-                    System.out.println("ESPER ALERT");
-                    System.out.println("ESPER ALERT");
-                    System.out.println("ESPER ALERT");
-                    System.out.println("ESPER ALERT");
-                    System.out.println("ESPER ALERT");
-                    System.out.println("ESPER ALERT");
-                    System.out.println("ESPER ALERT");
-                    System.out.println("ESPER ALERT");
-                    System.out.println("ESPER ALERT");
-                    System.out.println("ESPER ALERT");
-                    System.out.println("ESPER ALERT");
-                    System.out.println("ESPER ALERT");
-                    System.out.println("ESPER ALERT");
-                    System.out.println("ESPER ALERT");
-                }
-            }).build();
-            EventProcessor.getInstance().createAbsoluteThreshold(absoluteThresholdParameter);
+            if (threshold.getWindowSize() == null || threshold.getWindowSize() == 0) {
+                addAbsoluteThreshold(threshold, customer);
+            } else {
+                addRelativeThreshold(threshold, customer);
+            }
         }
         thresholdDao.save(thresholdsToPersist);
+    }
+
+    private void addAbsoluteThreshold(Threshold threshold, Customer customer) {
+        AbsoluteThresholdParameter atp = AbsoluteThresholdParameter.newInstance()
+                .accountBalance(new AccountBalanceEvent(customer.getId(), new BigDecimal(0), threshold.getThresholdDate()))
+                .thresholdInEur(threshold.getThreshold())
+                .type("negative")
+                .callback(new EventPersistingCallback(threshold, customer, eventDao))
+                .build();
+    }
+
+    private void addRelativeThreshold(Threshold threshold, Customer customer) {
+        RelativeThresholdParameter rtp = RelativeThresholdParameter.newInstance()
+                .customerId(customer.getId())
+                .thresholdInEur(threshold.getThreshold())
+                .type("negative")
+                .direction("unidirectional")
+                .callback(new EventPersistingCallback(threshold, customer, eventDao))
+                .windowSize(threshold.getWindowSize())
+                .classification(threshold.getClassification())
+                .build();
+
+        eventProcessor.createRelativeThreshold(rtp);
     }
 
     private Threshold thresholdDtoToThreshold(Customer customer, at.ac.tuwien.shared.dtos.Threshold thresholdDto) {
