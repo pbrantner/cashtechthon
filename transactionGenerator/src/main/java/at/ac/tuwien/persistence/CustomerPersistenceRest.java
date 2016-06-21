@@ -39,7 +39,7 @@ public class CustomerPersistenceRest implements CustomerPersistence {
         for (Customer c : cs) {
             try {
                 HttpEntity<Customer> entity = new HttpEntity<>(c, headers);
-                ResponseEntity<Long> response = template.postForEntity(path, entity, null);
+                ResponseEntity<Long> response = template.postForEntity(path, entity, Long.class);
 
                 c.setId(response.getBody());
 
