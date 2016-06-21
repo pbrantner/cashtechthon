@@ -1,16 +1,18 @@
 package at.ac.tuwien.cashtechthon.controller;
 
 import at.ac.tuwien.cashtechthon.dao.IClassificationDao;
+import at.ac.tuwien.cashtechthon.dao.IEventDao;
 import at.ac.tuwien.cashtechthon.dao.ITransactionDao;
-import at.ac.tuwien.cashtechthon.domain.Classification;
-import at.ac.tuwien.cashtechthon.domain.Transaction;
+import at.ac.tuwien.cashtechthon.domain.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import at.ac.tuwien.cashtechthon.dtos.ComparisonResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -18,8 +20,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import at.ac.tuwien.cashtechthon.controller.exception.CustomerNotFoundException;
 import at.ac.tuwien.cashtechthon.dao.ICustomerDao;
-import at.ac.tuwien.cashtechthon.domain.Customer;
 
+import javax.annotation.PostConstruct;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -39,14 +41,17 @@ public class CustomerController extends AbstractRestController {
 	private ICustomerDao customerDao;
 	private ITransactionDao transactionDao;
 	private IClassificationDao classificationDao;
+	private IEventDao eventDao;
 
 	@Autowired
 	public CustomerController(ICustomerDao customerDao,
 							  ITransactionDao transactionDao,
-							  IClassificationDao classificationDao) {
+							  IClassificationDao classificationDao,
+							  IEventDao eventDao) {
 		this.customerDao = customerDao;
 		this.transactionDao = transactionDao;
 		this.classificationDao = classificationDao;
+		this.eventDao = eventDao;
 	}
 
 	@RequestMapping(method=RequestMethod.GET, produces=MediaType.APPLICATION_JSON_VALUE)
@@ -81,6 +86,17 @@ public class CustomerController extends AbstractRestController {
 
 		Page<Classification> classifications = classificationDao.findByCustomer(customer, pageable);
 		return classifications;
+	}
+
+	@RequestMapping(value="/{customerId}/events", method = RequestMethod.GET)
+	public List<Event> getCustomerEvents(@PathVariable("customerId") Customer customer) {
+		return eventDao.findByCustomer(customer);
+	}
+
+	@RequestMapping(value = "/events/{eventId}", method = RequestMethod.DELETE)
+	public ResponseEntity<?> deleteEvent(@PathVariable("eventId") long eventId) {
+		eventDao.delete(eventId);
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
 	@RequestMapping(value="/{customerId}/comparison", method=RequestMethod.GET, produces=MediaType.APPLICATION_JSON_VALUE)
