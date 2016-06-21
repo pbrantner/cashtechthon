@@ -1,6 +1,7 @@
 package at.ac.tuwien.cashtechthon.controller;
 
 import at.ac.tuwien.shared.dtos.Classification;
+import at.ac.tuwien.shared.dtos.Customer;
 import io.jsonwebtoken.Claims;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,12 @@ public class ApiController {
         final Claims claims = (Claims) request.getAttribute("claims");
 
         return ((List<String>) claims.get("roles")).contains(role);
+    }
+
+    @RequestMapping(value = "/customer", method = RequestMethod.POST)
+    public ResponseEntity<?> processCustomer(@RequestBody Customer customer) {
+        System.out.println("new customer: " + customer);
+        return new ResponseEntity<>("Classifications created", HttpStatus.CREATED);
     }
 
     @RequestMapping(value = "/classification", method = RequestMethod.POST)
