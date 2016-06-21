@@ -39,9 +39,9 @@ public class CustomerPersistenceRest implements CustomerPersistence {
         for (Customer c : cs) {
             try {
                 HttpEntity<Customer> entity = new HttpEntity<>(c, headers);
-                ResponseEntity<Customer> response = template.postForEntity(path, entity, null);
+                ResponseEntity<Long> response = template.postForEntity(path, entity, null);
 
-                c.setId(response.getBody().getId());
+                c.setId(response.getBody());
 
                 logger.debug("Saved customer via REST - response: " + response.getStatusCode().toString());
             } catch (HttpClientErrorException e) {
