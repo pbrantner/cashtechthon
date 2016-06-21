@@ -85,8 +85,8 @@ public class ClassificationService implements IClassificationService {
 	}
 
 	private at.ac.tuwien.cashtechthon.domain.Classification classificationDtoToClassification(at.ac.tuwien.shared.dtos.Classification classificationDto) {
-		at.ac.tuwien.cashtechthon.domain.Classification classification = new at.ac.tuwien.cashtechthon.domain.Classification();
 		Customer customer = customerDao.findOne(classificationDto.getCustomer().getId());
+		at.ac.tuwien.cashtechthon.domain.Classification classification = new at.ac.tuwien.cashtechthon.domain.Classification();
 		classification.setCustomer(customer);
 		classification.setAmount(classificationDto.getAmount());
 		classification.setClassificationDate(classificationDto.getClassificationDate());
