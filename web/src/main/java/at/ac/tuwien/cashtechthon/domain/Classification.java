@@ -31,6 +31,11 @@ public class Classification {
         classificationDate = LocalDateTime.now();
     }
 
+    public Classification(double value, Customer c, String clazz, LocalDateTime dateTime) {
+        this(value, c, clazz);
+        classificationDate = dateTime;
+    }
+
     public Long getId() {
         return id;
     }

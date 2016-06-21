@@ -7,14 +7,11 @@ import at.ac.tuwien.cashtechthon.domain.Classification;
 import at.ac.tuwien.cashtechthon.domain.Customer;
 import at.ac.tuwien.cashtechthon.domain.Event;
 import at.ac.tuwien.cashtechthon.domain.Transaction;
-import at.ac.tuwien.cashtechthon.dtos.CustomerReport;
-import at.ac.tuwien.cashtechthon.dtos.GroupedClassification;
-import at.ac.tuwien.cashtechthon.dtos.ReportResponse;
+import at.ac.tuwien.cashtechthon.dtos.*;
 import at.ac.tuwien.cashtechthon.service.IClassificationService;
 import at.ac.tuwien.shared.dtos.Gender;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import at.ac.tuwien.cashtechthon.dtos.ComparisonResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -140,7 +137,7 @@ public class CustomerController extends AbstractRestController {
 			gender = Gender.valueOf(StringUtils.capitalize(sex));
 		}
 
-		List<GroupedClassification> groupGroups = classificationDao.findClassificationsByAgeAndIncome(incomeFrom,
+		List<GroupedClassification> groupGroups = classificationDao.findClassificationsByProperties(incomeFrom,
 				incomeTo, gender, location, customerId, ageFrom, ageTill);
 		groupGroups.forEach(g -> {
 			Object[] d = new Object[2];
@@ -164,22 +161,25 @@ public class CustomerController extends AbstractRestController {
 	}
 
 	@RequestMapping(value="/{customerId}/comparison", method=RequestMethod.GET, produces=MediaType.APPLICATION_JSON_VALUE)
-	public ComparisonResponse getCustomerComparison(){
+	public ComparisonResponse getCustomerComparison(@PathVariable("customerId") Long customerId){
 		ComparisonResponse resp = new ComparisonResponse();
 		resp.setStart("2015-11"); // TODO REPLACE THIS
 		resp.setEnd("2016-02"); // TODO REPLACE THIS
 		resp.setColumns(Arrays.asList("Month", "Customer", "Group"));
 
+		List<MonthClassification> classificationsCustomer = classificationDao.findComparisonByClassificationAndCustomer("Education", customerId);
+		List<MonthClassification> classificationsGroup = classificationDao.findComparisonByClassificationAndCustomer("Trash", 4L);
+
 		// TODO REPLACE THIS
 		List<List<Object>> data = new ArrayList<>();
-		LocalDateTime date = LocalDateTime.now();
-		data.add(Arrays.asList(date.toInstant(ZoneOffset.UTC).toEpochMilli(), 630.77d, 722.1d));
-		date = date.withMonth(7);
-		data.add(Arrays.asList(date.toInstant(ZoneOffset.UTC).toEpochMilli(), 1050.23d, 1802.12d));
-		date = date.withMonth(8);
-		data.add(Arrays.asList(date.toInstant(ZoneOffset.UTC).toEpochMilli(), 303.55d , 280.78d));
-		date = date.withMonth(9);
-		data.add(Arrays.asList(date.toInstant(ZoneOffset.UTC).toEpochMilli(), 405.20d, 480.10d));
+
+		for (MonthClassification classification : classificationsCustomer) {
+			data.add(Arrays.asList(classification.getDayOfYear(), null, classification.getTotal()));
+		}
+		for (MonthClassification classification : classificationsGroup) {
+			data.add(Arrays.asList(classification.getDayOfYear(), classification.getTotal(), null));
+			//data.add(Arrays.asList(classification.getDateTime().toInstant(ZoneOffset.UTC).toEpochMilli(), classification.getTotal(), null));
+		}
 		resp.setData(data);
 
 		return resp;

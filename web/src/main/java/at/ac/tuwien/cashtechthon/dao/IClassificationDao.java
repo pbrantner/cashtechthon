@@ -3,6 +3,7 @@ package at.ac.tuwien.cashtechthon.dao;
 import at.ac.tuwien.cashtechthon.domain.Classification;
 import at.ac.tuwien.cashtechthon.domain.Customer;
 import at.ac.tuwien.cashtechthon.dtos.GroupedClassification;
+import at.ac.tuwien.cashtechthon.dtos.MonthClassification;
 import at.ac.tuwien.shared.dtos.Gender;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,6 +20,17 @@ public interface IClassificationDao extends JpaRepository<Classification, Long> 
     @Query(value = "SELECT new at.ac.tuwien.cashtechthon.dtos.GroupedClassification(cl.classification, SUM(cl.amount)) " +
                    "FROM Classification cl WHERE cl.customer.id = :customerId GROUP BY cl.classification")
     List<GroupedClassification> findClassificationsByCustomer(@Param("customerId") Long customerId);
+
+    // TODO: group by date (but not possible, bug?)
+    @Query(value = "SELECT new at.ac.tuwien.cashtechthon.dtos.MonthClassification(DAYOFYEAR(cl.classificationDate), SUM(cl.amount)) " +
+            "FROM Classification cl " +
+            "WHERE cl.customer.id = :customerId " +
+            "AND cl.classification = :classification " +
+            "GROUP BY DAYOFYEAR(cl.classificationDate) " +
+            "ORDER BY cl.classificationDate")
+            //"GROUP BY DAY(cl.classificationDate), MONTH(cl.classificationDate), YEAR(cl.classificationDate)")
+    List<MonthClassification> findComparisonByClassificationAndCustomer(@Param("classification") String classification,
+                                                                   @Param("customerId") Long customerId);
 
     /**
      * Query for comparison
@@ -41,7 +53,7 @@ public interface IClassificationDao extends JpaRepository<Classification, Long> 
             "AND (:ageTill IS NULL OR (YEAR(current_date) - YEAR(cu.dateOfBirth)) <= :ageTill)" +
             "AND cu.id <> :customerId " +
             "GROUP BY cl.classification")
-    List<GroupedClassification> findClassificationsByAgeAndIncome(@Param("incomeFrom") BigDecimal incomeFrom,
+    List<GroupedClassification> findClassificationsByProperties(@Param("incomeFrom") BigDecimal incomeFrom,
                                                                   @Param("incomeTo") BigDecimal incomeTo,
                                                                   @Param("gender") Gender gender,
                                                                   @Param("location") String location,
