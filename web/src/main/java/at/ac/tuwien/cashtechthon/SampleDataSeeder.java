@@ -1,10 +1,13 @@
 package at.ac.tuwien.cashtechthon;
 
+import at.ac.tuwien.cashtechthon.dao.IClassificationDao;
 import at.ac.tuwien.cashtechthon.dao.ICustomerDao;
 import at.ac.tuwien.cashtechthon.dao.ITransactionDao;
 import at.ac.tuwien.cashtechthon.domain.*;
+import at.ac.tuwien.cashtechthon.domain.Classification;
 import at.ac.tuwien.cashtechthon.domain.Currency;
-import at.ac.tuwien.shared.dtos.Gender;
+import at.ac.tuwien.cashtechthon.domain.Customer;
+import at.ac.tuwien.shared.dtos.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -20,6 +23,7 @@ public class SampleDataSeeder implements ApplicationListener<ContextRefreshedEve
 
     private ICustomerDao customerDao;
     private ITransactionDao transactionDao;
+    private IClassificationDao classificationDao;
 
     private Customer customerOne;
     private Customer customerTwo;
@@ -28,7 +32,8 @@ public class SampleDataSeeder implements ApplicationListener<ContextRefreshedEve
 
     @Autowired
     public SampleDataSeeder(ICustomerDao customerDao,
-                            ITransactionDao transactionDao) {
+                            ITransactionDao transactionDao,
+                            IClassificationDao classificationDao) {
         this.customerDao = customerDao;
         this.transactionDao = transactionDao;
     }
@@ -36,7 +41,8 @@ public class SampleDataSeeder implements ApplicationListener<ContextRefreshedEve
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
         createCustomers();
-        createTransactions();
+        createClassifications();
+        //createTransactions();
     }
 
     public List<Customer> createCustomers() {
@@ -72,6 +78,35 @@ public class SampleDataSeeder implements ApplicationListener<ContextRefreshedEve
         customers.add(customerFour);
 
         return customers;
+    }
+
+    public void createClassifications() {
+        List<Classification> list = new ArrayList<>();
+        list.add(new Classification(-17.322, customerOne, "Miscellaneous"));
+        list.add(new Classification(17.322, customerOne, "absoluteThresholdNegative"));
+        list.add(new Classification(-17.322, customerOne, "absoluteThresholdPositive"));
+        list.add(new Classification(200, customerOne, "absoluteThresholdPositive"));
+        list.add(new Classification(-629.58, customerOne, "Travel"));
+        list.add(new Classification(-26.016, customerOne, "Bars"));
+        list.add(new Classification(-26.045, customerOne, "Health"));
+        list.add(new Classification(-5.4043, customerOne, "Education"));
+        list.add(new Classification(-4.8511, customerOne, "Education"));
+
+        list.add(new Classification(-8.6855, customerTwo, "Groceries"));
+        list.add(new Classification(8.6855, customerTwo, "absoluteThresholdNegative"));
+        list.add(new Classification(-8.6855, customerTwo, "absoluteThresholdPositive"));
+        list.add(new Classification(-200, customerTwo, "absoluteThresholdNegative"));
+        list.add(new Classification(-26.723, customerTwo, "Cash"));
+        list.add(new Classification(-13.201, customerTwo, "Restaurants"));
+        list.add(new Classification(-17.098, customerTwo, "Miscellaneous"));
+        list.add(new Classification(-629.16, customerTwo, "Travel"));
+        list.add(new Classification(-23.637, customerTwo, "Cash"));
+        list.add(new Classification(-5.4043, customerTwo, "Education"));
+        list.add(new Classification(-4.8511, customerTwo, "Education"));
+
+        for (Classification c : list) {
+            classificationDao.save(c);
+        }
     }
 
     public List<Transaction> createTransactions() {
