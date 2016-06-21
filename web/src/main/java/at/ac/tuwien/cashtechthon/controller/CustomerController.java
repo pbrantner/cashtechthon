@@ -103,22 +103,18 @@ public class CustomerController extends AbstractRestController {
 	@RequestMapping(value = "/{customerId}/classifications/comparison", method = RequestMethod.GET)
 	public ReportResponse getClassifications(@PathVariable("customerId") Long customerId,
 										  @RequestParam(value = "age", required = false) Long age,
-										  @RequestParam(value = "income", required = false) BigDecimal income){
+										  @RequestParam(value = "incomeFrom", required = false) BigDecimal incomeFrom,
+											 @RequestParam(value = "incomeTill", required = false) BigDecimal incomeTo){
 		LocalDate firstDayOfYear = LocalDate.now().withDayOfYear(1);
 		LocalDate now = LocalDate.now();
 
-		//List<at.ac.tuwien.cashtechthon.dtos.Classification> classifications = classificationService.getClassifications(new Long[]{customerId}, firstDayOfYear, now);
-
 		List<GroupedClassification> customerGroups = classificationDao.findClassificationsByCustomer(customerId);
-
 		ReportResponse resp = new ReportResponse();
 
         /* CUSTOMER */
 		resp.setCustomer(new CustomerReport());
 		resp.getCustomer().getHeaders().add("Class");
 		resp.getCustomer().getHeaders().add("Money");
-
-		//List<String> classList = ;//classifications.stream().map(x -> x.getClassifications()).flatMap(l -> l.stream()).collect(Collectors.toList());
 
 		customerGroups.forEach(c -> {
 			Object[] d = new Object[2];
@@ -132,10 +128,13 @@ public class CustomerController extends AbstractRestController {
 		resp.getGroup().getHeaders().add("Class");
 		resp.getGroup().getHeaders().add("Money");
 
-		Object[] d = new Object[2];
-		d[0] = "FAKE";
-		d[1] = 123;
-		resp.getGroup().getData().add(d);
+		List<GroupedClassification> groupGroups = classificationDao.findClassificationsByAgeAndIncome(incomeFrom, incomeTo);
+		groupGroups.forEach(g -> {
+			Object[] d = new Object[2];
+			d[0] = g.getClassification();
+			d[1] = g.getNrClassifications();
+			resp.getGroup().getData().add(d);
+		});
 
 		return resp;
 	}

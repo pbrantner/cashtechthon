@@ -36,6 +36,7 @@ public class SampleDataSeeder implements ApplicationListener<ContextRefreshedEve
                             IClassificationDao classificationDao) {
         this.customerDao = customerDao;
         this.transactionDao = transactionDao;
+        this.classificationDao = classificationDao;
     }
 
     @Override
