@@ -49,7 +49,7 @@ public class GeneratorServiceImpl implements GeneratorService {
         List<ExtendedCustomer> customers = classificationGenerator.getCustomers();
         customerPersistence.save(customers);
 
-        while(true) {
+        while (true) {
             List<Classification> c = classificationGenerator.generate();
             classificationPersistence.save(c);
 

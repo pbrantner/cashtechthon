@@ -1,6 +1,8 @@
 package at.ac.tuwien.shared.dtos;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Customer {
     private Long id;
@@ -9,6 +11,11 @@ public class Customer {
     private LocalDate dateOfBirth;
     private Gender gender;
     private String location;
+    private List<Threshold> thresholds;
+
+    public Customer() {
+        this.thresholds = new ArrayList<>();
+    }
 
     public Long getId() {
         return id;
@@ -56,6 +63,18 @@ public class Customer {
 
     public void setLocation(String location) {
         this.location = location;
+    }
+
+    public List<Threshold> getThresholds() {
+        return thresholds;
+    }
+
+    public void setThresholds(List<Threshold> thresholds) {
+        this.thresholds = thresholds;
+    }
+
+    public void addThreshold(Threshold threshold) {
+        this.thresholds.add(threshold);
     }
 
     @Override
