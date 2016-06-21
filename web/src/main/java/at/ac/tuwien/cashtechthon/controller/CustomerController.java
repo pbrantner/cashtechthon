@@ -161,24 +161,36 @@ public class CustomerController extends AbstractRestController {
 	}
 
 	@RequestMapping(value="/{customerId}/comparison", method=RequestMethod.GET, produces=MediaType.APPLICATION_JSON_VALUE)
-	public ComparisonResponse getCustomerComparison(@PathVariable("customerId") Long customerId){
+	public ComparisonResponse getCustomerComparison(@PathVariable("customerId") Long customerId,
+													@RequestParam(value = "sex", required = false) String sex,
+													@RequestParam(value = "age", required = false) Long age,
+													@RequestParam(value = "incomeFrom", required = false) BigDecimal incomeFrom,
+													@RequestParam(value = "incomeTill", required = false) BigDecimal incomeTo,
+													@RequestParam(value = "location", required = false) String location,
+													@RequestParam(value = "ageFrom", required = false) Integer ageFrom,
+													@RequestParam(value = "ageTill", required = false) Integer ageTill){
 		ComparisonResponse resp = new ComparisonResponse();
 		resp.setStart("2015-11"); // TODO REPLACE THIS
 		resp.setEnd("2016-02"); // TODO REPLACE THIS
 		resp.setColumns(Arrays.asList("Month", "Customer", "Group"));
 
-		List<MonthClassification> classificationsCustomer = classificationDao.findComparisonByClassificationAndCustomer("Education", customerId);
-		List<MonthClassification> classificationsGroup = classificationDao.findComparisonByClassificationAndCustomer("Trash", 4L);
+		Gender gender = null;
+		// check for optional parameters
+		if (sex != null) {
+			gender = Gender.valueOf(StringUtils.capitalize(sex));
+		}
 
-		// TODO REPLACE THIS
+		List<MonthClassification> classificationsCustomer = classificationDao.findComparisonByClassificationAndCustomer("Education", customerId);
+		List<MonthClassification> classificationsGroup = classificationDao.findComparisonByClassificationAndGroup("Trash", customerId, incomeFrom,
+				incomeTo, gender, location, ageFrom, ageTill);
+
 		List<List<Object>> data = new ArrayList<>();
 
 		for (MonthClassification classification : classificationsCustomer) {
-			data.add(Arrays.asList(classification.getDayOfYear(), null, classification.getTotal()));
+			data.add(Arrays.asList(classification.getDateTime().toInstant(ZoneOffset.UTC).toEpochMilli(), null, classification.getTotal()));
 		}
 		for (MonthClassification classification : classificationsGroup) {
-			data.add(Arrays.asList(classification.getDayOfYear(), classification.getTotal(), null));
-			//data.add(Arrays.asList(classification.getDateTime().toInstant(ZoneOffset.UTC).toEpochMilli(), classification.getTotal(), null));
+			data.add(Arrays.asList(classification.getDateTime().toInstant(ZoneOffset.UTC).toEpochMilli(), classification.getTotal(), null));
 		}
 		resp.setData(data);
 

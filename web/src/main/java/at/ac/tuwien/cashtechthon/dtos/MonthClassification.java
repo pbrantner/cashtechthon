@@ -1,6 +1,7 @@
 package at.ac.tuwien.cashtechthon.dtos;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
@@ -11,10 +12,9 @@ public class MonthClassification {
     private BigDecimal total;
     private Integer dayOfYear;
 
-    public MonthClassification(Integer dayOfYear, BigDecimal total) {
-        //this.dateTime = dateTime;
+    public MonthClassification(Integer year, Integer month, Integer day, BigDecimal total) {
         this.total = total;
-        this.dayOfYear = dayOfYear;
+        this.dateTime = LocalDateTime.of(year, month, day, 0, 0);
     }
 
     public LocalDateTime getDateTime() {

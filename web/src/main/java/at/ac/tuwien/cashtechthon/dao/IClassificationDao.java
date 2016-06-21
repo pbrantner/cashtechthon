@@ -21,16 +21,36 @@ public interface IClassificationDao extends JpaRepository<Classification, Long> 
                    "FROM Classification cl WHERE cl.customer.id = :customerId GROUP BY cl.classification")
     List<GroupedClassification> findClassificationsByCustomer(@Param("customerId") Long customerId);
 
-    // TODO: group by date (but not possible, bug?)
-    @Query(value = "SELECT new at.ac.tuwien.cashtechthon.dtos.MonthClassification(DAYOFYEAR(cl.classificationDate), SUM(cl.amount)) " +
+    @Query(value = "SELECT new at.ac.tuwien.cashtechthon.dtos.MonthClassification(YEAR(cl.classificationDate), MONTH(cl.classificationDate), DAY(cl.classificationDate), SUM(cl.amount)) " +
             "FROM Classification cl " +
             "WHERE cl.customer.id = :customerId " +
             "AND cl.classification = :classification " +
-            "GROUP BY DAYOFYEAR(cl.classificationDate) " +
+            "GROUP BY YEAR(cl.classificationDate), MONTH(cl.classificationDate), DAY(cl.classificationDate), classificationDate " +
             "ORDER BY cl.classificationDate")
-            //"GROUP BY DAY(cl.classificationDate), MONTH(cl.classificationDate), YEAR(cl.classificationDate)")
     List<MonthClassification> findComparisonByClassificationAndCustomer(@Param("classification") String classification,
                                                                    @Param("customerId") Long customerId);
+
+    @Query(value = "SELECT new at.ac.tuwien.cashtechthon.dtos.MonthClassification(YEAR(cl.classificationDate), MONTH(cl.classificationDate), DAY(cl.classificationDate), SUM(cl.amount)) " +
+            "FROM Classification cl " +
+            "JOIN cl.customer cu " +
+            "WHERE (:incomeFrom IS NULL OR cu.id IN (SELECT clsc.id FROM Classification cls JOIN cls.customer clsc WHERE cls.classification = 'Income' GROUP BY clsc.id HAVING MAX(cls.amount) >= :incomeFrom)) " +
+            "AND (:incomeTo IS NULL OR cu.id IN (SELECT clsc.id FROM Classification cls JOIN cls.customer clsc WHERE cls.classification = 'Income' GROUP BY clsc.id HAVING MAX(cls.amount) <= :incomeTo)) " +
+            "AND (:gender IS NULL OR cu.gender = :gender) " +
+            "AND (:location IS NULL OR cu.location = :location) " +
+            "AND (:ageFrom IS NULL OR (YEAR(current_date) - YEAR(cu.dateOfBirth)) >= :ageFrom)" +
+            "AND (:ageTill IS NULL OR (YEAR(current_date) - YEAR(cu.dateOfBirth)) <= :ageTill)" +
+            "AND cu.id <> :customerId " +
+            "AND cl.classification = :classification " +
+            "GROUP BY YEAR(cl.classificationDate), MONTH(cl.classificationDate), DAY(cl.classificationDate), cl.classificationDate " +
+            "ORDER BY cl.classificationDate")
+    List<MonthClassification> findComparisonByClassificationAndGroup(@Param("classification") String classification,
+                                                                     @Param("customerId") Long customerId,
+                                                                     @Param("incomeFrom") BigDecimal incomeFrom,
+                                                                     @Param("incomeTo") BigDecimal incomeTo,
+                                                                     @Param("gender") Gender gender,
+                                                                     @Param("location") String location,
+                                                                     @Param("ageFrom") Integer ageFrom,
+                                                                     @Param("ageTill") Integer ageTill);
 
     /**
      * Query for comparison
