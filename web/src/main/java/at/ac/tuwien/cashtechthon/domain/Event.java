@@ -38,4 +38,13 @@ public class Event {
     public void setThreshold(Threshold threshold) {
         this.threshold = threshold;
     }
+
+    @Override
+    public String toString() {
+        return "Event{" +
+                "id=" + id +
+                ", customer=" + customer +
+                ", threshold=" + threshold +
+                '}';
+    }
 }

@@ -4,20 +4,30 @@
         .module('MDC')
         .controller('ReportController', [
             'commonService', '$log', '$state', '$scope', '$q', '$http', '$stateParams',
-            'CustomerService', 'ReportHistoryService',
+            'CustomerService', 'ReportHistoryService', 'EventService',
             ReportController
         ]);
 
     /**
      * Manages basic information, e.g. the existing users
      */
-    function ReportController(commonService, $log, $state, $scope, $q, $http, $stateParams, CustomerService, ReportHistoryService) {
+    function ReportController(commonService, $log, $state, $scope, $q, $http, $stateParams, CustomerService, ReportHistoryService, EventService) {
         var self = this;
 
         self.statistics = {};
         self.common = commonService;
         self.customer = {};
         self.customerName = "";
+
+        self.events = [{
+            text : "Text"
+        },{
+            text : "Text"
+        },{
+            text : "Text"
+        },{
+            text : "Text"
+        }];
 
         self.report = {};
         self.report.customerId = $stateParams.customerId;
@@ -36,6 +46,10 @@
             .then(function(resp){
                 self.customer = resp.data;
                 self.customerName = self.customer.firstName + " " + self.customer.lastName;
+
+                EventService.clearNotifications();
+                EventService.connectUserId(self.customer.id);
+
             },function(resp){
                 alert(resp);
             });
