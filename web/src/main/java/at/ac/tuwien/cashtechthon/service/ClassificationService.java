@@ -92,7 +92,9 @@ public class ClassificationService implements IClassificationService {
 		classification.setClassificationDate(classificationDto.getClassificationDate());
 		classification.setCurrency(classificationDto.getCurrency());
 
-		ClassificationEvent classificationEvent = new ClassificationEvent(customer.getId(), classificationDto.getClassification(), classificationDto.getClassificationDate(), classificationDto.getAmount());
+		ClassificationEvent classificationEvent = new ClassificationEvent(customer.getId(),
+				classificationDto.getClassification(), classificationDto.getClassificationDate(),
+				classificationDto.getAmount());
 		eventProcessor.addEvent(classificationEvent);
 
 		return classification;
