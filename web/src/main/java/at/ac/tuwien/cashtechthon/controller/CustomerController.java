@@ -1,6 +1,8 @@
 package at.ac.tuwien.cashtechthon.controller;
 
+import at.ac.tuwien.cashtechthon.dao.IClassificationDao;
 import at.ac.tuwien.cashtechthon.dao.ITransactionDao;
+import at.ac.tuwien.cashtechthon.domain.Classification;
 import at.ac.tuwien.cashtechthon.domain.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -26,12 +28,15 @@ public class CustomerController extends AbstractRestController {
 
 	private ICustomerDao customerDao;
 	private ITransactionDao transactionDao;
+	private IClassificationDao classificationDao;
 
 	@Autowired
 	public CustomerController(ICustomerDao customerDao,
-							  ITransactionDao transactionDao) {
+							  ITransactionDao transactionDao,
+							  IClassificationDao classificationDao) {
 		this.customerDao = customerDao;
 		this.transactionDao = transactionDao;
+		this.classificationDao = classificationDao;
 	}
 
 	@RequestMapping(method=RequestMethod.GET, produces=MediaType.APPLICATION_JSON_VALUE)
@@ -56,5 +61,15 @@ public class CustomerController extends AbstractRestController {
 	@RequestMapping(value="/{customerId}/companies", method=RequestMethod.GET, produces=MediaType.APPLICATION_JSON_VALUE)
 	public Page<Transaction> findCompaniesByCustomer(Pageable pageable, @PathVariable("customerId") Long customerId) {
 		return transactionDao.findDistinctCompanyByCustomerId(customerId, pageable);
+	}
+
+	@RequestMapping(value="/{customerId}/classifications", method=RequestMethod.GET, produces=MediaType.APPLICATION_JSON_VALUE)
+	public Page<Classification> findTransactionsByCustomer(Pageable pageable, @PathVariable("customerId") Customer customer) {
+		if(customer == null) {
+			throw new CustomerNotFoundException();
+		}
+
+		Page<Classification> classifications = classificationDao.findByCustomer(customer, pageable);
+		return classifications;
 	}
 }

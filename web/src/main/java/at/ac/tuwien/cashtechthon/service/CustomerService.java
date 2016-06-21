@@ -54,12 +54,28 @@ public class CustomerService implements ICustomerService {
             AccountBalanceEvent accountBalanceEvent = new AccountBalanceEvent();
             accountBalanceEvent.setCustomerId(customer.getId());
             accountBalanceEvent.setDeterminedAt(LocalDateTime.now());
-            accountBalanceEvent.setBalanceInEur(new BigDecimal(100));
+            accountBalanceEvent.setBalanceInEur(new BigDecimal(0));
 
             AbsoluteThresholdParameter absoluteThresholdParameter = AbsoluteThresholdParameter.newInstance().accountBalance(accountBalanceEvent).thresholdInEur(threshold.getThreshold()).type(threshold.getClassification()).callback(new AlertCallback() {
                 @Override
                 public void onAlert(Long alertId) {
-                    System.out.println("test");
+                    System.out.println("ESPER ALERT");
+                    System.out.println("ESPER ALERT");
+                    System.out.println("ESPER ALERT");
+                    System.out.println("ESPER ALERT");
+                    System.out.println("ESPER ALERT");
+                    System.out.println("ESPER ALERT");
+                    System.out.println("ESPER ALERT");
+                    System.out.println("ESPER ALERT");
+                    System.out.println("ESPER ALERT");
+                    System.out.println("ESPER ALERT");
+                    System.out.println("ESPER ALERT");
+                    System.out.println("ESPER ALERT");
+                    System.out.println("ESPER ALERT");
+                    System.out.println("ESPER ALERT");
+                    System.out.println("ESPER ALERT");
+                    System.out.println("ESPER ALERT");
+                    System.out.println("ESPER ALERT");
                 }
             }).build();
             EventProcessor.getInstance().createAbsoluteThreshold(absoluteThresholdParameter);

@@ -23,9 +23,9 @@ public class Customer {
     @OneToMany
     @JoinColumn(name="CUST_ID")
     private List<Transaction> transactions;
-    @OneToMany(mappedBy = "customer")
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
     private List<Classification> classifications;
-    @OneToMany(mappedBy = "customer")
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
     private List<Threshold> thresholds;
 
     public Long getId() {

@@ -2,10 +2,7 @@ package at.ac.tuwien.cashtechthon.domain;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
@@ -19,7 +16,7 @@ public class Classification {
     private BigDecimal amount;
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime classificationDate;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL, optional = false)
     private Customer customer;
 
     public Long getId() {
@@ -64,6 +61,6 @@ public class Classification {
 
     @Override
     public String toString() {
-        return String.format("classification[id=%d,amount=%f]", id, amount);
+        return String.format("classification[id=%d,amount=%f,customerId=%d]", id, amount, customer.getId());
     }
 }
