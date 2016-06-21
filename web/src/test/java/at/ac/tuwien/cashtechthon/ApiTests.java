@@ -1,10 +1,9 @@
 package at.ac.tuwien.cashtechthon;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
-import at.ac.tuwien.shared.dtos.Classification;
-import at.ac.tuwien.shared.dtos.LoginRequest;
-import at.ac.tuwien.shared.dtos.TokenLoginResponse;
+import at.ac.tuwien.shared.dtos.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,6 +16,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
+
+import java.time.LocalDate;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = PLAYfulSavingApiApplication.class)
@@ -59,5 +60,30 @@ public class ApiTests {
         HttpEntity<Classification> entity = new HttpEntity<>(classification, httpHeaders);
         ResponseEntity<String> classificationResponse = new TestRestTemplate().postForEntity("http://localhost:" + port + "/api/classification", entity, null);
         assertEquals(HttpStatus.CREATED, classificationResponse.getStatusCode());
+    }
+
+    @Test
+    public void testAddNewCustomer() {
+        // login
+        LoginRequest userLogin = new LoginRequest();
+        userLogin.setUsername("user");
+        userLogin.setPassword("password");
+        ResponseEntity<TokenLoginResponse> loginResponse = new TestRestTemplate().postForEntity("http://localhost:" + port + "/login/api", userLogin, TokenLoginResponse.class);
+        assertEquals(HttpStatus.OK, loginResponse.getStatusCode());
+
+        // add customer
+        Customer customer = new Customer();
+        customer.setFirstname("Thomas");
+        customer.setLastname("Muster");
+        customer.setLocation("Vienna");
+        customer.setGender(Gender.Male);
+        LocalDate birthDate = LocalDate.now();
+        customer.setDateOfBirth(birthDate);
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.add("Authorization", "Bearer " + loginResponse.getBody().getToken());
+        HttpEntity<Customer> entity = new HttpEntity<>(customer, httpHeaders);
+        ResponseEntity<Long> response = new TestRestTemplate().postForEntity("http://localhost:" + port + "/api/customer", entity, Long.class);
+        assertEquals(HttpStatus.CREATED, response.getStatusCode());
+        assertNotNull(response.getBody());
     }
 }
