@@ -4,6 +4,8 @@ import at.ac.tuwien.cashtechthon.dao.IClassificationDao;
 import at.ac.tuwien.cashtechthon.dao.ITransactionDao;
 import at.ac.tuwien.cashtechthon.domain.Classification;
 import at.ac.tuwien.cashtechthon.domain.Transaction;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -25,6 +27,8 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/customers")
 public class CustomerController extends AbstractRestController {
+
+	private Log logger = LogFactory.getLog(CustomerController.class);
 
 	private ICustomerDao customerDao;
 	private ITransactionDao transactionDao;

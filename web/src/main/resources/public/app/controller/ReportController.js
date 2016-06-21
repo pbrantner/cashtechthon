@@ -133,8 +133,8 @@
 
         $scope.query = {
             order: 'name',
-            limit: 5,
-            page: 1
+            size: 5,
+            page: 0
         };
         $scope.transactions = [];
 
@@ -143,8 +143,10 @@
         }
 
         $scope.getTransactions = function () {
+            var params = angular.extend({}, $scope.query);
+            params.size = params.limit;
             $scope.promise = $http.get("/customers/"+ self.report.customerId + "/classifications",{
-                params: $scope.query
+                params: params
             }).then(success);
         };
 
