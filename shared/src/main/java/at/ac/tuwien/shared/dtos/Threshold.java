@@ -6,7 +6,8 @@ import java.time.LocalDateTime;
 public class Threshold {
     private String classification;
     private BigDecimal threshold;
-    private LocalDateTime creationDate;
+    private LocalDateTime thresholdDate;
+    private Long windowSize;
 
     public String getClassification() {
         return classification;
@@ -24,11 +25,19 @@ public class Threshold {
         this.threshold = value;
     }
 
-    public LocalDateTime getCreationDate() {
-        return creationDate;
+    public LocalDateTime getThresholdDate() {
+        return thresholdDate;
     }
 
-    public void setCreationDate(LocalDateTime creationDate) {
-        this.creationDate = creationDate;
+    public void setThresholdDate(LocalDateTime thresholdDate) {
+        this.thresholdDate = thresholdDate;
+    }
+
+    public Long getWindowSize() {
+        return windowSize;
+    }
+
+    public void setWindowSize(Long windowSize) {
+        this.windowSize = windowSize;
     }
 }
