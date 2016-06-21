@@ -1,7 +1,9 @@
 package at.ac.tuwien.service;
 
+import at.ac.tuwien.dtos.CustomerData;
 import at.ac.tuwien.shared.dtos.*;
 import at.ac.tuwien.shared.util.PropertiesReader;
+import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -10,13 +12,12 @@ import java.math.MathContext;
 import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
-import java.util.Random;
+import java.util.*;
 
 @Service
 public class ClassificationGeneratorImpl implements ClassificationGenerator {
+    private final static Logger logger = Logger.getLogger(ClassificationGeneratorImpl.class);
+
     private int amountOfCustomers;
     private long secondsBetweenClassifications;
     private LocalDateTime currentDate;
@@ -27,6 +28,8 @@ public class ClassificationGeneratorImpl implements ClassificationGenerator {
     private List<ExtendedClassification> classifications = new ArrayList<ExtendedClassification>();
     private List<ExtendedCustomer> customers = new ArrayList<ExtendedCustomer>();
     private Random randomGen = new Random();
+    private Map<Long, CustomerData> customerDataMap = new HashMap<>();
+    private int counter = 0;
 
     @PostConstruct
     public void init() {
@@ -34,15 +37,16 @@ public class ClassificationGeneratorImpl implements ClassificationGenerator {
         amountOfCustomers = pr.getInt("amountOfCustomers");
         secondsBetweenClassifications = pr.getInt("secondsBetweenClassifications");
 
+        currentDate = LocalDateTime.now();
+        currentDate = currentDate.minusYears(1);
+
         initFemaleNames();
         initMaleNames();
         initLastNames();
         initLocations();
         initClassifications();
-        initCustomers();
 
-        currentDate = LocalDateTime.now();
-        currentDate = currentDate.minusYears(1);
+        initCustomers();
     }
 
     private void initFemaleNames() {
@@ -2270,7 +2274,34 @@ public class ClassificationGeneratorImpl implements ClassificationGenerator {
         classifications.add(new ExtendedClassification(null, new BigDecimal(-7), "Education"));
         classifications.add(new ExtendedClassification(null, new BigDecimal(-30), "Health"));
         classifications.add(new ExtendedClassification(null, new BigDecimal(-100), "Investment", -0.25, 1.0));
+    }
 
+    private void addThresholds(ExtendedCustomer c) {
+        for (Classification cl : c.getDefaultClassifications()) {
+            Threshold t = new Threshold();
+            t.setClassification(cl.getClassification());
+            t.setThresholdDate(currentDate);
+            t.setWindowSize(2678400000L);
+
+            if (cl.getAmount().compareTo(new BigDecimal(0)) > 0) {
+                t.setThreshold(cl.getAmount().multiply(new BigDecimal(-1)));
+
+                c.addThreshold(t);
+            } else {
+                t.setThreshold(cl.getAmount().multiply(new BigDecimal(2)));
+
+                c.addThreshold(t);
+            }
+        }
+
+        Threshold t = new Threshold();
+        t.setClassification("absoluteThresholdNegative");
+        t.setThreshold(new BigDecimal(-200));
+        c.addThreshold(t);
+        t = new Threshold();
+        t.setClassification("absoluteThresholdPositive");
+        t.setThreshold(new BigDecimal(200));
+        c.addThreshold(t);
     }
 
     private void initCustomers() {
@@ -2296,7 +2327,7 @@ public class ClassificationGeneratorImpl implements ClassificationGenerator {
 
             double income = 0;
             if (i % 10 != 0) {
-                //10% dont have an income
+                //i.e. 10% don't have an income
                 income = 500 + (10000 - 500) * randomGen.nextDouble();
                 c.addDefaultClassification(new Classification(c, new BigDecimal(income), "Income"));
             }
@@ -2315,6 +2346,8 @@ public class ClassificationGeneratorImpl implements ClassificationGenerator {
                 c.addDefaultClassification(new Classification(null, new BigDecimal(-15), "Telephone"));
             }
 
+            addThresholds(c);
+
             customers.add(c);
         }
     }
@@ -2324,10 +2357,53 @@ public class ClassificationGeneratorImpl implements ClassificationGenerator {
         return customers;
     }
 
+    private void addThresholdClassifications(List<Classification> result, ExtendedCustomer c) {
+        CustomerData cd = getCustomerData(c);
+        if (counter % 20 == 0) {
+            BigDecimal val = cd.getBalance().min(new BigDecimal(199));
+            Classification cll = new Classification();
+            cll.setClassification("absoluteThresholdNegative");
+            cll.setClassificationDate(currentDate);
+            cll.setCustomer(c);
+            cll.setAmount(val.multiply(new BigDecimal(-1)));
+            result.add(cll);
+
+            cll = new Classification();
+            cll.setClassification("absoluteThresholdPositive");
+            cll.setClassificationDate(currentDate);
+            cll.setCustomer(c);
+            cll.setAmount(val);
+            result.add(cll);
+        }
+
+        List<Threshold> ts = c.getThresholds();
+        if (counter % 16 == 0 && ts.size() > 0) {
+            Threshold t = ts.get(randomGen.nextInt(ts.size()));
+            Classification cl = new Classification();
+            cl.setClassification(t.getClassification());
+            cl.setClassificationDate(currentDate);
+            cl.setCustomer(c);
+            cl.setAmount(t.getThreshold());
+            result.add(cl);
+        }
+    }
+
+    private CustomerData getCustomerData(Customer c) {
+        CustomerData cd = customerDataMap.get(c.getId());
+
+        if (cd == null) {
+            cd = new CustomerData();
+            customerDataMap.put(c.getId(), cd);
+        }
+
+        return cd;
+    }
+
     @Override
     public List<Classification> generate() {
-        List<Classification> result = new ArrayList<Classification>();
-        Customer c = customers.get(randomGen.nextInt(customers.size()));
+        List<Classification> result = new ArrayList<>();
+        ExtendedCustomer c = customers.get(randomGen.nextInt(customers.size()));
+        CustomerData cd = getCustomerData(c);
         ExtendedClassification cl = classifications.get(randomGen.nextInt(classifications.size()));
         cl.setCustomer(c);
         cl.setClassificationDate(currentDate);
@@ -2337,18 +2413,35 @@ public class ClassificationGeneratorImpl implements ClassificationGenerator {
         BigDecimal rand = new BigDecimal(randomGen.nextDouble()).remainder(upper.subtract(lower));
         cl.setAmount(lower.add(rand).round(new MathContext(5, RoundingMode.CEILING)));
 
+        cd.setBalance(cd.getBalance().add(cl.getAmount()));
+        cd.setTransactionCount(cd.getTransactionCount() + 1);
+
         result.add(cl);
+
+        logger.debug("Customer " + c.getId() + " had " + cd.getTransactionCount() + " transactions and has a balance"
+                + " of " + cd.getBalance());
 
         currentDate = currentDate.plusSeconds(secondsBetweenClassifications);
 
         if (!cl.getClassificationDate().getMonth().equals(currentDate.getMonth())) {
             for (ExtendedCustomer customer : customers) {
                 for (Classification classification : customer.getDefaultClassifications()) {
+                    CustomerData cdd = getCustomerData(classification.getCustomer());
+                    cdd.setTransactionCount(cdd.getTransactionCount() + 1);
+                    cdd.setBalance(cdd.getBalance().add(classification.getAmount()));
                     classification.setClassificationDate(currentDate);
                     result.add(classification);
+
+                    logger.debug("Customer " + classification.getCustomer().getId() + " had "
+                            + cdd.getTransactionCount() + " transactions and has a balance"
+                            + " of " + cdd.getBalance());
                 }
             }
         }
+
+        addThresholdClassifications(result, c);
+
+        counter++;
 
         return result;
     }
