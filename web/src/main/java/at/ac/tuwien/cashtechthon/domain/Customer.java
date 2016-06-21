@@ -1,6 +1,10 @@
 package at.ac.tuwien.cashtechthon.domain;
 
+import at.ac.tuwien.shared.dtos.Gender;
+
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import java.time.LocalDate;
 import java.util.List;
 
 @Entity
@@ -11,6 +15,11 @@ public class Customer {
     private Long accountNr;
     private String firstName;
     private String lastName;
+    private String location;
+    private LocalDate dateOfBirth;
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
     @OneToMany
     @JoinColumn(name="CUST_ID")
     private List<Transaction> transactions;
@@ -53,5 +62,29 @@ public class Customer {
 
     public void setTransactions(List<Transaction> transactions) {
         this.transactions = transactions;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public LocalDate getDateOfBirth() {
+        return dateOfBirth;
+    }
+
+    public void setDateOfBirth(LocalDate dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
+    }
+
+    public Gender getGender() {
+        return gender;
+    }
+
+    public void setGender(Gender gender) {
+        this.gender = gender;
     }
 }

@@ -1,8 +1,11 @@
 package at.ac.tuwien.cashtechthon.controller;
 
+import at.ac.tuwien.cashtechthon.dao.ICustomerDao;
+import at.ac.tuwien.cashtechthon.service.ICustomerService;
 import at.ac.tuwien.shared.dtos.Classification;
 import at.ac.tuwien.shared.dtos.Customer;
 import io.jsonwebtoken.Claims;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +18,13 @@ import java.util.*;
 @RequestMapping("/api")
 public class ApiController {
 
+    private ICustomerService customerService;
+
+    @Autowired
+    public ApiController(ICustomerService customerService) {
+        this.customerService = customerService;
+    }
+
     @RequestMapping(value = "/role/{role}", method = RequestMethod.GET)
     public Boolean login(@PathVariable final String role,
                          final HttpServletRequest request) throws ServletException {
@@ -24,9 +34,10 @@ public class ApiController {
     }
 
     @RequestMapping(value = "/customer", method = RequestMethod.POST)
-    public ResponseEntity<?> processCustomer(@RequestBody Customer customer) {
+    public ResponseEntity<Long> processCustomer(@RequestBody Customer customer) {
         System.out.println("new customer: " + customer);
-        return new ResponseEntity<>("Classifications created", HttpStatus.CREATED);
+        at.ac.tuwien.cashtechthon.domain.Customer persistedCustomer = customerService.save(customer);
+        return new ResponseEntity<>(persistedCustomer.getId(), HttpStatus.CREATED);
     }
 
     @RequestMapping(value = "/classification", method = RequestMethod.POST)
