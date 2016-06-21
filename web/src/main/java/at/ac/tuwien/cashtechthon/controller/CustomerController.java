@@ -4,12 +4,13 @@ import at.ac.tuwien.cashtechthon.dao.IClassificationDao;
 import at.ac.tuwien.cashtechthon.dao.IEventDao;
 import at.ac.tuwien.cashtechthon.dao.ITransactionDao;
 import at.ac.tuwien.cashtechthon.domain.Classification;
+import at.ac.tuwien.cashtechthon.domain.Customer;
+import at.ac.tuwien.cashtechthon.domain.Event;
 import at.ac.tuwien.cashtechthon.domain.Transaction;
 import at.ac.tuwien.cashtechthon.dtos.CustomerReport;
 import at.ac.tuwien.cashtechthon.dtos.GroupedClassification;
 import at.ac.tuwien.cashtechthon.dtos.ReportResponse;
 import at.ac.tuwien.cashtechthon.service.IClassificationService;
-import at.ac.tuwien.cashtechthon.domain.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import at.ac.tuwien.cashtechthon.dtos.ComparisonResponse;
@@ -56,8 +57,7 @@ public class CustomerController extends AbstractRestController {
 	public CustomerController(ICustomerDao customerDao,
 							  ITransactionDao transactionDao,
 							  IClassificationDao classificationDao,
-							  IClassificationService classificationService) {
-							  IClassificationDao classificationDao,
+							  IClassificationService classificationService,
 							  IEventDao eventDao) {
 		this.customerDao = customerDao;
 		this.transactionDao = transactionDao;
