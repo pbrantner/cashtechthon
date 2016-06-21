@@ -67,7 +67,7 @@ public class CustomerService implements ICustomerService {
                 .accountBalance(new AccountBalanceEvent(customer.getId(), new BigDecimal(0), threshold.getThresholdDate()))
                 .thresholdInEur(threshold.getThreshold())
                 .type("negative")
-                .callback(new EventPersistingCallback(threshold, eventDao))
+                .callback(new EventPersistingCallback(threshold, customer, eventDao))
                 .build();
     }
 
@@ -77,7 +77,7 @@ public class CustomerService implements ICustomerService {
                 .thresholdInEur(threshold.getThreshold())
                 .type("negative")
                 .direction("unidirectional")
-                .callback(new EventPersistingCallback(threshold, eventDao))
+                .callback(new EventPersistingCallback(threshold, customer, eventDao))
                 .windowSize(threshold.getWindowSize())
                 .classification(threshold.getClassification())
                 .build();
