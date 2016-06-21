@@ -1,8 +1,8 @@
 package at.ac.tuwien.persistence;
 
 import at.ac.tuwien.service.HttpSingleton;
-import at.ac.tuwien.shared.dtos.Classification;
 import at.ac.tuwien.shared.dtos.Customer;
+import at.ac.tuwien.shared.dtos.ExtendedCustomer;
 import at.ac.tuwien.shared.util.PropertiesReader;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,18 +34,20 @@ public class CustomerPersistenceRest implements CustomerPersistence {
     }
 
     @Override
-    public void save(List<Customer> cs) {
+    public void save(List<ExtendedCustomer> cs) {
         HttpHeaders headers = httpSingleton.getHttpHeaders();
         for (Customer c : cs) {
             try {
                 HttpEntity<Customer> entity = new HttpEntity<>(c, headers);
-                ResponseEntity<?> response = template.postForEntity(path, entity, null);
+                ResponseEntity<Customer> response = template.postForEntity(path, entity, null);
 
-                logger.debug("Saved transaction via REST - response: " + response.getStatusCode().toString());
+                c.setId(response.getBody().getId());
+
+                logger.debug("Saved customer via REST - response: " + response.getStatusCode().toString());
             } catch (HttpClientErrorException e) {
-                logger.error("Saving transaction via REST failed and resulted in HttpStatus " + e.getStatusText().toString());
+                logger.error("Saving customer via REST failed and resulted in HttpStatus " + e.getStatusText().toString());
             } catch (ResourceAccessException e) {
-                logger.error("Saving transaction via REST failed since Server was not available");
+                logger.error("Saving customer via REST failed since Server was not available");
             }
         }
     }

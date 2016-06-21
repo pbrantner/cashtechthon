@@ -1,6 +1,9 @@
 package at.ac.tuwien.service;
 
+import at.ac.tuwien.persistence.CustomerPersistence;
 import at.ac.tuwien.shared.dtos.Classification;
+import at.ac.tuwien.shared.dtos.Customer;
+import at.ac.tuwien.shared.dtos.ExtendedCustomer;
 import at.ac.tuwien.shared.dtos.LoginRequest;
 import at.ac.tuwien.persistence.ClassificationPersistence;
 import at.ac.tuwien.shared.util.PropertiesReader;
@@ -18,6 +21,8 @@ public class GeneratorServiceImpl implements GeneratorService {
     private ClassificationGenerator classificationGenerator;
     @Autowired
     private ClassificationPersistence classificationPersistence;
+    @Autowired
+    private CustomerPersistence customerPersistence;
     @Autowired
     private AuthService authService;
     private String username;
@@ -40,6 +45,9 @@ public class GeneratorServiceImpl implements GeneratorService {
             logger.debug("Stopping GeneratorService since authentication failed");
             return;
         }
+
+        List<ExtendedCustomer> customers = classificationGenerator.getCustomers();
+        customerPersistence.save(customers);
 
         while(true) {
             List<Classification> c = classificationGenerator.generate();

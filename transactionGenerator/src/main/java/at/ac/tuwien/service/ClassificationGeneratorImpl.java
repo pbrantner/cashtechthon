@@ -2320,6 +2320,11 @@ public class ClassificationGeneratorImpl implements ClassificationGenerator {
     }
 
     @Override
+    public List<ExtendedCustomer> getCustomers() {
+        return customers;
+    }
+
+    @Override
     public List<Classification> generate() {
         List<Classification> result = new ArrayList<Classification>();
         Customer c = customers.get(randomGen.nextInt(customers.size()));
