@@ -23,6 +23,10 @@ public class Customer {
     @OneToMany
     @JoinColumn(name="CUST_ID")
     private List<Transaction> transactions;
+    @OneToMany(mappedBy = "customer")
+    private List<Classification> classifications;
+    @OneToMany(mappedBy = "customer")
+    private List<Threshold> thresholds;
 
     public Long getId() {
         return id;
@@ -86,5 +90,10 @@ public class Customer {
 
     public void setGender(Gender gender) {
         this.gender = gender;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("customer[id=%d,firstName=%s,lastName=%s]", id, firstName, lastName);
     }
 }

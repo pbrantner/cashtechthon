@@ -2,6 +2,7 @@ package at.ac.tuwien.cashtechthon;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import at.ac.tuwien.shared.dtos.*;
 import org.junit.Test;
@@ -17,7 +18,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Currency;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = PLAYfulSavingApiApplication.class)
@@ -36,42 +40,37 @@ public class ApiTests {
 
     @Test
     public void testLoginNotProtectedAndTokenReturned() {
-        LoginRequest userLogin = new LoginRequest();
-        userLogin.setUsername("user");
-        userLogin.setPassword("password");
-        ResponseEntity<TokenLoginResponse> response = new TestRestTemplate().postForEntity("http://localhost:" + port + "/login/api", userLogin, TokenLoginResponse.class);
-        assertEquals(HttpStatus.OK, response.getStatusCode());
+        ResponseEntity<TokenLoginResponse> loginResponse = requestLoginResponse();
 
         // token must has header, payload and signature separated by two dots
-        assertEquals(3, response.getBody().getToken().split("\\.").length);
+        assertEquals(3, loginResponse.getBody().getToken().split("\\.").length);
     }
 
-    @Test
-    public void testLoggedInClassification() {
-        LoginRequest userLogin = new LoginRequest();
-        userLogin.setUsername("user");
-        userLogin.setPassword("password");
-        ResponseEntity<TokenLoginResponse> response = new TestRestTemplate().postForEntity("http://localhost:" + port + "/login/api", userLogin, TokenLoginResponse.class);
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-
-        Classification classification = new Classification();
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.add("Authorization", "Bearer " + response.getBody().getToken());
-        HttpEntity<Classification> entity = new HttpEntity<>(classification, httpHeaders);
-        ResponseEntity<String> classificationResponse = new TestRestTemplate().postForEntity("http://localhost:" + port + "/api/classification", entity, null);
-        assertEquals(HttpStatus.CREATED, classificationResponse.getStatusCode());
-    }
-
-    @Test
-    public void testAddNewCustomer() {
-        // login
+    /**
+     * Logs in and returns corresponding login header
+     * @return corresponding login header such as token
+     */
+    private ResponseEntity<TokenLoginResponse> requestLoginResponse() {
         LoginRequest userLogin = new LoginRequest();
         userLogin.setUsername("user");
         userLogin.setPassword("password");
         ResponseEntity<TokenLoginResponse> loginResponse = new TestRestTemplate().postForEntity("http://localhost:" + port + "/login/api", userLogin, TokenLoginResponse.class);
         assertEquals(HttpStatus.OK, loginResponse.getStatusCode());
+        return loginResponse;
+    }
 
-        // add customer
+    /**
+     * Prepares the login headers
+     * @return login headers with authorization token
+     */
+    private HttpHeaders prepareLoginHeaders() {
+        ResponseEntity<TokenLoginResponse> loginResponse = requestLoginResponse();
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.add("Authorization", "Bearer " + loginResponse.getBody().getToken());
+        return httpHeaders;
+    }
+
+    private Customer generateCustomer() {
         Customer customer = new Customer();
         customer.setFirstname("Thomas");
         customer.setLastname("Muster");
@@ -79,11 +78,34 @@ public class ApiTests {
         customer.setGender(Gender.Male);
         LocalDate birthDate = LocalDate.now();
         customer.setDateOfBirth(birthDate);
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.add("Authorization", "Bearer " + loginResponse.getBody().getToken());
+        return customer;
+    }
+
+    @Test
+    public void testLoggedInAddNewCustomer() {
+        Customer customer = generateCustomer();
+        HttpHeaders httpHeaders = prepareLoginHeaders();
+
         HttpEntity<Customer> entity = new HttpEntity<>(customer, httpHeaders);
         ResponseEntity<Long> response = new TestRestTemplate().postForEntity("http://localhost:" + port + "/api/customer", entity, Long.class);
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
-        assertNotNull(response.getBody());
+        assertTrue(response.getBody() > 0);
+    }
+
+    @Test
+    public void testLoggedInAddClassification() {
+        Customer customer = generateCustomer();
+        customer.setId(1L);
+        HttpHeaders httpHeaders = prepareLoginHeaders();
+
+        Classification classification = new Classification();
+        classification.setCustomer(customer);
+        classification.setAmount(new BigDecimal(100));
+        classification.setCurrency(Currency.getInstance("EUR"));
+        classification.setClassificationDate(LocalDateTime.now());
+
+        HttpEntity<Classification> entity = new HttpEntity<>(classification, httpHeaders);
+        ResponseEntity<Long> response = new TestRestTemplate().postForEntity("http://localhost:" + port + "/api/classification", entity, Long.class);
+        assertTrue(response.getBody() > 0);
     }
 }

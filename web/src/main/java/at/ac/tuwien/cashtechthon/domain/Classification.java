@@ -5,6 +5,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
@@ -14,10 +15,12 @@ public class Classification {
     @Id
     @GeneratedValue
     private Long id;
-    private Currency currency;
+    private java.util.Currency currency;
     private BigDecimal amount;
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime classificationDate;
+    @ManyToOne
+    private Customer customer;
 
     public Long getId() {
         return id;
@@ -27,11 +30,11 @@ public class Classification {
         this.id = id;
     }
 
-    public Currency getCurrency() {
+    public java.util.Currency getCurrency() {
         return currency;
     }
 
-    public void setCurrency(Currency currency) {
+    public void setCurrency(java.util.Currency currency) {
         this.currency = currency;
     }
 
@@ -49,5 +52,18 @@ public class Classification {
 
     public void setClassificationDate(LocalDateTime classificationDate) {
         this.classificationDate = classificationDate;
+    }
+
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("classification[id=%d,amount=%f]", id, amount);
     }
 }

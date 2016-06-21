@@ -7,6 +7,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import at.ac.tuwien.cashtechthon.dao.IClassificationDao;
+import at.ac.tuwien.cashtechthon.dao.ICustomerDao;
+import at.ac.tuwien.cashtechthon.domain.Customer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -20,11 +23,17 @@ public class ClassificationService implements IClassificationService {
 
 	private IMLService mlService;
 	private ITransactionDao transactionDao;
+	private IClassificationDao classificationDao;
+	private ICustomerDao customerDao;
 	
 	@Autowired
-	public ClassificationService(IMLService mlService, ITransactionDao transactionDao) {
+	public ClassificationService(IMLService mlService, ITransactionDao transactionDao,
+								 IClassificationDao classificationDao,
+								 ICustomerDao customerDao) {
 		this.mlService = mlService;
 		this.transactionDao = transactionDao;
+		this.classificationDao = classificationDao;
+		this.customerDao = customerDao;
 	}
 	
 	@Override
@@ -61,5 +70,20 @@ public class ClassificationService implements IClassificationService {
 		} else {
 			return mlService.getResult(trans);
 		}
+	}
+
+	@Override
+	public at.ac.tuwien.cashtechthon.domain.Classification save(at.ac.tuwien.shared.dtos.Classification classification) {
+		return classificationDao.save(classificationDtoToClassification(classification));
+	}
+
+	private at.ac.tuwien.cashtechthon.domain.Classification classificationDtoToClassification(at.ac.tuwien.shared.dtos.Classification classificationDto) {
+		at.ac.tuwien.cashtechthon.domain.Classification classification = new at.ac.tuwien.cashtechthon.domain.Classification();
+		Customer customer = customerDao.findOne(classificationDto.getCustomer().getId());
+		classification.setAmount(classificationDto.getAmount());
+		classification.setClassificationDate(classificationDto.getClassificationDate());
+		classification.setCurrency(classificationDto.getCurrency());
+
+		return classification;
 	}
 }
