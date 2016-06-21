@@ -2360,6 +2360,7 @@ public class ClassificationGeneratorImpl implements ClassificationGenerator {
     private void addThresholdClassifications(List<Classification> result, ExtendedCustomer c) {
         CustomerData cd = getCustomerData(c);
         if (counter % 20 == 0) {
+            logger.debug("Adding Threshold tests for customer " + c.getId());
             BigDecimal val = cd.getBalance().min(new BigDecimal(199));
             Classification cll = new Classification();
             cll.setClassification("absoluteThresholdNegative");
@@ -2378,6 +2379,7 @@ public class ClassificationGeneratorImpl implements ClassificationGenerator {
 
         List<Threshold> ts = c.getThresholds();
         if (counter % 16 == 0 && ts.size() > 0) {
+            logger.debug("Adding Threshold tests for customer " + c.getId());
             Threshold t = ts.get(randomGen.nextInt(ts.size()));
             Classification cl = new Classification();
             cl.setClassification(t.getClassification());
