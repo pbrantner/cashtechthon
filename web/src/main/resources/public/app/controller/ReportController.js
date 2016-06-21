@@ -203,7 +203,7 @@
             var data = new google.visualization.DataTable();
 
             if(respData){
-                for(var idx=0; idx < respData.columns; idx++){
+                for(var idx=0; idx < respData.columns.length; idx++){
                     var v = respData.columns[idx];
                     if(idx===0){
                         data.addColumn("date",v);
@@ -214,7 +214,7 @@
 
 
                 for(var idx=0; idx < respData.data.length; idx++){
-                    respData.data[idx][0] = moment().unix(respData.data[idx][0])._d;
+                    respData.data[idx][0] = new Date(respData.data[idx][0]);
                 }
                 data.addRows(respData.data);
             }else{
