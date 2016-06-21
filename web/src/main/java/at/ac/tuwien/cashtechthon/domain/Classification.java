@@ -16,7 +16,7 @@ public class Classification {
     private BigDecimal amount;
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime classificationDate;
-    @ManyToOne(cascade = CascadeType.ALL, optional = false)
+    @ManyToOne(cascade = CascadeType.MERGE, optional = false)
     private Customer customer;
 
     public Long getId() {

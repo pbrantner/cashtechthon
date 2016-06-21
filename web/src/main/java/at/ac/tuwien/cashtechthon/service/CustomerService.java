@@ -7,12 +7,10 @@ import at.ac.tuwien.cashtechthon.dao.IEventDao;
 import at.ac.tuwien.cashtechthon.dao.IThresholdDao;
 import at.ac.tuwien.cashtechthon.domain.Customer;
 import at.ac.tuwien.cashtechthon.domain.Threshold;
-import javafx.scene.control.Alert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -67,7 +65,7 @@ public class CustomerService implements ICustomerService {
                 .accountBalance(new AccountBalanceEvent(customer.getId(), new BigDecimal(0), threshold.getThresholdDate()))
                 .thresholdInEur(threshold.getThreshold())
                 .type("negative")
-                .callback(new EventPersistingCallback(threshold, eventDao))
+                .callback(new EventPersistingCallback(threshold, customer, eventDao))
                 .build();
     }
 
@@ -77,7 +75,7 @@ public class CustomerService implements ICustomerService {
                 .thresholdInEur(threshold.getThreshold())
                 .type("negative")
                 .direction("unidirectional")
-                .callback(new EventPersistingCallback(threshold, eventDao))
+                .callback(new EventPersistingCallback(threshold, customer, eventDao))
                 .windowSize(threshold.getWindowSize())
                 .classification(threshold.getClassification())
                 .build();

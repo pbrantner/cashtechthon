@@ -1,6 +1,7 @@
 package at.ac.tuwien.cashtechthon.domain;
 
 import at.ac.tuwien.shared.dtos.Gender;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -23,9 +24,11 @@ public class Customer {
     @OneToMany
     @JoinColumn(name="CUST_ID")
     private List<Transaction> transactions;
-    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "customer")
+    @JsonIgnore
     private List<Classification> classifications;
-    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "customer")
+    @JsonIgnore
     private List<Threshold> thresholds;
 
     public Long getId() {
@@ -90,6 +93,22 @@ public class Customer {
 
     public void setGender(Gender gender) {
         this.gender = gender;
+    }
+
+    public List<Classification> getClassifications() {
+        return classifications;
+    }
+
+    public void setClassifications(List<Classification> classifications) {
+        this.classifications = classifications;
+    }
+
+    public List<Threshold> getThresholds() {
+        return thresholds;
+    }
+
+    public void setThresholds(List<Threshold> thresholds) {
+        this.thresholds = thresholds;
     }
 
     @Override

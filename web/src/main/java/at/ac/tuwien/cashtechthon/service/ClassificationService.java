@@ -19,8 +19,9 @@ import at.ac.tuwien.cashtechthon.dao.ITransactionDao;
 import at.ac.tuwien.cashtechthon.domain.Transaction;
 import at.ac.tuwien.cashtechthon.dtos.Classification;
 import at.ac.tuwien.cashtechthon.dtos.ClassificationSummary;
+import org.springframework.stereotype.Service;
 
-@Component
+@Service
 public class ClassificationService implements IClassificationService {
 
 	private IMLService mlService;
