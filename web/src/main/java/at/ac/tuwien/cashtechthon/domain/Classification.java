@@ -18,6 +18,7 @@ public class Classification {
     private LocalDateTime classificationDate;
     @ManyToOne(cascade = CascadeType.MERGE, optional = false)
     private Customer customer;
+    private String classification;
 
     public Long getId() {
         return id;
@@ -57,6 +58,14 @@ public class Classification {
 
     public void setCustomer(Customer customer) {
         this.customer = customer;
+    }
+
+    public String getClassification() {
+        return classification;
+    }
+
+    public void setClassification(String classification) {
+        this.classification = classification;
     }
 
     @Override
