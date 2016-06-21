@@ -4,6 +4,7 @@ import at.ac.tuwien.cashtechthon.dao.ICustomerDao;
 import at.ac.tuwien.cashtechthon.dao.ITransactionDao;
 import at.ac.tuwien.cashtechthon.domain.*;
 import at.ac.tuwien.cashtechthon.domain.Currency;
+import at.ac.tuwien.shared.dtos.Gender;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -44,18 +45,21 @@ public class SampleDataSeeder implements ApplicationListener<ContextRefreshedEve
         customerOne = new Customer();
         customerOne.setFirstName("Max");
         customerOne.setLastName("Mustermann");
+        customerOne.setGender(Gender.Male);
         customerOne = customerDao.save(customerOne);
         customers.add(customerOne);
 
         customerTwo = new Customer();
         customerTwo.setFirstName("Maria");
         customerTwo.setLastName("Mayer");
+        customerTwo.setGender(Gender.Female);
         customerTwo = customerDao.save(customerTwo);
         customers.add(customerTwo);
 
         customerThree = new Customer();
         customerThree.setFirstName("Anna");
         customerThree.setLastName("Berger");
+        customerThree.setGender(Gender.Female);
         customerThree = customerDao.save(customerThree);
         customers.add(customerThree);
 
@@ -63,6 +67,7 @@ public class SampleDataSeeder implements ApplicationListener<ContextRefreshedEve
         customerFour = new Customer();
         customerFour.setFirstName("Felix");
         customerFour.setLastName("Jung");
+        customerFour.setGender(Gender.Male);
         customerFour = customerDao.save(customerFour);
         customers.add(customerFour);
 

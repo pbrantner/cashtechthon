@@ -1,6 +1,5 @@
 package at.ac.tuwien.cashtechthon.controller;
 
-import at.ac.tuwien.cashtechthon.dao.ICustomerDao;
 import at.ac.tuwien.cashtechthon.service.ICustomerService;
 import at.ac.tuwien.shared.dtos.Classification;
 import at.ac.tuwien.shared.dtos.Customer;
