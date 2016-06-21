@@ -69,7 +69,7 @@ public class CustomerController extends AbstractRestController {
 			throw new CustomerNotFoundException();
 		}
 
-		Page<Classification> classifications = classificationDao.findByCustomer(customer, pageable);
+		Page<Classification> classifications = classificationDao.findByCustomerId(customer.getId(), pageable);
 		return classifications;
 	}
 }

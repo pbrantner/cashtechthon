@@ -3,11 +3,13 @@ package at.ac.tuwien.cashtechthon.service;
 import at.ac.tuwien.cashtechthon.cep.AbsoluteThresholdParameter;
 import at.ac.tuwien.cashtechthon.cep.AlertCallback;
 import at.ac.tuwien.cashtechthon.cep.EventProcessor;
+import at.ac.tuwien.cashtechthon.cep.RelativeThresholdParameter;
 import at.ac.tuwien.cashtechthon.cep.event.AccountBalanceEvent;
 import at.ac.tuwien.cashtechthon.dao.ICustomerDao;
 import at.ac.tuwien.cashtechthon.dao.IThresholdDao;
 import at.ac.tuwien.cashtechthon.domain.Customer;
 import at.ac.tuwien.cashtechthon.domain.Threshold;
+import javafx.scene.control.Alert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -51,7 +53,19 @@ public class CustomerService implements ICustomerService {
             Threshold threshold = thresholdDtoToThreshold(customer, thresholdDto);
             thresholdsToPersist.add(threshold);
 
-            AccountBalanceEvent accountBalanceEvent = new AccountBalanceEvent();
+            RelativeThresholdParameter rtp = RelativeThresholdParameter.newInstance()
+                    .customerId(customer.getId())
+                    .thresholdInEur(threshold.getThreshold())
+                    .type("negative")
+                    .direction("unidirectional")
+                    .callback(new AlertCallback2(threshold))
+                    .windowSize(threshold.getWindowSize())
+                    .classification(threshold.getClassification())
+                    .build();
+
+            EventProcessor.getInstance().createRelativeThreshold(rtp);
+
+            /*AccountBalanceEvent accountBalanceEvent = new AccountBalanceEvent();
             accountBalanceEvent.setCustomerId(customer.getId());
             accountBalanceEvent.setDeterminedAt(LocalDateTime.now());
             accountBalanceEvent.setBalanceInEur(new BigDecimal(0));
@@ -60,25 +74,9 @@ public class CustomerService implements ICustomerService {
                 @Override
                 public void onAlert(Long alertId) {
                     System.out.println("ESPER ALERT");
-                    System.out.println("ESPER ALERT");
-                    System.out.println("ESPER ALERT");
-                    System.out.println("ESPER ALERT");
-                    System.out.println("ESPER ALERT");
-                    System.out.println("ESPER ALERT");
-                    System.out.println("ESPER ALERT");
-                    System.out.println("ESPER ALERT");
-                    System.out.println("ESPER ALERT");
-                    System.out.println("ESPER ALERT");
-                    System.out.println("ESPER ALERT");
-                    System.out.println("ESPER ALERT");
-                    System.out.println("ESPER ALERT");
-                    System.out.println("ESPER ALERT");
-                    System.out.println("ESPER ALERT");
-                    System.out.println("ESPER ALERT");
-                    System.out.println("ESPER ALERT");
                 }
             }).build();
-            EventProcessor.getInstance().createAbsoluteThreshold(absoluteThresholdParameter);
+            EventProcessor.getInstance().createAbsoluteThreshold(absoluteThresholdParameter); */
         }
         thresholdDao.save(thresholdsToPersist);
     }
@@ -101,5 +99,18 @@ public class CustomerService implements ICustomerService {
         customer.setGender(customerDto.getGender());
         customer.setLocation(customerDto.getLocation());
         return customer;
+    }
+
+    private static class AlertCallback2 implements at.ac.tuwien.cashtechthon.cep.AlertCallback {
+        private Threshold th;
+
+        public AlertCallback2(Threshold th) {
+            this.th = th;
+        }
+
+        @Override
+        public void onAlert(Long alertId) {
+            System.out.println("ESPER!!!! " + th.toString());
+        }
     }
 }
