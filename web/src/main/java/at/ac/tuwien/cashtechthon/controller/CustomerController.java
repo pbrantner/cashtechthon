@@ -75,9 +75,8 @@ public class CustomerController extends AbstractRestController {
 			throw new CustomerNotFoundException();
 		}
 
-		//Page<Classification> classifications = classificationDao.findByCustomer(customer, pageable);
-		//return classifications;
-		return null;
+		Page<Classification> classifications = classificationDao.findByCustomerId(customer.getId(), pageable);
+		return classifications;
 	}
 
 	@RequestMapping(value="/{customerId}/comparison", method=RequestMethod.GET, produces=MediaType.APPLICATION_JSON_VALUE)

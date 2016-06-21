@@ -38,7 +38,7 @@ public class ClassificationGeneratorImpl implements ClassificationGenerator {
         secondsBetweenClassifications = pr.getInt("secondsBetweenClassifications");
 
         currentDate = LocalDateTime.now();
-        currentDate = currentDate.minusYears(1);
+        //currentDate = currentDate.minusYears(1);
 
         initFemaleNames();
         initMaleNames();
@@ -2283,13 +2283,8 @@ public class ClassificationGeneratorImpl implements ClassificationGenerator {
             t.setThresholdDate(currentDate);
             t.setWindowSize(2678400000L);
 
-            if (cl.getAmount().compareTo(new BigDecimal(0)) > 0) {
-                t.setThreshold(cl.getAmount().multiply(new BigDecimal(-1)));
-
-                c.addThreshold(t);
-            } else {
-                t.setThreshold(cl.getAmount().multiply(new BigDecimal(2)));
-
+            if (cl.getAmount().compareTo(new BigDecimal(0)) < 0) {
+                t.setThreshold(cl.getAmount().multiply(new BigDecimal(1.5)));
                 c.addThreshold(t);
             }
         }
@@ -2379,7 +2374,6 @@ public class ClassificationGeneratorImpl implements ClassificationGenerator {
 
         List<Threshold> ts = c.getThresholds();
         if (counter % 16 == 0 && ts.size() > 0) {
-            logger.debug("Adding Threshold tests for customer " + c.getId());
             Threshold t = ts.get(randomGen.nextInt(ts.size()));
             Classification cl = new Classification();
             cl.setClassification(t.getClassification());
@@ -2387,6 +2381,7 @@ public class ClassificationGeneratorImpl implements ClassificationGenerator {
             cl.setCustomer(c);
             cl.setAmount(t.getThreshold());
             result.add(cl);
+            logger.debug("Adding Threshold tests for customer " + c.getId() + ": " + cl.toString());
         }
     }
 
