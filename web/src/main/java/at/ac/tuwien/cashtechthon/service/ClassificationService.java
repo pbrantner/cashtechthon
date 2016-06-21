@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import at.ac.tuwien.cashtechthon.cep.EventProcessor;
+import at.ac.tuwien.cashtechthon.cep.event.ClassificationEvent;
 import at.ac.tuwien.cashtechthon.dao.IClassificationDao;
 import at.ac.tuwien.cashtechthon.dao.ICustomerDao;
 import at.ac.tuwien.cashtechthon.domain.Customer;
@@ -25,6 +27,8 @@ public class ClassificationService implements IClassificationService {
 	private ITransactionDao transactionDao;
 	private IClassificationDao classificationDao;
 	private ICustomerDao customerDao;
+	private EventProcessor eventProcessor;
+
 	
 	@Autowired
 	public ClassificationService(IMLService mlService, ITransactionDao transactionDao,
@@ -34,6 +38,8 @@ public class ClassificationService implements IClassificationService {
 		this.transactionDao = transactionDao;
 		this.classificationDao = classificationDao;
 		this.customerDao = customerDao;
+
+		eventProcessor = EventProcessor.getInstance();
 	}
 	
 	@Override
@@ -83,6 +89,9 @@ public class ClassificationService implements IClassificationService {
 		classification.setAmount(classificationDto.getAmount());
 		classification.setClassificationDate(classificationDto.getClassificationDate());
 		classification.setCurrency(classificationDto.getCurrency());
+
+		ClassificationEvent classificationEvent = new ClassificationEvent(customer.getId(), classificationDto.getClassification(), classificationDto.getClassificationDate(), classificationDto.getAmount());
+		eventProcessor.addEvent(classificationEvent);
 
 		return classification;
 	}
