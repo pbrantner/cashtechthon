@@ -14,6 +14,7 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -53,6 +54,8 @@ public class SampleDataSeeder implements ApplicationListener<ContextRefreshedEve
         customerOne.setFirstName("Max");
         customerOne.setLastName("Mustermann");
         customerOne.setGender(Gender.Male);
+        customerOne.setLocation("Vienna");
+        customerOne.setDateOfBirth(LocalDate.of(1990, 6, 25));
         customerOne = customerDao.save(customerOne);
         customers.add(customerOne);
 
@@ -60,6 +63,8 @@ public class SampleDataSeeder implements ApplicationListener<ContextRefreshedEve
         customerTwo.setFirstName("Maria");
         customerTwo.setLastName("Mayer");
         customerTwo.setGender(Gender.Female);
+        customerTwo.setLocation("Linz");
+        customerTwo.setDateOfBirth(LocalDate.of(2000, 6, 6));
         customerTwo = customerDao.save(customerTwo);
         customers.add(customerTwo);
 
@@ -67,6 +72,7 @@ public class SampleDataSeeder implements ApplicationListener<ContextRefreshedEve
         customerThree.setFirstName("Anna");
         customerThree.setLastName("Berger");
         customerThree.setGender(Gender.Female);
+        customerTwo.setDateOfBirth(LocalDate.of(2000, 6, 6));
         customerThree = customerDao.save(customerThree);
         customers.add(customerThree);
 
@@ -75,6 +81,8 @@ public class SampleDataSeeder implements ApplicationListener<ContextRefreshedEve
         customerFour.setFirstName("Felix");
         customerFour.setLastName("Jung");
         customerFour.setGender(Gender.Male);
+        customerFour.setLocation("Vienna");
+        customerFour.setDateOfBirth(LocalDate.of(1980, 1, 1));
         customerFour = customerDao.save(customerFour);
         customers.add(customerFour);
 
@@ -92,6 +100,8 @@ public class SampleDataSeeder implements ApplicationListener<ContextRefreshedEve
         list.add(new Classification(-26.045, customerOne, "Health"));
         list.add(new Classification(-5.4043, customerOne, "Education"));
         list.add(new Classification(-4.8511, customerOne, "Education"));
+        list.add(new Classification(-4.8511, customerOne, "Education"));
+        list.add(new Classification(3500, customerOne, "Income"));
 
         list.add(new Classification(-8.6855, customerTwo, "Groceries"));
         list.add(new Classification(8.6855, customerTwo, "absoluteThresholdNegative"));
@@ -104,6 +114,20 @@ public class SampleDataSeeder implements ApplicationListener<ContextRefreshedEve
         list.add(new Classification(-23.637, customerTwo, "Cash"));
         list.add(new Classification(-5.4043, customerTwo, "Education"));
         list.add(new Classification(-4.8511, customerTwo, "Education"));
+        list.add(new Classification(2500, customerTwo, "Income"));
+
+        list.add(new Classification(-8.6855, customerFour, "Trash"));
+        list.add(new Classification(8.6855, customerFour, "Trash"));
+        list.add(new Classification(-8.6855, customerFour, "Trash"));
+        list.add(new Classification(-200, customerFour, "Trash"));
+        list.add(new Classification(-26.723, customerFour, "Trash"));
+        list.add(new Classification(-13.201, customerFour, "Trash"));
+        list.add(new Classification(-17.098, customerFour, "Trash"));
+        list.add(new Classification(-629.16, customerFour, "Trash"));
+        list.add(new Classification(-23.637, customerFour, "Trash"));
+        list.add(new Classification(-5.4043, customerFour, "Trash"));
+        list.add(new Classification(-4.8511, customerFour, "Trash"));
+        list.add(new Classification(1500, customerFour, "Income"));
 
         for (Classification c : list) {
             classificationDao.save(c);

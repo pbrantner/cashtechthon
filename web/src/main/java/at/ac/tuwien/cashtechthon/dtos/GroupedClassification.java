@@ -1,13 +1,15 @@
 package at.ac.tuwien.cashtechthon.dtos;
 
+import java.math.BigDecimal;
+
 /**
- * Created by Tom on 21.06.16.
+ * Aggregation DTO of classification data for frontend Pie-Chart
  */
 public class GroupedClassification {
     private String classification;
-    private Long nrClassifications;
+    private BigDecimal nrClassifications;
 
-    public GroupedClassification(String classification, Long nrClassifications) {
+    public GroupedClassification(String classification, BigDecimal nrClassifications) {
         this.classification = classification;
         this.nrClassifications = nrClassifications;
     }
@@ -20,11 +22,11 @@ public class GroupedClassification {
         this.classification = classification;
     }
 
-    public Long getNrClassifications() {
+    public BigDecimal getNrClassifications() {
         return nrClassifications;
     }
 
-    public void setNrClassifications(Long nrClassifications) {
+    public void setNrClassifications(BigDecimal nrClassifications) {
         this.nrClassifications = nrClassifications;
     }
 }

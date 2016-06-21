@@ -11,6 +11,7 @@ import at.ac.tuwien.cashtechthon.dtos.CustomerReport;
 import at.ac.tuwien.cashtechthon.dtos.GroupedClassification;
 import at.ac.tuwien.cashtechthon.dtos.ReportResponse;
 import at.ac.tuwien.cashtechthon.service.IClassificationService;
+import at.ac.tuwien.shared.dtos.Gender;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import at.ac.tuwien.cashtechthon.dtos.ComparisonResponse;
@@ -19,6 +20,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -102,13 +104,16 @@ public class CustomerController extends AbstractRestController {
 
 	@RequestMapping(value = "/{customerId}/classifications/comparison", method = RequestMethod.GET)
 	public ReportResponse getClassifications(@PathVariable("customerId") Long customerId,
+										  @RequestParam(value = "sex", required = false) String sex,
 										  @RequestParam(value = "age", required = false) Long age,
 										  @RequestParam(value = "incomeFrom", required = false) BigDecimal incomeFrom,
-											 @RequestParam(value = "incomeTill", required = false) BigDecimal incomeTo){
+										  @RequestParam(value = "incomeTill", required = false) BigDecimal incomeTo,
+										  @RequestParam(value = "location", required = false) String location,
+										  @RequestParam(value = "ageFrom", required = false) Integer ageFrom,
+										  @RequestParam(value = "ageTill", required = false) Integer ageTill) {
 		LocalDate firstDayOfYear = LocalDate.now().withDayOfYear(1);
 		LocalDate now = LocalDate.now();
 
-		List<GroupedClassification> customerGroups = classificationDao.findClassificationsByCustomer(customerId);
 		ReportResponse resp = new ReportResponse();
 
         /* CUSTOMER */
@@ -116,6 +121,7 @@ public class CustomerController extends AbstractRestController {
 		resp.getCustomer().getHeaders().add("Class");
 		resp.getCustomer().getHeaders().add("Money");
 
+		List<GroupedClassification> customerGroups = classificationDao.findClassificationsByCustomer(customerId);
 		customerGroups.forEach(c -> {
 			Object[] d = new Object[2];
 			d[0] = c.getClassification();
@@ -128,7 +134,14 @@ public class CustomerController extends AbstractRestController {
 		resp.getGroup().getHeaders().add("Class");
 		resp.getGroup().getHeaders().add("Money");
 
-		List<GroupedClassification> groupGroups = classificationDao.findClassificationsByAgeAndIncome(incomeFrom, incomeTo);
+		Gender gender = null;
+		// check for optional parameters
+		if (sex != null) {
+			gender = Gender.valueOf(StringUtils.capitalize(sex));
+		}
+
+		List<GroupedClassification> groupGroups = classificationDao.findClassificationsByAgeAndIncome(incomeFrom,
+				incomeTo, gender, location, customerId, ageFrom, ageTill);
 		groupGroups.forEach(g -> {
 			Object[] d = new Object[2];
 			d[0] = g.getClassification();

@@ -21,9 +21,7 @@ public class Classification {
     private Customer customer;
     private String classification;
 
-    public Classification() {
-
-    }
+    public Classification() {}
 
     public Classification(double value, Customer c, String clazz) {
         amount = new BigDecimal(value);
