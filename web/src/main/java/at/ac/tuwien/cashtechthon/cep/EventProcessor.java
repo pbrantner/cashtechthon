@@ -1,6 +1,8 @@
 package at.ac.tuwien.cashtechthon.cep;
 
 import java.time.LocalDateTime;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicLong;
 
 import at.ac.tuwien.cashtechthon.cep.event.AccountBalanceEvent;
@@ -18,7 +20,8 @@ public class EventProcessor {
 	private final EPServiceProvider epService;
 	private final EPAdministrator epAdmin;
 	private final AtomicLong alertCounter = new AtomicLong();
-
+	private ConcurrentMap<Long, EPStatement> alertMap = new ConcurrentHashMap<>();
+	
 	private EventProcessor() {
 		Configuration configuration = new Configuration();
 		configuration.addEventType("Classification", ClassificationEvent.class.getName());
@@ -48,8 +51,12 @@ public class EventProcessor {
 	public Long createRelativeThreshold(RelativeThresholdParameter parameter) {
 		StringBuilder thresholdQuery = new StringBuilder();
 		thresholdQuery.append("select * from Classification(customerId=")
-		.append(parameter.getCustomerId())
-		.append(").win:keepall() c")
+		.append(parameter.getCustomerId());
+		if(parameter.getClassification() != null) {
+			thresholdQuery.append(", classification='")
+			.append(parameter.getClassification()).append("'");
+		}
+		thresholdQuery.append(").win:keepall() c")
 		.append(" where")
 		.append(" (select sum(c2.amountInEur) from Classification(customerId=")
 		.append(parameter.getCustomerId());
@@ -60,7 +67,7 @@ public class EventProcessor {
 		thresholdQuery.append(").win:keepall() c2 where millis(c2.classificationDate) > ")
 		.append(TimeFunction.calculateMilliseconds(LocalDateTime.now()));
 		if(parameter.getDirection().equals("unidirectional")) {
-			thresholdQuery.append(" and c.amountInEur ");
+			thresholdQuery.append(" and c.amountInEur");
 			if(parameter.getType().equals("positive")) {
 				thresholdQuery.append(" > 0");
 			} else if(parameter.getType().equals("negative")) {
@@ -81,8 +88,11 @@ public class EventProcessor {
 		} else {
 			thresholdQuery.append(" <= ").append(parameter.getThresholdInEur().negate());
 		}
+		System.out.println("Creating relative threshold with query: " + thresholdQuery.toString());
 		long alertId = alertCounter.incrementAndGet();
-		epAdmin.createEPL(thresholdQuery.toString()).addListener(new AlertListener(alertId, parameter.getCallback()));
+		EPStatement statement = epAdmin.createEPL(thresholdQuery.toString());
+		statement.addListener(new AlertListener(alertId, parameter.getCallback()));
+		alertMap.put(alertId, statement);
 		return alertId;
 	}
 
@@ -103,10 +113,23 @@ public class EventProcessor {
 		} else {
 			thresholdQuery.append(" <= ").append(parameter.getThresholdInEur().negate());
 		}
+		System.out.println("Creating absolute threshold with query: " + thresholdQuery.toString());
 		long alertId = alertCounter.incrementAndGet();
-		epAdmin.createEPL(thresholdQuery.toString()).addListener(new AlertListener(alertId, parameter.getCallback()));;
+		EPStatement statement = epAdmin.createEPL(thresholdQuery.toString());
+		statement.addListener(new AlertListener(alertId, parameter.getCallback()));
+		alertMap.put(alertId, statement);
 		addEvent(parameter.getAccountBalance());
 		return alertId;
+	}
+	
+	public boolean cancelAlert(long alertId) {
+		EPStatement statement = alertMap.get(alertId);
+		if(statement != null) {
+			statement.stop();
+			statement.destroy();
+			return alertMap.remove(alertId, statement);
+		}
+		return false;
 	}
 
 	private static class AlertListener implements StatementAwareUpdateListener {

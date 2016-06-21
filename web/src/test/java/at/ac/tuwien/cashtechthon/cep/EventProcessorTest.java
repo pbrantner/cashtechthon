@@ -1,6 +1,7 @@
 package at.ac.tuwien.cashtechthon.cep;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.math.BigDecimal;
 import java.time.Duration;
@@ -50,6 +51,7 @@ public class EventProcessorTest {
 		assertEquals(3, callback.getNumberOfCalls(alertId));
 		eventProcessor.addEvent(new ClassificationEvent(1L, "Bars", now.plusSeconds(30L), new BigDecimal("1")));
 		assertEquals(4, callback.getNumberOfCalls(alertId));
+		assertTrue(eventProcessor.cancelAlert(alertId));
 	}
 
 	@Test
@@ -66,6 +68,7 @@ public class EventProcessorTest {
 		assertEquals(0, callback.getNumberOfCalls(alertId));
 		eventProcessor.addEvent(new ClassificationEvent(1L, "Cloths", now.plusSeconds(10L), new BigDecimal("1")));
 		assertEquals(1, callback.getNumberOfCalls(alertId));
+		assertTrue(eventProcessor.cancelAlert(alertId));
 	}
 
 	@Test
@@ -91,6 +94,7 @@ public class EventProcessorTest {
 				.callback(callback).build();
 		eventProcessor.createAbsoluteThreshold(parameter);
 		assertEquals(3, callback.getNumberOfCalls(alertId));
+		assertTrue(eventProcessor.cancelAlert(alertId));
 	}
 
 	@Test
@@ -105,6 +109,7 @@ public class EventProcessorTest {
 		// query cannot join balance event with classifications if there are no classifications for a customer
 		// therefore no alert is triggered even though absolute threshold would have been reached
 		assertEquals(0, callback.getNumberOfCalls(alertId));
+		assertTrue(eventProcessor.cancelAlert(alertId));
 	}
 
 	@Test
@@ -127,6 +132,7 @@ public class EventProcessorTest {
 		assertEquals(3, callback.getNumberOfCalls(alertId));
 		eventProcessor.addEvent(new ClassificationEvent(1L, "Bars", now.plusSeconds(30L), new BigDecimal("-1")));
 		assertEquals(4, callback.getNumberOfCalls(alertId));
+		assertTrue(eventProcessor.cancelAlert(alertId));
 	}
 
 	@Test
@@ -143,6 +149,7 @@ public class EventProcessorTest {
 		assertEquals(0, callback.getNumberOfCalls(alertId));
 		eventProcessor.addEvent(new ClassificationEvent(1L, "Cloths", now.plusSeconds(10L), new BigDecimal("-1")));
 		assertEquals(1, callback.getNumberOfCalls(alertId));
+		assertTrue(eventProcessor.cancelAlert(alertId));
 	}
 
 	@Test
@@ -168,6 +175,7 @@ public class EventProcessorTest {
 				.callback(callback).build();
 		eventProcessor.createAbsoluteThreshold(parameter);
 		assertEquals(3, callback.getNumberOfCalls(alertId));
+		assertTrue(eventProcessor.cancelAlert(alertId));
 	}
 
 	@Test
@@ -182,6 +190,7 @@ public class EventProcessorTest {
 		// query cannot join balance event with classifications if there are no classifications for a customer
 		// therefore no alert is triggered even though absolute threshold would have been reached
 		assertEquals(0, callback.getNumberOfCalls(alertId));
+		assertTrue(eventProcessor.cancelAlert(alertId));
 	}
 
 	@Test
@@ -204,6 +213,7 @@ public class EventProcessorTest {
 		assertEquals(3, callback.getNumberOfCalls(alertId));
 		eventProcessor.addEvent(new ClassificationEvent(1L, "Bars", now.plusSeconds(30L), new BigDecimal("1")));
 		assertEquals(4, callback.getNumberOfCalls(alertId));
+		assertTrue(eventProcessor.cancelAlert(alertId));
 	}
 	
 	@Test
@@ -226,6 +236,7 @@ public class EventProcessorTest {
 		assertEquals(3, callback.getNumberOfCalls(alertId));
 		eventProcessor.addEvent(new ClassificationEvent(1L, "Bars", now.plusSeconds(30L), new BigDecimal("-1")));
 		assertEquals(4, callback.getNumberOfCalls(alertId));
+		assertTrue(eventProcessor.cancelAlert(alertId));
 	}
 	
 	@Test
@@ -247,6 +258,7 @@ public class EventProcessorTest {
 		assertEquals(2, callback.getNumberOfCalls(alertId));
 		eventProcessor.addEvent(new ClassificationEvent(1L, "Bars", now.plusSeconds(30L), new BigDecimal("1")));
 		assertEquals(3, callback.getNumberOfCalls(alertId));
+		assertTrue(eventProcessor.cancelAlert(alertId));
 	}
 	
 	@Test
@@ -269,6 +281,7 @@ public class EventProcessorTest {
 		assertEquals(2, callback.getNumberOfCalls(alertId));
 		eventProcessor.addEvent(new ClassificationEvent(1L, "Bars", now.plusSeconds(30L), new BigDecimal("-1")));
 		assertEquals(3, callback.getNumberOfCalls(alertId));
+		assertTrue(eventProcessor.cancelAlert(alertId));
 	}
 	
 	@Test
@@ -291,6 +304,7 @@ public class EventProcessorTest {
 		assertEquals(0, callback.getNumberOfCalls(alertId));
 		eventProcessor.addEvent(new ClassificationEvent(1L, "Bars", now.plusSeconds(30L), new BigDecimal("2")));
 		assertEquals(1, callback.getNumberOfCalls(alertId));
+		assertTrue(eventProcessor.cancelAlert(alertId));
 	}
 	
 	@Test
@@ -315,6 +329,7 @@ public class EventProcessorTest {
 		assertEquals(0, callback.getNumberOfCalls(alertId));
 		eventProcessor.addEvent(new ClassificationEvent(1L, "Travel", now.plusSeconds(35L), new BigDecimal("-4")));
 		assertEquals(1, callback.getNumberOfCalls(alertId));
+		assertTrue(eventProcessor.cancelAlert(alertId));
 	}
 	
 	@Test
@@ -341,6 +356,7 @@ public class EventProcessorTest {
 		assertEquals(1, callback.getNumberOfCalls(alertId));
 		eventProcessor.addEvent(new ClassificationEvent(1L, "System", now.plusSeconds(40L), new BigDecimal("1")));
 		assertEquals(2, callback.getNumberOfCalls(alertId));
+		assertTrue(eventProcessor.cancelAlert(alertId));
 	}
 	
 	@Test
@@ -367,6 +383,42 @@ public class EventProcessorTest {
 		assertEquals(1, callback.getNumberOfCalls(alertId));
 		eventProcessor.addEvent(new ClassificationEvent(1L, "System", now.plusSeconds(40L), new BigDecimal("-1")));
 		assertEquals(2, callback.getNumberOfCalls(alertId));
+		assertTrue(eventProcessor.cancelAlert(alertId));
+	}
+	
+	@Test
+	public void testPositiveRelativeThresholdWithCycleAndClassification() throws InterruptedException {
+		CountingAlertCallback callback = new CountingAlertCallback();
+		RelativeThresholdParameter parameter = RelativeThresholdParameter.newInstance()
+				.customerId(1L).thresholdInEur(BigDecimal.TEN).type("negative").direction("unidirectional")
+				.callback(callback).windowSize(Duration.ofSeconds(5L).toMillis()).classification("Misc").build();
+		Long alertId = eventProcessor.createRelativeThreshold(parameter);
+		assertEquals(0, callback.getNumberOfCalls(alertId));		
+		Thread.sleep(1_000L);
+		eventProcessor.addEvent(new ClassificationEvent(1L, "Misc", LocalDateTime.now(), new BigDecimal("-5")));
+		assertEquals(0, callback.getNumberOfCalls(alertId));
+		// move to next cycle and check if only 1 alert is raised
+		Thread.sleep(5_000L);
+		eventProcessor.addEvent(new ClassificationEvent(1L, "Other", LocalDateTime.now(), new BigDecimal("-10")));
+		eventProcessor.addEvent(new ClassificationEvent(1L, "Misc", LocalDateTime.now(), new BigDecimal("-5")));
+		eventProcessor.addEvent(new ClassificationEvent(1L, "Misc", LocalDateTime.now(), new BigDecimal("-5")));
+		assertEquals(1, callback.getNumberOfCalls(alertId));
+		// move to next windows and check if next classification triggers event
+		Thread.sleep(5_000L);
+		eventProcessor.addEvent(new ClassificationEvent(1L, "Other", LocalDateTime.now(), new BigDecimal("-5")));
+		eventProcessor.addEvent(new ClassificationEvent(1L, "Other", LocalDateTime.now(), new BigDecimal("-5")));
+		eventProcessor.addEvent(new ClassificationEvent(1L, "Misc", LocalDateTime.now(), new BigDecimal("-5")));
+		assertEquals(1, callback.getNumberOfCalls(alertId));
+		// current window has -5 as sum, this one should trigger another alert
+		eventProcessor.addEvent(new ClassificationEvent(1L, "Misc", LocalDateTime.now(), new BigDecimal("-5")));
+		eventProcessor.addEvent(new ClassificationEvent(1L, "Other", LocalDateTime.now(), new BigDecimal("5")));
+		assertEquals(2, callback.getNumberOfCalls(alertId));
+		// move to next window and check if one classification with exact threshold value is enough to trigger alert
+		Thread.sleep(5_000L);
+		eventProcessor.addEvent(new ClassificationEvent(1L, "Misc", LocalDateTime.now(), new BigDecimal("-10")));
+		eventProcessor.addEvent(new ClassificationEvent(1L, "Other", LocalDateTime.now(), new BigDecimal("-10")));
+		assertEquals(3, callback.getNumberOfCalls(alertId));
+		assertTrue(eventProcessor.cancelAlert(alertId));
 	}
 	
 	@Test
@@ -396,6 +448,7 @@ public class EventProcessorTest {
 		Thread.sleep(5_000L);
 		eventProcessor.addEvent(new ClassificationEvent(1L, "Misc", LocalDateTime.now(), new BigDecimal("-10")));
 		assertEquals(3, callback.getNumberOfCalls(alertId));
+		assertTrue(eventProcessor.cancelAlert(alertId));
 	}
 	
 	@Test
@@ -441,6 +494,8 @@ public class EventProcessorTest {
 		eventProcessor.addEvent(new ClassificationEvent(1L, "Income", now.plusSeconds(35L), new BigDecimal("50")));
 		assertEquals(5, callback.getNumberOfCalls(savingsAlertId1));
 		assertEquals(2, callback.getNumberOfCalls(savingsAlertId2));
+		assertTrue(eventProcessor.cancelAlert(savingsAlertId1));
+		assertTrue(eventProcessor.cancelAlert(savingsAlertId2));
 	}
 	
 //	@Test
