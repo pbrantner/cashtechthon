@@ -19,16 +19,6 @@
         self.customer = {};
         self.customerName = "";
 
-        self.events = [{
-            text : "Text"
-        },{
-            text : "Text"
-        },{
-            text : "Text"
-        },{
-            text : "Text"
-        }];
-
         self.report = {};
         self.report.customerId = $stateParams.customerId;
 
@@ -47,7 +37,6 @@
                 self.customer = resp.data;
                 self.customerName = self.customer.firstName + " " + self.customer.lastName;
 
-                EventService.clearNotifications();
                 EventService.connectUserId(self.customer.id);
 
             },function(resp){

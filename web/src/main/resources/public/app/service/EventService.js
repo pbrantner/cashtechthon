@@ -14,7 +14,7 @@
         var success = function (resp) {
             if(angular.isArray(resp.data) && resp.data.length > 0) {
                 var val = resp.data[0];
-                var text = val.id + ": " + val.threshold.threshold + " for " + val.threshold.classification + " reached!";
+                var text = "Threshold " + val.threshold.threshold + " for " + val.threshold.classification + " reached!";
                 var simple = $mdToast.simple().textContent(text).action("OK").highlightAction(true).position("top right").hideDelay(false);
                 if(currentToast == null){
                     currentToast = $mdToast.show(simple).then(function (answer) {
