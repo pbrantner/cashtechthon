@@ -5,6 +5,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.*;
 
 @Entity
 public class Classification {
@@ -18,6 +19,22 @@ public class Classification {
     private LocalDateTime classificationDate;
     @ManyToOne(cascade = CascadeType.MERGE, optional = false)
     private Customer customer;
+    private String classification;
+
+    public Classification() {}
+
+    public Classification(double value, Customer c, String clazz) {
+        amount = new BigDecimal(value);
+        customer = c;
+        classification = clazz;
+        currency = java.util.Currency.getInstance("EUR");
+        classificationDate = LocalDateTime.now();
+    }
+
+    public Classification(double value, Customer c, String clazz, LocalDateTime dateTime) {
+        this(value, c, clazz);
+        classificationDate = dateTime;
+    }
 
     public Long getId() {
         return id;
@@ -57,6 +74,14 @@ public class Classification {
 
     public void setCustomer(Customer customer) {
         this.customer = customer;
+    }
+
+    public String getClassification() {
+        return classification;
+    }
+
+    public void setClassification(String classification) {
+        this.classification = classification;
     }
 
     @Override
