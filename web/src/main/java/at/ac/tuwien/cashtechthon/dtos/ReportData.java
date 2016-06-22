@@ -6,12 +6,12 @@ import java.util.List;
 /**
  * Created by syrenio on 21/05/16.
  */
-public class CustomerReport {
+public class ReportData {
 
     private List<String> headers;
     private List<Object[]> data;
 
-    public CustomerReport() {
+    public ReportData() {
         this.headers = new ArrayList<>();
         this.data = new ArrayList<>();
     }

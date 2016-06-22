@@ -97,8 +97,8 @@
 
         self.drawPieCharts = function(){
             if(self.pieChartData !== null){
-                self.drawChart("piechart", self.pieChartData.customer[self.switchEarnExp]);
-                self.drawChart("groupPieChart", self.pieChartData.group[self.switchEarnExp]);
+                self.drawChart("piechart", self.pieChartData.customer[self.switchEarnExp.toLowerCase()]);
+                self.drawChart("groupPieChart", self.pieChartData.group[self.switchEarnExp.toLowerCase()]);
             }
         };
 

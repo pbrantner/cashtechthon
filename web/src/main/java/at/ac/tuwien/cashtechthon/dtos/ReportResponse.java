@@ -5,23 +5,23 @@ package at.ac.tuwien.cashtechthon.dtos;
  */
 public class ReportResponse {
     /* requested customer report*/
-    private CustomerReport customer;
+    private ReportExpEarn customer;
     /* age/income group to compare to*/
-    private CustomerReport group;
+    private ReportExpEarn group;
 
-    public CustomerReport getCustomer() {
+    public ReportExpEarn getCustomer() {
         return customer;
     }
 
-    public void setCustomer(CustomerReport customer) {
+    public void setCustomer(ReportExpEarn customer) {
         this.customer = customer;
     }
 
-    public CustomerReport getGroup() {
+    public ReportExpEarn getGroup() {
         return group;
     }
 
-    public void setGroup(CustomerReport group) {
+    public void setGroup(ReportExpEarn group) {
         this.group = group;
     }
 }

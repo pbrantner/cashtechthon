@@ -29,15 +29,11 @@ import at.ac.tuwien.cashtechthon.controller.exception.CustomerNotFoundException;
 import at.ac.tuwien.cashtechthon.dao.ICustomerDao;
 
 import java.math.BigDecimal;
-import javax.annotation.PostConstruct;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 @RestController
@@ -114,22 +110,35 @@ public class CustomerController extends AbstractRestController {
 		ReportResponse resp = new ReportResponse();
 
         /* CUSTOMER */
-		resp.setCustomer(new CustomerReport());
-		resp.getCustomer().getHeaders().add("Class");
-		resp.getCustomer().getHeaders().add("Money");
+		resp.setCustomer(new ReportExpEarn());
+		resp.getCustomer().setEarnings(new ReportData());
+		resp.getCustomer().setExpenses(new ReportData());
+		resp.getCustomer().getExpenses().getHeaders().add("Class");
+		resp.getCustomer().getExpenses().getHeaders().add("Money");
+		resp.getCustomer().getEarnings().getHeaders().add("Class");
+		resp.getCustomer().getEarnings().getHeaders().add("Money");
 
 		List<GroupedClassification> customerGroups = classificationDao.findClassificationsByCustomer(customerId);
 		customerGroups.forEach(c -> {
 			Object[] d = new Object[2];
 			d[0] = c.getClassification();
-			d[1] = c.getNrClassifications();
-			resp.getCustomer().getData().add(d);
+			if(c.getNrClassifications().compareTo(BigDecimal.ZERO) > 0){
+				d[1] = c.getNrClassifications();
+				resp.getCustomer().getExpenses().getData().add(d);
+			}else{
+				d[1] = c.getNrClassifications().abs();
+				resp.getCustomer().getEarnings().getData().add(d);
+			}
 		});
 
         /* GROUP */
-		resp.setGroup(new CustomerReport());
-		resp.getGroup().getHeaders().add("Class");
-		resp.getGroup().getHeaders().add("Money");
+		resp.setGroup(new ReportExpEarn());
+		resp.getGroup().setEarnings(new ReportData());
+		resp.getGroup().setExpenses(new ReportData());
+		resp.getGroup().getExpenses().getHeaders().add("Class");
+		resp.getGroup().getExpenses().getHeaders().add("Money");
+		resp.getGroup().getEarnings().getHeaders().add("Class");
+		resp.getGroup().getEarnings().getHeaders().add("Money");
 
 		Gender gender = null;
 		// check for optional parameters
@@ -142,8 +151,13 @@ public class CustomerController extends AbstractRestController {
 		groupGroups.forEach(g -> {
 			Object[] d = new Object[2];
 			d[0] = g.getClassification();
-			d[1] = g.getNrClassifications();
-			resp.getGroup().getData().add(d);
+			if(g.getNrClassifications().compareTo(BigDecimal.ZERO) > 0){
+				d[1] = g.getNrClassifications();
+				resp.getGroup().getExpenses().getData().add(d);
+			}else{
+				d[1] = g.getNrClassifications().abs();
+				resp.getGroup().getEarnings().getData().add(d);
+			}
 		});
 
 		return resp;

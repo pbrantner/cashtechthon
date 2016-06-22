@@ -1,19 +1,16 @@
 package at.ac.tuwien.cashtechthon.controller;
 
 import at.ac.tuwien.cashtechthon.dao.ITransactionDao;
-import at.ac.tuwien.cashtechthon.domain.Transaction;
 import at.ac.tuwien.cashtechthon.dtos.Classification;
-import at.ac.tuwien.cashtechthon.dtos.CustomerReport;
+import at.ac.tuwien.cashtechthon.dtos.ReportData;
+import at.ac.tuwien.cashtechthon.dtos.ReportExpEarn;
 import at.ac.tuwien.cashtechthon.dtos.ReportResponse;
 import at.ac.tuwien.cashtechthon.service.IClassificationService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -37,6 +34,7 @@ public class ReportController {
     public ReportResponse getTransactions(@PathVariable("customerId") Long customerId,
                                           @RequestParam(value = "age", required = false) Long age,
                                           @RequestParam(value = "income", required = false) BigDecimal income){
+
         LocalDate firstDayOfYear = LocalDate.now().withDayOfYear(1);
         LocalDate now = LocalDate.now();
 
@@ -46,10 +44,13 @@ public class ReportController {
         ReportResponse resp = new ReportResponse();
 
         /* CUSTOMER */
-        resp.setCustomer(new CustomerReport());
-
-        resp.getCustomer().getHeaders().add("Class");
-        resp.getCustomer().getHeaders().add("Money");
+        resp.setCustomer(new ReportExpEarn());
+        resp.getCustomer().setEarnings(new ReportData());
+        resp.getCustomer().setExpenses(new ReportData());
+        resp.getCustomer().getExpenses().getHeaders().add("Class");
+        resp.getCustomer().getExpenses().getHeaders().add("Money");
+        resp.getCustomer().getEarnings().getHeaders().add("Class");
+        resp.getCustomer().getEarnings().getHeaders().add("Money");
 
         List<String> classList = classifications.stream().map(x -> x.getClassifications()).flatMap(l -> l.stream()).collect(Collectors.toList());
 
@@ -57,18 +58,22 @@ public class ReportController {
             Object[] d = new Object[2];
             d[0] = c;
             d[1] = 999;
-            resp.getCustomer().getData().add(d);
+            resp.getCustomer().getExpenses().getData().add(d);
         });
 
         /* GROUP */
-        resp.setGroup(new CustomerReport());
-        resp.getGroup().getHeaders().add("Class");
-        resp.getGroup().getHeaders().add("Money");
+        resp.setGroup(new ReportExpEarn());
+        resp.getGroup().setEarnings(new ReportData());
+        resp.getGroup().setExpenses(new ReportData());
+        resp.getGroup().getExpenses().getHeaders().add("Class");
+        resp.getGroup().getExpenses().getHeaders().add("Money");
+        resp.getGroup().getEarnings().getHeaders().add("Class");
+        resp.getGroup().getEarnings().getHeaders().add("Money");
 
         Object[] d = new Object[2];
         d[0] = "FAKE";
         d[1] = 123;
-        resp.getGroup().getData().add(d);
+        resp.getGroup().getExpenses().getData().add(d);
 
         return resp;
     }
