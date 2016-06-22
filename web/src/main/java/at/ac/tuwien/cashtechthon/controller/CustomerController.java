@@ -124,10 +124,10 @@ public class CustomerController extends AbstractRestController {
 			d[0] = c.getClassification();
 			if(c.getNrClassifications().compareTo(BigDecimal.ZERO) > 0){
 				d[1] = c.getNrClassifications();
-				resp.getCustomer().getExpenses().getData().add(d);
+				resp.getCustomer().getEarnings().getData().add(d);
 			}else{
 				d[1] = c.getNrClassifications().abs();
-				resp.getCustomer().getEarnings().getData().add(d);
+				resp.getCustomer().getExpenses().getData().add(d);
 			}
 		});
 
@@ -153,10 +153,10 @@ public class CustomerController extends AbstractRestController {
 			d[0] = g.getClassification();
 			if(g.getNrClassifications().compareTo(BigDecimal.ZERO) > 0){
 				d[1] = g.getNrClassifications();
-				resp.getGroup().getExpenses().getData().add(d);
+				resp.getGroup().getEarnings().getData().add(d);
 			}else{
 				d[1] = g.getNrClassifications().abs();
-				resp.getGroup().getEarnings().getData().add(d);
+				resp.getGroup().getExpenses().getData().add(d);
 			}
 		});
 
