@@ -11,14 +11,19 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import javax.persistence.criteria.CriteriaQuery;
 import java.math.BigDecimal;
 import java.util.List;
 
 public interface IClassificationDao extends JpaRepository<Classification, Long> {
+    //FIXME remove classifications which contain 'Threshold' in classification
     Page<Classification> findByCustomer(Customer customer, Pageable pageable);
 
     @Query(value = "SELECT new at.ac.tuwien.cashtechthon.dtos.GroupedClassification(cl.classification, SUM(cl.amount)) " +
-                   "FROM Classification cl WHERE cl.customer.id = :customerId GROUP BY cl.classification")
+                   "FROM Classification cl " +
+                   "WHERE cl.customer.id = :customerId " +
+                   "AND cl.classification NOT LIKE '%Threshold%' " +
+                   "GROUP BY cl.classification")
     List<GroupedClassification> findClassificationsByCustomer(@Param("customerId") Long customerId);
 
     @Query(value = "SELECT new at.ac.tuwien.cashtechthon.dtos.MonthClassification(YEAR(cl.classificationDate), MONTH(cl.classificationDate), DAY(cl.classificationDate), SUM(cl.amount)) " +
@@ -41,6 +46,7 @@ public interface IClassificationDao extends JpaRepository<Classification, Long> 
             "AND (:ageTill IS NULL OR (YEAR(current_date) - YEAR(cu.dateOfBirth)) <= :ageTill)" +
             "AND cu.id <> :customerId " +
             "AND cl.classification = :classification " +
+            "AND cl.classification NOT LIKE '%Threshold%' " +
             "GROUP BY YEAR(cl.classificationDate), MONTH(cl.classificationDate), DAY(cl.classificationDate), cl.classificationDate " +
             "ORDER BY cl.classificationDate")
     List<MonthClassification> findComparisonByClassificationAndGroup(@Param("classification") String classification,
@@ -72,6 +78,7 @@ public interface IClassificationDao extends JpaRepository<Classification, Long> 
             "AND (:ageFrom IS NULL OR (YEAR(current_date) - YEAR(cu.dateOfBirth)) >= :ageFrom)" +
             "AND (:ageTill IS NULL OR (YEAR(current_date) - YEAR(cu.dateOfBirth)) <= :ageTill)" +
             "AND cu.id <> :customerId " +
+            "AND cl.classification NOT LIKE '%Threshold%' " +
             "GROUP BY cl.classification")
     List<GroupedClassification> findClassificationsByProperties(@Param("incomeFrom") BigDecimal incomeFrom,
                                                                   @Param("incomeTo") BigDecimal incomeTo,
