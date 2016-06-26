@@ -497,15 +497,6 @@ public class EventProcessorTest {
 		assertTrue(eventProcessor.cancelAlert(savingsAlertId1));
 		assertTrue(eventProcessor.cancelAlert(savingsAlertId2));
 	}
-	
-//	@Test
-//	public void testMultipleRelativeThresholds() {
-//		CountingAlertCallback callback = new CountingAlertCallback();
-//		RelativeThresholdParameter parameter = RelativeThresholdParameter.newInstance()
-//				.customerId(1L).thresholdInEur(new BigDecimal("50")).type("positive").direction("bidirectional")
-//				.callback(callback).build();
-//		Long alertId1 = eventProcessor.createRelativeThreshold(parameter);
-//	}
 
 	private static class CountingAlertCallback implements AlertCallback {
 		private Map<Long, Integer> alerts = new HashMap<>();
