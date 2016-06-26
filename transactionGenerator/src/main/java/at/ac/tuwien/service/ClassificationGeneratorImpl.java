@@ -2277,7 +2277,12 @@ public class ClassificationGeneratorImpl implements ClassificationGenerator {
     }
 
     private void addThresholds(ExtendedCustomer c) {
+        Classification income = null;
         for (Classification cl : c.getDefaultClassifications()) {
+            if ("Income".equals(cl.getClassification())) {
+                income = cl;
+            }
+
             Threshold t = new Threshold();
             t.setClassification(cl.getClassification());
             t.setThresholdDate(currentDate);
@@ -2289,14 +2294,13 @@ public class ClassificationGeneratorImpl implements ClassificationGenerator {
             }
         }
 
-        Threshold t = new Threshold();
-        t.setClassification("absoluteThresholdNegative");
-        t.setThreshold(new BigDecimal(-200));
-        c.addThreshold(t);
-        t = new Threshold();
-        t.setClassification("absoluteThresholdPositive");
-        t.setThreshold(new BigDecimal(200));
-        c.addThreshold(t);
+        if (income != null) {
+            //not all users have an income
+            Threshold t = new Threshold();
+            t.setClassification(income.getClassification());
+            t.setThreshold(income.getAmount().multiply(new BigDecimal(4)));
+            c.addThreshold(t);
+        }
     }
 
     private void initCustomers() {
