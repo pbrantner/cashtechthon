@@ -386,9 +386,8 @@ public class EventProcessorTest {
 		assertTrue(eventProcessor.cancelAlert(alertId));
 	}
 	
-	//@Test
+	@Test
 	public void testPositiveRelativeThresholdWithCycleAndClassification() throws InterruptedException {
-		//TODO fix - test fails
 		CountingAlertCallback callback = new CountingAlertCallback();
 		RelativeThresholdParameter parameter = RelativeThresholdParameter.newInstance()
 				.customerId(1L).thresholdInEur(BigDecimal.TEN).type("negative").direction("unidirectional")
