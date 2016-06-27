@@ -71,18 +71,6 @@
             <div id="piechart" class="piechart"></div>
             <div id="groupPieChart" class="piechart"></div>
         </div>
-        <div>
-            <h3>Timeline</h3>
-            <md-input-container class="md-block" flex-gt-sm="">
-                <label>Category</label>
-                <md-select ng-model="ctrl.report.classification">
-                    <md-option ng-repeat="cla in ctrl.classifications" value="{{cla}}">
-                        {{cla}}
-                    </md-option>
-                </md-select>
-            </md-input-container>
-            <div id="linechart" class="linechart"></div>
-        </div>
 
         <md-divider></md-divider>
         <md-toolbar class="md-table-toolbar md-default">
