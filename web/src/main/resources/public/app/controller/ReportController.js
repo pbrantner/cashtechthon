@@ -137,17 +137,24 @@
         $scope.query = {
             order: 'name',
             size: 5,
-            page: 0
+            page: 1
         };
         $scope.transactions = [];
 
         function success(transactions) {
             $scope.transactions = transactions.data;
+            if($scope.transactions && $scope.transactions.content && $scope.transactions.content.length > 0){
+                for(var idx = 0; idx < $scope.transactions.content.length; idx++){
+                    var d = $scope.transactions.content[idx].classificationDate;
+                    $scope.transactions.content[idx].date = d[2] + "." + d[1] + "." + d[0];
+                }
+            }
         }
 
         $scope.getTransactions = function () {
             var params = angular.extend({}, $scope.query);
-            params.size = params.limit;
+            params.size = params.size;
+            params.page -= 1;
             $scope.promise = $http.get("/customers/"+ self.report.customerId + "/classifications",{
                 params: params
             }).then(success);
