@@ -2333,13 +2333,13 @@ public class ClassificationGeneratorImpl implements ClassificationGenerator {
             if (income > 0 && i % 10 < 9) {
                 double upper = income * 0.6;
                 double rent = (200 + (upper - 200) * randomGen.nextDouble()) * -1d;
-                c.addDefaultClassification(new Classification(c, new BigDecimal(income), "Rent"));
+                c.addDefaultClassification(new Classification(c, new BigDecimal(rent), "Rent"));
             }
             if (income > 0 && income < 850) {
                 c.addDefaultClassification(new Classification(c, new BigDecimal(850 - income), "Welfare"));
             }
             if (i % 10 == 0) {
-                c.addDefaultClassification(new Classification(c, new BigDecimal(200), "Child support"));
+                c.addDefaultClassification(new Classification(c, new BigDecimal(-200), "Child support"));
             }
             if (i % 50 != 0) {
                 c.addDefaultClassification(new Classification(null, new BigDecimal(-15), "Telephone"));
