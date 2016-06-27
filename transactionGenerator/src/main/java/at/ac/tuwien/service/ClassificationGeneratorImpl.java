@@ -2255,11 +2255,14 @@ public class ClassificationGeneratorImpl implements ClassificationGenerator {
         locations.add("Wolfsberg");
         locations.add("Wolkersdorf im Weinviertel");
         locations.add("Wörgl");
-        locations.add("Ybbs an der Donau");*/
+        locations.add("Ybbs an der Donau");
         locations.add("Zell am See");
         locations.add("Zeltweg");
-        locations.add("Zistersdorf");
-        locations.add("Wien");
+        locations.add("Zistersdorf");*/
+
+        locations.add("Vienna");
+        locations.add("Graz");
+        locations.add("St. Pölten");
     }
 
     private void initClassifications() {
