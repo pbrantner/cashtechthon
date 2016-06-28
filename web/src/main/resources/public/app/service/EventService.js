@@ -10,25 +10,14 @@
         var timeoutPromise = null;
         var userId = null;
         var currentToast = null;
+        var displayedEventIds = [];
         var displayedEvents = [];
 
         var success = function (resp) {
             if(angular.isArray(resp.data) && resp.data.length > 0) {
-                console.log(resp.data);
-                console.log(displayedEvents);
+                var val = resp.data[0];
 
-                var val = undefined;
-                var i = 0;
-                //Find first event that wasn't displayed already
-                while(val == undefined && i < resp.data.length) {
-                    if(!displayedEvents.includes(resp.data[i].threshold.id)) {
-                        val = resp.data[i];
-                    }
-                    i++;
-                }
-
-                if(val != undefined) {
-                    displayedEvents.push(val.threshold.id);
+                if(val != null) {
                     
                     var text = "";
                     var pronome = (val.customer.gender == "Male" ? "his" : "her");
@@ -55,13 +44,16 @@
                     }
 
                     if(val.threshold.windowSize ) {
-                        text += " for the last "
+                        text += " for "
                             +  (val.threshold.windowSize / (1000*60*60*24))
                             +  " days"
                             ;
                     }
+                    text += " since " + val.threshold.thresholdDate[2] + "."
+                         +  val.threshold.thresholdDate[1] + "."
+                         +  val.threshold.thresholdDate[0]
+                         ;
                     text += "!";
-                    console.log(val);
                     var simple = $mdToast.simple().textContent(text).action("OK").highlightAction(true).position("top right").hideDelay(false);
 
                     if(currentToast == null){
