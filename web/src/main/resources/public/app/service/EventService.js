@@ -49,10 +49,6 @@
                             +  " days"
                             ;
                     }
-                    text += " since " + val.threshold.thresholdDate[2] + "."
-                         +  val.threshold.thresholdDate[1] + "."
-                         +  val.threshold.thresholdDate[0]
-                         ;
                     text += "!";
                     var simple = $mdToast.simple().textContent(text).action("OK").highlightAction(true).position("top right").hideDelay(false);
 
