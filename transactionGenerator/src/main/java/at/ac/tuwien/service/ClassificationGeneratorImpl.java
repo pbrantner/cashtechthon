@@ -2059,7 +2059,7 @@ public class ClassificationGeneratorImpl implements ClassificationGenerator {
     }
 
     private void initLocations() {
-        locations.add("Allentsteig");
+        /*locations.add("Allentsteig");
         locations.add("Altheim");
         locations.add("Althofen");
         locations.add("Amstetten");
@@ -2258,8 +2258,11 @@ public class ClassificationGeneratorImpl implements ClassificationGenerator {
         locations.add("Ybbs an der Donau");
         locations.add("Zell am See");
         locations.add("Zeltweg");
-        locations.add("Zistersdorf");
-        locations.add("Zwettl-Niederösterreich");
+        locations.add("Zistersdorf");*/
+
+        locations.add("Vienna");
+        locations.add("Graz");
+        locations.add("St. Pölten");
     }
 
     private void initClassifications() {

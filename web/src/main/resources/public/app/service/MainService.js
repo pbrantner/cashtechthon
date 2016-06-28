@@ -12,7 +12,7 @@
     function MainService($http) {
         return {
             loadAllCustomers : function() {
-                return $http.get('/customers');
+                return $http.get('/customers?size=1000');
             }
         };
     }
