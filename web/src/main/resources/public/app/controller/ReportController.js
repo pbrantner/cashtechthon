@@ -261,9 +261,11 @@
                 height: 500
             };
 
-            var chart = new google.charts.Line(document.getElementById('linechart'));
-
-            chart.draw(data, options);
+            var elm = document.getElementById('linechart');
+            if(elm){
+                var chart = new google.charts.Line(elm);
+                chart.draw(data, options);
+            }
         }
 
     }
